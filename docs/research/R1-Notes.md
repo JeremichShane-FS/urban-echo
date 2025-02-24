@@ -1,6 +1,6 @@
 # Project & Portfolio
 
-- **Research Notes - Milestone 1**
+- **Research Notes - Workflow**
 - **Shane Jeremich**
 - **Assignment Due Date: 02/11/2025**
 

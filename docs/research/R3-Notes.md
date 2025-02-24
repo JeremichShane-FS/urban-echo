@@ -1,8 +1,8 @@
 # Project & Portfolio
 
 - **Research Notes - Web Design Elements**
-- **Style, Typography, Color, and Texture Research**
-- **February 19, 2025**
+- **Shane Jeremich**
+- **Assignment Due Date: 02/19/2025**
 
 <br>
 
