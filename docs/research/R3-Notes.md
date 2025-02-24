@@ -6,13 +6,13 @@
 
 <br>
 
-## Topic - Web Design Visual Elements
+## Web Design Visual Elements
 
 This document contains general notes related to key visual design elements for web applications, including style tiles, typography, color theory, and textures.
 
 <br>
 
-## Sub-Topic 1 - Style Tiles
+## Style Tiles
 
 Style tiles serve as a design deliverable that bridges the gap between mood boards and full mockups.
 
@@ -22,7 +22,7 @@ Style tiles serve as a design deliverable that bridges the gap between mood boar
 
 <br>
 
-## Sub-Topic 2 - Typography and Brand Fonts
+## Typography and Brand Fonts
 
 Typography plays a crucial role in shaping brand identity and user perception.
 
@@ -38,7 +38,7 @@ Typography plays a crucial role in shaping brand identity and user perception.
 
 <br>
 
-## Sub-Topic 3 - Color Theory and Implementation
+## Color Theory and Implementation
 
 Color selection is fundamental to effective web design and brand communication.
 

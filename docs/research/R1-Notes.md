@@ -6,7 +6,7 @@
 
 # R1-Notes: Research on Git Workflows
 
-## Research Topic
+## Workflow and Documentation
 
 Feature Branch Workflow and Efficient Research Documentation
 
