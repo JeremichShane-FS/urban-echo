@@ -6,13 +6,13 @@
 
 <br>
 
-## Topic - Design Theory and Best Practices
+## Design Theory and Best Practices
 
 This document contains research notes on design theory, user experience principles, and best practices for creating effective web applications and interfaces.
 
 <br>
 
-## Sub-Topic 1 - User Experience Laws and Principles
+## User Experience Laws and Principles
 
 Research on fundamental UX laws and principles that guide effective design.
 
@@ -32,7 +32,7 @@ Research on fundamental UX laws and principles that guide effective design.
 
 <br>
 
-## Sub-Topic 2 - Space and Visual Hierarchy
+## Space and Visual Hierarchy
 
 Research on effective use of whitespace and layout principles.
 
@@ -53,7 +53,7 @@ Research on effective use of whitespace and layout principles.
 
 <br>
 
-## Sub-Topic 3 - Common Design Mistakes and Solutions
+## Common Design Mistakes and Solutions
 
 Analysis of frequent design errors and their remedies.
 
@@ -78,7 +78,7 @@ Analysis of frequent design errors and their remedies.
 
 <br>
 
-## Sub-Topic 4 - Dialog and Interface Elements
+## Dialog and Interface Elements
 
 Research on effective dialog box and interface element design.
 
