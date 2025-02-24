@@ -1,6 +1,6 @@
 # Project & Portfolio 
 
-- **Research Notes - Milestone #2**
+- **Research Notes - Structure**
 - **Shane Jeremich**
 - **Assignment Due Date: 02/16/2025**
 
