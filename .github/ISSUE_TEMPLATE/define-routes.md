@@ -2,7 +2,7 @@
 name: Define Routes
 about: "\"Focus on defining and documenting routes for specific feature areas of the
   application."
-title: ''
+title: 'Routes: [Feature Area]'
 labels: ''
 assignees: ''
 

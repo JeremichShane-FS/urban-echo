@@ -1,7 +1,7 @@
 ---
 name: Plan State Management
 about: Focus on defining and planning state management for specific application states.
-title: ''
+title: 'State: [State Name]'
 labels: ''
 assignees: ''
 
