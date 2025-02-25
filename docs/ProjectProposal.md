@@ -1,77 +1,168 @@
-# [Concept Name]
+# E-commerce Clothing Store
 
 ## Application Definition Statement
 
-*A clear high-level summary should be used to introduce the concept. This should be similar to an elevator pitch or a conversational reply to "What are you building?”. You will explore the audience and their demographics, the problem they are having, and your solution in subsequent sections in more detail but touch on them here.* 
-
-*Clarity over quantity should be the focus, to that end, creating visuals/charts to explain the more complex data or logical points could help to reinforce your Application’s Definition Statement.*
-
-[ Replace this text with your Application Definition Statement ] 
-
+The project is a modern e-commerce platform for clothing retail, designed to provide a seamless shopping experience. This platform will offer users an intuitive interface to browse clothing items, manage their shopping cart, and complete secure purchases. By leveraging Next.js for performance, MongoDB for flexible product management, and integrating Auth0 and Stripe, the platform ensures a secure and efficient shopping experience for fashion-conscious consumers.
 
 ## Target Market
 
-*Using Primary and Secondary research, describe the people most likely to be utilizing your application. What are their ages, education level, employment sector, income level, hobbies, or any other defining characteristics that set them apart from other groups of people? Identifying specific groups will help drive application design choices.*
+Primary Research:
 
-*Primary Research is research that you have conducted yourself and is not based on secondary sources. Examples of Primary Research include surveys, interviews, and focus groups. This doesn't have to be formal in nature and can include discussions you have with individuals that are likely users of your application. Secondary Research is research that has been conducted by others and is based on their findings. Examples of Secondary Research include market research reports, industry publications, and news articles.*
+- Conducted informal interviews with 5 online shoppers aged 25-35
+- Observed shopping behaviors of friends and family members who regularly purchase clothing online
 
-[ Replace this text with a description of any Primary and Secondary research you conducted to determine the Target Market for your application. Link to any references used during this research. ]
+Secondary Research:
 
+- According to Statista, the fashion e-commerce sector is expected to reach $1.2 trillion by 2025
+- Target demographic:
+  - Age: 18-45
+  - Income: Middle-class ($40,000-$100,000)
+  - Tech-savvy individuals comfortable with online shopping
+  - Fashion-conscious consumers who value convenience
+  - Urban and suburban residents with busy lifestyles
 
 ## User Profile / Persona
 
-*User profiles are a snapshot of an actual person and helps to open a window into the mind of an actual user and will provide insight while tailoring and refining interaction details to best fit your ideal users within your Target Market.*
+Rachel Jeremich
 
-
-[ Replace this text with a User Profile / Persona for your application. If necessary, research 'Web User Persona' to generate ideas. ]
-
+- Age: 28
+- Occupation: RN Nurse
+- Location: Suburban area
+- Income: $70,000/year
+- Tech-savvy: High
+- Shopping Habits:
+  - Shops online 2-3 times per month
+  - Prefers browsing during evening hours
+  - Uses both mobile and desktop for shopping
+  - Values easy navigation and clear product images
+  - Expects seamless checkout process
+- Pain Points:
+  - Limited time for in-store shopping
+  - Concerns about secure payments
+  - Needs detailed product information
 
 ## Use Cases
 
-*A 'Use Case' describes how a user may interact with your application. It provides a series of steps to reach a desired result. If a user wants to listen to some music during a workout, how many clicks would it take to do that? Begin with a simple question like that and then map out the different steps to reach the desired goal. Use cases help us think through how our application will be used.*
+Browse and Purchase:
 
-*Use Cases help drive design decisions as well as testing procedures. During development we regularly test and confirm the work in progress matches up with our Use Cases. This provides valuable insight into how our application is addressing the needs of the user and allows us to correct missteps early. This [article](https://www.softwaretestinghelp.com/use-case-testing/) gives additional background Use Cases and Use Case Testing.*
+- User lands on homepage
+- Browses clothing categories
+- Filters by size and color
+- Views detailed product information
+- Adds items to cart
+- Proceeds to checkout
+- Logs in via Auth0
+- Enters shipping information
+- Completes payment via Stripe
+- Receives order confirmation
 
-[ Describe two or more Use Cases for your application. Use a bulleted list to describe the steps involved in each Use Case. ]
+Account Management:
 
+- User creates account
+- Updates profile information
+- Views order history
+- Saves favorite items
+- Manages shipping addresses
+- Sets communication preferences
 
 ## Problem Statement
 
-*In a few sentences explain the problem your target market is seeing that requires this project to be built. This will identify why is your application needed and needs to be supported by Primary Research.*
-
-[ Replace this text with a Problem Statement for your application. Include any Research that supports your Problem Statement. ]
-
+Modern consumers face significant challenges with traditional clothing shopping, including time constraints, limited store hours, and concerns about payment security. Many existing e-commerce platforms offer poor user experiences, slow loading times, and complicated checkout processes, leading to cart abandonment and frustrated customers.
 
 ## Pain Points
 
-*Explain your audience’s pain points that are contributing to their defined problem and their impact on the user. Primary Research should support your explanations.*
+1. Time Management:
 
-[ Replace this text with a description of the Pain Points your audience is experiencing. Include any Research that supports your Pain Points. ]
+   - Limited shopping hours at physical stores
+   - Long checkout queues
+   - Travel time to stores
+
+2. User Experience:
+
+   - Slow-loading websites
+   - Complicated navigation
+   - Unclear product information
+
+3. Security Concerns:
+   - Payment information safety
+   - Personal data protection
+   - Account security
 
 ## Solution Statement
 
-*How is your project going to solve the problem outlined above? Consider the competing products in your market space. What makes your solution different from other’s attempts to solve the problem? How are you able to better solve the defined problem for your audience than your competition?*
+Our e-commerce platform addresses these challenges by providing:
 
-[ Replace this text with a Solution Statement for your application. Include any Research that supports your Solution Statement. ]
+- Fast, responsive interface using Next.js
+- Secure authentication via Auth0
+- Streamlined checkout process with Stripe
+- Detailed product information and high-quality images
+- Mobile-first design for shopping on-the-go
+- Intuitive navigation and search functionality
 
 ## Competition
 
-*What competing products exist to solve this or a similar problem? Identify and summarize competing products and how their approach to solving your identified problem differ from your own.*
+Direct Competitors:
 
-[ Replace this text with a description of the Competition for your application. Include any Research that supports your description. Competition can be direct or indirect. Direct competition is a product that solves the same problem as your application. Indirect competition is a product that solves a similar problem as your application. ]
+1. ASOS
 
+   - Larger inventory but slower website
+   - More complex navigation
+
+2. Zara Online
+   - Limited size availability
+   - Regional pricing differences
+
+Indirect Competitors:
+
+1. Local Boutiques
+   - Limited hours
+   - Higher prices
+   - Personal service
 
 ## Features & Functionality
 
-*Define key features and functionality intended to provide solutions to specific problems and pain points you have identified. These key items should be specifically defined in response to problems / pain points.*
+1. Product Browsing:
 
-*A good way to identify a Key Feature is to use the phrase 'In order to [solve this problem] I need to [do this]'. For example, 'In order to listen to music while I workout I need to be able to create a playlist'.*
+   - Advanced filtering options
+   - Quick view functionality
+   - Size and color variants
+   - Related items suggestions
 
-*Features and functionality should be prioritized based on their importance to the user. This will help you focus on the most important features first and then add additional features as time allows.*
+2. User Authentication:
 
-[ Replace this text with a list of Key Features and Functionality for your application. Include a description of each feature and how it will solve a specific problem or pain point. For example, 'Playlist: The user will have the ability to create a playlist of songs they want to listen to while working out. This will allow them to listen to the music they want to hear while working out.' ]
+   - Secure login via Auth0
+   - Social media integration
+   - Password recovery
+   - Account management
 
+3. Shopping Cart:
+
+   - Real-time updates
+   - Save for later option
+   - Quick checkout
+   - Guest checkout option
+
+4. Payment Processing:
+   - Secure payments via Stripe
+   - Multiple payment methods
+   - Order tracking
+   - Automatic receipts
 
 ## Integrations
 
-*Use of an API is expected. This can be 3rd party APIs, your own API, or a combination of data sets. Identify which integrations are planned for and outline how you will use them transformatively. For 3rd party APIs provide links to their respective documentation and verify that your intended use complies with their Terms of Service.*
+1. Auth0 API
+
+   - User authentication
+   - Social login integration
+   - Documentation: https://auth0.com/docs/api
+
+2. Stripe API
+
+   - Payment processing
+   - Subscription management
+   - Documentation: https://stripe.com/docs/api
+
+3. MongoDB Atlas
+   - Product database
+   - User data storage
+   - Documentation: https://docs.atlas.mongodb.com/api/
