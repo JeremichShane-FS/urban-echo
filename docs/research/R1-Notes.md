@@ -1,12 +1,12 @@
 # Project & Portfolio
 
-- **Research Notes - Milestone 1**
+- **Research Notes - Workflow**
 - **Shane Jeremich**
 - **Assignment Due Date: 02/11/2025**
 
 # R1-Notes: Research on Git Workflows
 
-## Research Topic
+## Workflow and Documentation
 
 Feature Branch Workflow and Efficient Research Documentation
 

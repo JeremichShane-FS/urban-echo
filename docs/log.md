@@ -68,7 +68,30 @@ Each week I will summarize my milestone activity and progress by writing a stand
 
 ### Week 3
 
-Stay tuned, this stand up is coming soon...
+**⚙️ Overview** - What I worked on this past week
+
+- Completed comprehensive research on design theory, documenting key UX laws, principles of visual hierarchy, and best practices for interface elements (documented in R4-Notes).
+- Conducted research on production planning, focusing on RESTful API design, documentation-driven development, and atomic design principles (documented in R5-Notes).
+- Standardized the formatting across all research documents for consistency.
+- Shifted focus to prototyping the user interface in Figma, based on the wireframes and style tile.
+- Began working on the "Component: Navigation Bar" and "Component: Product Card" issues in preparation for Milestone 4.
+
+**🌵 Challenges** - What problems did I have & how I'm addressing them
+
+- The main challenge this week was needing to adjust the project timeline slightly. I realized that completing the full prototype within Milestone 3 was too ambitious, so I've moved the prototyping work to Milestone 4. This allows for more dedicated time to ensure the prototype is well-developed and incorporates the design theory research.
+
+**🏆 Accomplishments** - What is something I "leveled up" on this week
+
+- Significantly improved my understanding of design theory and how it applies to UI/UX design. The in-depth research on UX laws and design principles will be invaluable in creating a user-centered interface.
+- Gained a better understanding of production planning and best practices for API design and documentation. This knowledge will be crucial as we move into the development phase.
+
+**🔮 Next Steps** - What I plan to prioritize and do next
+
+- Prioritize completing the Figma prototype for Milestone 4, ensuring it aligns with the wireframes, style tile, and design theory research.
+- Continue working on the component issues ("Component: Navigation Bar" and "Component: Product Card") to prepare for development.
+- Begin the initial setup of the Next.js project and potentially start implementing basic components.
+- I’ll continue participating in Stand Up Discussions to share progress and keep the team updated.
+- Finally, I’ll begin preparing for dev's PR in milestone 4, ensuring all necessary components are in place for a strong submission.
 
 ### Week 4
 
