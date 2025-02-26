@@ -8,10 +8,12 @@ assignees: ''
 ---
 
 ---
+
 name: "State Management"
 about: "Focus on defining and planning state management for specific application states."
 title: "State: [State Name]"
 labels: state-management
+
 ---
 
 ## State: [State Name]
