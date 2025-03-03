@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Background -->
+  <rect width="600" height="300" fill="#333333" rx="10" ry="10"/>
+  
+  <!-- Cityscape Silhouette -->
+  <path d="M50,200 L80,200 L80,150 L100,150 L100,180 L120,180 L120,130 L140,130 L140,170 
+          L160,170 L160,120 L180,120 L180,140 L200,140 L200,100 L220,100 L220,160 
+          L240,160 L240,110 L260,110 L260,140 L280,140 L280,90 L300,90 L300,170 
+          L320,170 L320,150 L340,150 L340,180 L550,180" 
+        fill="none" stroke="#4A90A7" stroke-width="3"/>
+  
+  <!-- Soundwave/Echo Effect -->
+  <path d="M50,220 Q150,190 200,220 Q250,250 300,220 Q350,190 400,220 Q450,250 500,220 Q550,190 550,220" 
+        fill="none" stroke="#E67E22" stroke-width="3"/>
+  <path d="M50,240 Q150,210 200,240 Q250,270 300,240 Q350,210 400,240 Q450,270 500,240 Q550,210 550,240" 
+        fill="none" stroke="#E67E22" stroke-width="2" opacity="0.7"/>
+  <path d="M50,260 Q150,230 200,260 Q250,290 300,260 Q350,230 400,260 Q450,290 500,260 Q550,230 550,260" 
+        fill="none" stroke="#E67E22" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Logo Text -->
+  <text x="150" y="50" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#F7F7F7">URBAN</text>
+  <text x="320" y="50" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#E67E22">ECHO</text>
+</svg>
