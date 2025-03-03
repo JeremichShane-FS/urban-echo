@@ -1,4 +1,4 @@
-# E-commerce Clothing Store
+# Urban Echo E-commerce Clothing Store
 
 ## Application Definition Statement
 
