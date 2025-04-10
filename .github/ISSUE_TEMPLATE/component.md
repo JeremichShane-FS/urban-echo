@@ -1,16 +1,17 @@
 ---
 name: Component
 about: Focus on the development and integration of individual UI/functional components
-title: ''
+title: 'Component: [Component Name]'
 labels: ''
 assignees: ''
 
 ---
 
 ---
-name: "Component: [Component Name]"
+
+name: Component: [Component Name]
 about: Focus on the development and integration of the [Component Name] component.
-title: "Component: [Component Name]"
+title: Component: [Component Name]
 labels: component
 
 ---

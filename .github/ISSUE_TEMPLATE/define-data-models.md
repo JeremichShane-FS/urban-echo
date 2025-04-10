@@ -1,17 +1,19 @@
 ---
 name: Define Data Models
 about: Focus on defining and documenting data models for the application.
-title: ''
+title: 'Model: [Model Name]'
 labels: ''
 assignees: ''
 
 ---
 
 ---
-name: "Define Data Models"
+
+name: Define Data Models
 about: "Focus on defining and documenting data models for the application."
-title: "Model: [Model Name]"
+title: Model: [Model Name]
 labels: model
+
 ---
 
 ## Model: [Model Name]
