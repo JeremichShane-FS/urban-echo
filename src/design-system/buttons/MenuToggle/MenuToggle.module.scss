@@ -1,0 +1,18 @@
+@use "@assets/styles/abstracts" as *;
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+
+  &:hover {
+    color: var(--color-gray-50);
+    background-color: var(--color-text-dark);
+  }
+
+  @include respond-to(md) {
+    display: none;
+  }
+}

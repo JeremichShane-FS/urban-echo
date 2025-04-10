@@ -1,0 +1,40 @@
+.button {
+  font-family: var(--font-family-base);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Variant styles */
+.button-primary {
+  background-color: var(--color-primary);
+  color: var(--color-gray-50);
+
+  &:hover {
+    background-color: darken(var(--color-primary), 10%);
+  }
+}
+
+.button-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-text-dark);
+
+  &:hover {
+    background-color: darken(var(--color-secondary), 10%);
+  }
+}
+
+/* Size styles */
+.button-sm {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.button-md {
+  font-size: var(--font-size-base);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.button-lg {
+  font-size: var(--font-size-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+}

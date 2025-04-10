@@ -1,0 +1,27 @@
+@use "../abstracts" as *;
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+@each $bp, $value in $breakpoints {
+  .hidden-#{$bp}-up {
+    @include respond-to($bp) {
+      display: none !important;
+    }
+  }
+
+  .hidden-#{$bp}-down {
+    @media (max-width: $value - 1px) {
+      display: none !important;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+@use "sass:map";
+@use "breakpoints" as *;
+
+// Get breakpoints
+@function getBreakpoint($key) {
+  @if map.has-key($breakpoints, $key) {
+    @return map.get($breakpoints, $key);
+  } @else {
+    @warn "Invalid breakpoint: #{$key}";
+    @return null;
+  }
+}
+
+// Get color with opacity
+@function color-opacity($color, $opacity) {
+  @return rgba($color, $opacity);
+}
+
+// Function to add transparency to a color
+@function color-alpha($color, $opacity) {
+  @return rgba($color, $opacity);
+}
+
+// Function for color variations
+@function color-darken($color, $percentage) {
+  @return mix(var(--color-black), $color, $percentage);
+}
+
+@function color-lighten($color, $percentage) {
+  @return mix(var(--color-white), $color, $percentage);
+}
