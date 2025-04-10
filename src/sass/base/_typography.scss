@@ -1,0 +1,88 @@
+@use "variables" as *;
+@use "../utilities/_mixins" as *;
+@use "sass:color";
+
+:root {
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+}
+
+$font-heading: var(--font-heading);
+$font-body: var(--font-body);
+
+// Base text styles
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Heading styles
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  color: var(--heading-color);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+
+  @include breakpoint(xs) {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+
+  @include breakpoint(xs) {
+    font-size: var(--font-size-xl);
+  }
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+h5 {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+h6 {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+// Paragraph styles
+p {
+  margin-bottom: var(--spacing-md);
+  max-width: 70ch;
+}
+
+// Link styles
+a {
+  color: var(--accent-color);
+  transition: color 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--accent-color-dark);
+  }
+}

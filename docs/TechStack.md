@@ -1,46 +1,84 @@
-# Tech Stack
+# 🛠️ Tech Stack
 
-Fill out the headings below with your Tech Stack information. List the tools and technology you would like to use for your final project. Explain your reasoning for this as well. For example, how does the proposed tool or technology provide value to your overall portfolio of work? 
+## 🎨 Application Design
 
+I will use Figma for creating click-through designs of the e-commerce store. This will include:
 
-## Application Design
+- Product listing pages
+- Product detail views
+- Shopping cart interface
+- Checkout flow
+- User authentication screens
 
-What tool(s) will you use to create click-through designs of the application? List any UI kits you would like to utilize as well. 
+For styling, I'll implement SASS for custom styling solutions, allowing for:
 
-[your response here]
+- Reusable design variables
+- Nested selectors
+- Mixins for responsive design
+- Modular CSS architecture
 
+## ⚛️ Front End Framework
 
+I will use Next.js as the primary framework, leveraging its key features:
 
-## Front End Framework
+- Server-side rendering for better SEO
+- API routes for backend functionality
+- Image optimization for product images
+- Dynamic routing for product pages
+- Built-in React components
+- Static page generation for faster loading
+- Incremental Static Regeneration for product updates
 
-List your approach for front end development. For example, React is an often used front-end solution for projects in addition to using moduleCSS, PropTypes, and an ESLint style guide.   
+## 🏪 State Management
 
-[your response here]
+The state management solution will include:
 
+- Next.js built-in data fetching methods
+- Context API for cart management
+- Local Storage for persisting cart items
+- MongoDB for product and order data
+- Auth0 for user session management
 
-## State Management
+## 📡 Node
 
-What is your proposed solution for managing data? This could mean utilizing a database, local-storage, and in general state management libraries for the application (e.g. Redux).    
+Next.js provides an integrated solution for both frontend and backend, using Node.js under the hood. I will utilize:
 
-[your response here]
+- API routes for server-side logic
+- Environment variables for secure configuration
+- NPM for package management
+- Integration with external services (Stripe, Auth0)
 
+## 🚀 Express
 
-## Node
+While Express won't be directly used (as Next.js handles routing), the API routes will be structured similarly with:
 
-Node is often used to serve both an API and to render a front-end. This includes using best practices, npm, and npx. What do you propose? 
+- RESTful endpoints for product management
+- Authentication middleware using Auth0
+- Route handlers for:
+- Product queries
+- Cart operations
+- Order processing
+- Payment integration with Stripe
 
-[your response here]
+## 🗄️ MongoDB
 
+Instead of SQL/Postgres, I will use MongoDB as the database solution:
 
-## Express
+- Mongoose ODM for data modeling
+- Schema validation
+- CRUD operations for:
+- Products
+- Orders
+- User data
+- Indexing for search optimization
+- Data relationships between:
+- Users and Orders
+- Products and Categories
 
-Express is a popular framework to power an API. Describe your idea for building similar functionality offered by express: e.g. middleware, routes, controllers, sending and receiving JSON data.
+## 🚀 Deployment
 
-[your response here]
+I will use Vercel for deploying the application, which provides:
 
-
-## SQL/Postgres/Sequelize
-
-A popular solution for relational database work is to utilize Sequelize as an ORM. Are you familiar with migrations, models, and seeding? What tools and solutions do you propose for your application? For example, utilizing an ORM to build out models with full validated CRUD.
-
-[your response here]
+- Continuous deployment
+- Custom domain support
+- Serverless functions

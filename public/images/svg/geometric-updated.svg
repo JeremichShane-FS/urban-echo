@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <!-- Background -->
+  <rect width="600" height="300" fill="#333333" rx="10" ry="10"/>
+  
+  <!-- Geometric Echo Hexagons -->
+  <polygon points="300,60 350,90 350,150 300,180 250,150 250,90" 
+          fill="none" stroke="#2C6E91" stroke-width="3"/>
+  <polygon points="300,70 340,95 340,145 300,170 260,145 260,95" 
+          fill="none" stroke="#2C6E91" stroke-width="2.5" opacity="0.8"/>
+  <polygon points="300,80 330,100 330,140 300,160 270,140 270,100" 
+          fill="none" stroke="#4A90A7" stroke-width="2" opacity="0.6"/>
+  <polygon points="300,90 320,105 320,135 300,150 280,135 280,105" 
+          fill="none" stroke="#4A90A7" stroke-width="1.5" opacity="0.4"/>
+  <polygon points="300,100 310,110 310,130 300,140 290,130 290,110" 
+          fill="none" stroke="#4A90A7" stroke-width="1" opacity="0.2"/>
+  
+  <!-- Logo Text -->
+  <text x="215" y="230" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#F7F7F7">URBAN</text>
+  <text x="365" y="230" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#E67E22">ECHO</text>
+  
+  <!-- Echo Effect on E -->
+  <text x="375" y="230" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#E67E22" opacity="0.6">E</text>
+  <text x="385" y="230" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#E67E22" opacity="0.3">E</text>
+</svg>
