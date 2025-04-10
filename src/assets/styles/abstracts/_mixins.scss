@@ -1,0 +1,35 @@
+@use "breakpoints" as *;
+@use "functions" as *;
+
+// Breakpoint Mixins
+@mixin breakpoint($key) {
+  $breakpoint: getBreakpoint($key);
+
+  @if $breakpoint != null {
+    @media (min-width: #{$breakpoint}) {
+      @content;
+    }
+  } @else {
+    @warn "Cannot generate media query for invalid breakpoint: #{$key}";
+  }
+}
+
+@mixin respond-to($key) {
+  @include breakpoint($key) {
+    @content;
+  }
+}
+
+// Typography Mixins
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin multi-line-truncate($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

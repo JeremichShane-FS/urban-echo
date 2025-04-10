@@ -1,0 +1,26 @@
+@use "abstracts" as *;
+
+.grid {
+  display: grid;
+  gap: $spacing-md;
+
+  &--2-cols {
+    grid-template-columns: 1fr;
+
+    @include respond-to("md") {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &--3-cols {
+    grid-template-columns: 1fr;
+
+    @include respond-to("md") {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to("lg") {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}

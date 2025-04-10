@@ -8,8 +8,8 @@ const __dirname = dirname(__filename);
 const nextConfig = {
   reactStrictMode: true,
   sassOptions: {
-    includePaths: [join(__dirname, "src/sass")],
-    prependData: `@use "sass:math"; @use "@/sass/utilities" as *;`,
+    includePaths: [join(__dirname, "src/assets/styles/")],
+    prependData: `@use "sass:math"; @use "@assets/styles/utilities" as *;`,
   },
   images: {
     domains: ["images.unsplash.com", "via.placeholder.com"],
@@ -19,10 +19,6 @@ const nextConfig = {
     turbo: {
       resolveAlias: {
         "@": join(__dirname, "src"),
-        "@components": join(__dirname, "src/components"),
-        "@styles": join(__dirname, "src/sass"),
-        "@utils": join(__dirname, "src/utils"),
-        "@lib": join(__dirname, "src/lib"),
         "@public": join(__dirname, "public"),
       },
     },
