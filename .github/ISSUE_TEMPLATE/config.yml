@@ -1,11 +1,25 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
   - name: 📚 Documentation
-    url: https://example.com/docs
+    url: https://your-actual-docs-site.com
     about: Check our documentation before creating an issue
+
   - name: 💬 Discussions
     url: https://github.com/your-org/your-repo/discussions
     about: For questions and ideas, please use Discussions
+
+  - name: 🐛 Bug Report Template
+    url: https://github.com/your-org/your-repo/issues/new?template=bug_report.md
+    about: Report bugs using our template
+
+  - name: 🚀 Feature Request
+    url: https://github.com/your-org/your-repo/issues/new?template=feature_request.md
+    about: Suggest new features or improvements
+
   - name: 🤔 Need help?
-    url: https://stackoverflow.com/questions/tagged/your-project
-    about: For general questions, please use Stack Overflow with the 'your-project' tag
+    url: https://stackoverflow.com/questions/tagged/your-actual-project-tag
+    about: For general questions, please use Stack Overflow
+
+  - name: 📝 Contributing Guidelines
+    url: https://github.com/your-org/your-repo/blob/main/CONTRIBUTING.md
+    about: Please review our contribution guidelines before submitting PRs
