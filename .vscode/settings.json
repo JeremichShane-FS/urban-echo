@@ -1,6 +1,0 @@
-{
-  "yaml.schemas": {
-    "file:///Users/shanejeremich/.vscode/extensions/atlassian.atlascode-3.4.24/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
-    "https://json.schemastore.org/yamllint.json": "file:///Users/shanejeremich/Projects/2%20-%20Full%20Sail%20University/17%20-%20Project%20and%20Portfolio%20IV%20-%20nextjs/.github/ISSUE_TEMPLATE/config.yml"
-  }
-}
