@@ -1,0 +1,14 @@
+@use "@assets/styles/abstracts" as *;
+
+.mobile-menu {
+  padding: var(--spacing-sm);
+
+  @include respond-to(sm) {
+    padding: 0.75rem;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+  }
+}

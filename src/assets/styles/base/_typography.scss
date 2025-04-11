@@ -1,0 +1,119 @@
+@use "abstracts" as *;
+
+/* Base typography */
+body {
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  text-wrap: pretty;
+}
+
+// Heading styles
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  margin-bottom: 0.5em;
+  color: var(--color-blue-700);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-xs);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+
+  @include breakpoint(xs) {
+    font-size: var(--font-size-2xl);
+  }
+
+  @include breakpoint(lg) {
+    line-height: 1.1;
+  }
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: $line-height-xs;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+
+  @include breakpoint(xs) {
+    font-size: var(--font-size-xl);
+  }
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: $line-height-xs;
+  text-wrap: balance;
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+// Paragraph styles
+p {
+  margin-bottom: var(--spacing-md);
+  max-width: 70ch;
+}
+
+// Link styles
+a {
+  color: var(--accent-color);
+  transition: color 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--accent-color-dark);
+  }
+}
+
+/* Buttons, navigation, and other UI elements */
+button,
+.btn,
+nav,
+.nav-link {
+  font-family: var(--font-heading);
+}
+
+/* Utility classes */
+.text-heading {
+  font-family: var(--font-heading);
+}
+
+.text-body {
+  font-family: var(--font-body);
+}
+
+.font-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}

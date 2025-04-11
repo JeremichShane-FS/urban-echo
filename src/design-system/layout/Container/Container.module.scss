@@ -1,0 +1,50 @@
+@use "abstracts" as *;
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  max-width: var(--container-max-width);
+
+  @include breakpoint(sm) {
+    max-width: getBreakpoint("sm");
+  }
+
+  @include breakpoint(md) {
+    max-width: getBreakpoint("md");
+  }
+
+  @include breakpoint(lg) {
+    max-width: getBreakpoint("lg");
+  }
+
+  @include breakpoint(xl) {
+    max-width: getBreakpoint("xl");
+  }
+
+  @include breakpoint(xxl) {
+    max-width: var(--container-max-width);
+  }
+
+  &-fluid {
+    max-width: none;
+  }
+
+  &-sm {
+    @include breakpoint(sm) {
+      max-width: getBreakpoint("sm");
+    }
+  }
+
+  &-md {
+    @include breakpoint(md) {
+      max-width: getBreakpoint("md");
+    }
+  }
+
+  &-lg {
+    @include breakpoint(lg) {
+      max-width: getBreakpoint("lg");
+    }
+  }
+}

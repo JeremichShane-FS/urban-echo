@@ -1,18 +1,9 @@
-import { Montserrat, Open_Sans } from "next/font/google";
+import { montserrat, openSans } from "@config/fonts";
+import Container from "@design-system/layout/Container";
+import Footer from "@design-system/layout/Footer";
+import Navbar from "@design-system/navigation/Navbar";
 
-import "@/sass/main.scss";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
-});
+import "@assets/styles/main.scss";
 
 export const viewport = {
   width: "device-width",
@@ -70,14 +61,24 @@ export const metadata = {
   },
   // verification: {
   //   google: "google-site-verification-code", //TODO: Add Google verification code
-  //   yandex: "yandex-verification-code", //TODO: Add Yandex verification code
-  // },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${montserrat.className} ${openSans.className}`}>{children}</body>
+    <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
+      <body>
+        <header>
+          <Navbar />
+        </header>
+        <main>
+          <Container>{children}</Container>
+        </main>
+        <footer>
+          <Container>
+            <Footer />
+          </Container>
+        </footer>
+      </body>
     </html>
   );
 }
