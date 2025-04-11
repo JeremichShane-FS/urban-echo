@@ -4,7 +4,7 @@ about: Suggest improvements or additions to documentation
 title: "[DOCS] "
 labels: documentation
 assignees: ""
-projects: ["users/JeremichShane-FS/projects/5"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📚 Documentation Change
