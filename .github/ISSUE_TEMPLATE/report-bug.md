@@ -4,6 +4,7 @@ about: Report a bug or unexpected behavior
 title: "[BUG] "
 labels: bug, needs-triage
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🐛 Bug Description

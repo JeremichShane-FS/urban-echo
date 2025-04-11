@@ -4,6 +4,7 @@ about: Suggest improvements to user interface or experience
 title: "[UI/UX] "
 labels: ui, ux, design
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🎨 UI/UX Feedback

@@ -4,6 +4,7 @@ about: Issues related to language support and translations
 title: "[I18N] "
 labels: internationalization, localization
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🌐 Internationalization/Localization

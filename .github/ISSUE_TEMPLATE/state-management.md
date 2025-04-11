@@ -1,27 +1,10 @@
 ---
-<<<<<<< HEAD:.github/ISSUE_TEMPLATE/state-management.md
-name: State Management
-about: Focus on defining and planning state management for specific application states.
-title: 'State: [State Name]'
-labels: ''
-assignees: ''
-
----
-
----
-
-name: "State Management"
-about: "Focus on defining and planning state management for specific application states."
-title: "State: [State Name]"
-labels: state-management
-
-=======
 name: 🧠 Plan State Management
 about: Focus on defining and planning state management for specific application states
 title: "State: [State Name]"
 labels: state-management
 assignees: ""
->>>>>>> reconfig/github-issues-template:.github/ISSUE_TEMPLATE/plan-state-management.md
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🧠 State: [State Name]

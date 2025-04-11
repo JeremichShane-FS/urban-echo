@@ -4,6 +4,7 @@ about: Report issues related to accessibility standards
 title: "[A11Y] "
 labels: accessibility, ux
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ♿ Accessibility Concern
