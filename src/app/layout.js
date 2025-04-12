@@ -1,7 +1,8 @@
-import { montserrat, openSans } from "@config/fonts";
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";
+
+import { montserrat, openSans } from "@config/fonts";
 
 import "@assets/styles/main.scss";
 

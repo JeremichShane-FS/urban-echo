@@ -6,12 +6,23 @@ import ROUTES from "@config/routes";
 
 // Navigation structure
 export const MAIN_NAV_ITEMS = [
-  { id: "home", label: "Home", path: ROUTES.HOME },
-  { id: "shop", label: "Shop", path: ROUTES.SHOP },
-  { id: "men", label: "Men", path: ROUTES.MEN },
-  { id: "women", label: "Women", path: ROUTES.WOMEN },
-  { id: "accessories", label: "Accessories", path: ROUTES.ACCESSORIES },
-  { id: "sale", label: "Sale", path: ROUTES.SALE, highlight: true },
+  { id: "home", label: "Home", "aria-label": "Urban Echo Home", path: ROUTES.HOME },
+  { id: "shop", label: "Shop", "aria-label": "Shop Categories", path: ROUTES.SHOP },
+  { id: "men", label: "Men", "aria-label": "Shop Men Clothing", path: ROUTES.MEN },
+  { id: "women", label: "Women", "aria-label": "Shop Women Clothing", path: ROUTES.WOMEN },
+  {
+    id: "accessories",
+    label: "Accessories",
+    "aria-label": "Shop Accessories",
+    path: ROUTES.ACCESSORIES,
+  },
+  {
+    id: "sale",
+    label: "Sale",
+    "aria-label": "Shop Sale Items",
+    path: ROUTES.SALE,
+    highlight: true,
+  },
 ];
 
 export const ACCOUNT_NAV_ITEMS = [
