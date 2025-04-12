@@ -9,7 +9,6 @@ import styles from "./ActionIcons.module.scss";
 
 const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
   const navItems = getNavItemsByIds(["account", "cart"], ACCOUNT_NAV_ITEMS);
-  console.log(navItems);
 
   return (
     <>
