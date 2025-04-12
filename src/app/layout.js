@@ -23,7 +23,7 @@ export const metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico" }, //TODO: add my favicon.ico with correct path
-      { url: "/icon.svg", type: "image/svg+xml" }, //TODO: Create and add this SVG to your public folder
+      // { url: "/icon.svg", type: "image/svg+xml" }, //TODO: Create and add this SVG to your public folder
     ],
     apple: [
       { url: "/apple-icon.png" }, //TODO: Create and add this image to your public folder

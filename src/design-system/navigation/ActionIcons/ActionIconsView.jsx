@@ -1,11 +1,9 @@
-import { useNavigation } from "@modules/core/hooks/useNavigation";
 import { Search, ShoppingBag, User } from "lucide-react";
 import Link from "next/link";
 
 import styles from "./ActionIcons.module.scss";
 
 const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
-  const { paths } = useNavigation();
   return (
     <>
       <button
@@ -18,12 +16,12 @@ const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
         <Search className="h-6 w-6" aria-hidden="true" />
       </button>
 
-      <Link href={paths.account} className={styles["action-icons__button"]} aria-label="My account">
+      <Link href={``} className={styles["action-icons__button"]} aria-label="My account">
         <User className="h-6 w-6" aria-hidden="true" />
       </Link>
 
       <Link
-        href={paths.cart}
+        href={``}
         className={`${styles["action-icons__button"]} ${styles["action-icons__button--cart"]}`}
         aria-label={`Shopping cart with ${cartCount} items`}>
         <ShoppingBag className="h-6 w-6" aria-hidden="true" />

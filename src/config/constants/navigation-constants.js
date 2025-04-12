@@ -2,54 +2,56 @@
  * Navigation-related constants
  */
 
+import ROUTES from "@config/routes";
+
 // Navigation structure
 export const MAIN_NAV_ITEMS = [
-  { id: "home", label: "Home", path: "/" },
-  { id: "shop", label: "Shop", path: "/shop" },
-  { id: "men", label: "Men", path: "/shop/men" },
-  { id: "women", label: "Women", path: "/shop/women" },
-  { id: "accessories", label: "Accessories", path: "/shop/accessories" },
-  { id: "sale", label: "Sale", path: "/shop/sale", highlight: true },
+  { id: "home", label: "Home", path: ROUTES.HOME },
+  { id: "shop", label: "Shop", path: ROUTES.SHOP },
+  { id: "men", label: "Men", path: ROUTES.MEN },
+  { id: "women", label: "Women", path: ROUTES.WOMEN },
+  { id: "accessories", label: "Accessories", path: ROUTES.ACCESSORIES },
+  { id: "sale", label: "Sale", path: ROUTES.SALE, highlight: true },
 ];
 
 export const ACCOUNT_NAV_ITEMS = [
-  { id: "profile", label: "My Profile", path: "/account", icon: "user" },
-  { id: "orders", label: "My Orders", path: "/account/orders", icon: "package" },
-  { id: "wishlist", label: "Wishlist", path: "/account/wishlist", icon: "heart" },
-  { id: "addresses", label: "Addresses", path: "/account/addresses", icon: "home" },
-  { id: "settings", label: "Settings", path: "/account/settings", icon: "settings" },
-  { id: "cart", label: "Shopping Cart", path: "/cart", icon: "shopping-bag" },
-  { id: "logout", label: "Logout", path: "/logout", icon: "log-out" },
+  { id: "profile", label: "My Profile", path: ROUTES.ACCOUNT, icon: "user" },
+  { id: "orders", label: "My Orders", path: ROUTES.ORDERS, icon: "package" },
+  { id: "wishlist", label: "Wishlist", path: ROUTES.WISHLIST, icon: "heart" },
+  { id: "addresses", label: "Addresses", path: ROUTES.ADDRESSES, icon: "home" },
+  { id: "settings", label: "Settings", path: ROUTES.SETTINGS, icon: "settings" },
+  { id: "cart", label: "Shopping Cart", path: ROUTES.CART, icon: "shopping-bag" },
+  { id: "logout", label: "Logout", path: ROUTES.LOGOUT, icon: "log-out" },
 ];
 
 export const FOOTER_NAV_SECTIONS = [
   {
     title: "Shop",
     links: [
-      { label: "Men", path: "/shop/men" },
-      { label: "Women", path: "/shop/women" },
-      { label: "Accessories", path: "/shop/accessories" },
-      { label: "Sale", path: "/shop/sale" },
-      { label: "New Arrivals", path: "/shop/new" },
+      { label: "Men", path: ROUTES.MEN },
+      { label: "Women", path: ROUTES.WOMEN },
+      { label: "Accessories", path: ROUTES.ACCESSORIES },
+      { label: "Sale", path: ROUTES.SALE },
+      { label: "New Arrivals", path: ROUTES.NEW_ARRIVALS },
     ],
   },
   {
     title: "About",
     links: [
-      { label: "Our Story", path: "/about" },
-      { label: "Stores", path: "/stores" },
-      { label: "Sustainability", path: "/sustainability" },
-      { label: "Careers", path: "/careers" },
+      { label: "Our Story", path: ROUTES.ABOUT },
+      { label: "Stores", path: ROUTES.STORES },
+      { label: "Sustainability", path: ROUTES.SUSTAINABILITY },
+      { label: "Careers", path: ROUTES.CAREERS },
     ],
   },
   {
     title: "Help",
     links: [
-      { label: "Contact Us", path: "/contact" },
-      { label: "FAQs", path: "/faqs" },
-      { label: "Shipping", path: "/shipping" },
-      { label: "Returns", path: "/returns" },
-      { label: "Size Guide", path: "/size-guide" },
+      { label: "Contact Us", path: ROUTES.CONTACT },
+      { label: "FAQs", path: ROUTES.FAQS },
+      { label: "Shipping", path: ROUTES.SHIPPING },
+      { label: "Returns", path: ROUTES.RETURNS },
+      { label: "Size Guide", path: ROUTES.SIZE_GUIDE },
     ],
   },
 ];
