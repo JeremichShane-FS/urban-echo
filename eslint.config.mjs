@@ -27,6 +27,7 @@ const eslintConfig = [
       ecmaVersion: 2020,
       globals: {
         ...globals.browser,
+        ...globals.node,
         ...globals.jest,
       },
       parserOptions: {
