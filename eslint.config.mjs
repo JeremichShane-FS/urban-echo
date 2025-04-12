@@ -94,25 +94,27 @@ const eslintConfig = [
         "error",
         {
           groups: [
-            // React-related imports
-            ["^react$", "^react/", "^@react"],
-            // Third-party packages (not starting with @ and not react)
-            ["^(?!react|@|\\.)\\w+"],
-            // Aliased imports starting with @
+            // React, Next.js and external packages (npm/node_modules)
+            ["^react", "^next", "^(?!@|\\.)\\w+"],
+
+            // Config imports specifically
             ["^@"],
-            // Default imports (without destructuring)
-            ["^(@?\\w+|@[\\w-]+/[\\w-]+)$"],
-            // Destructured imports from non-@ paths
-            ["^[^@\\.].*\\u007B"],
-            // Internal/relative imports
+            ["^@(/?)config"],
+
+            // Internal, parent and sibling imports
             ["^\\."],
-            // Style imports
-            ["\\.(css|scss)$"],
+
+            // Side effect imports and type imports
+            ["^\\u0000", "^.+\\u0000$"],
+
+            // Style and asset imports
+            [
+              "\\.(css|scss|sass|less|styl|module.css|module.scss)$",
+              "\\.(svg|png|jpg|jpeg|gif|webp|ico|mp4|webm|mp3|wav)$",
+            ],
           ],
         },
       ],
-
-      // Enforce alphabetical ordering of destructured properties
       "sort-destructure-keys/sort-destructure-keys": "error",
     },
   },

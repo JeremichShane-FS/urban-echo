@@ -1,5 +1,4 @@
 import { memo } from "react";
-
 import Link from "next/link";
 
 import UrbanEchoLogo from "@assets/images/logo/UrbanEchoLogo";
@@ -9,14 +8,14 @@ import Container from "@design-system/layout/Container";
 import ActionIcons from "@design-system/navigation/ActionIcons";
 import MobileMenu from "@design-system/navigation/MobileMenu";
 import NavLinks from "@design-system/navigation/NavLinks";
-import getNavItemById from "@modules/core/utils/navigation";
+import { getNavItemById } from "@modules/core/utils/getNavItems";
 
 import { MAIN_NAV_ITEMS } from "@config/constants";
 
 import styles from "./Navbar.module.scss";
 
 const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
-  const home = getNavItemById("home", MAIN_NAV_ITEMS);
+  const navLink = getNavItemById("home", MAIN_NAV_ITEMS);
 
   return (
     <nav className={styles["navbar"]} aria-label="Main navigation">
@@ -25,7 +24,7 @@ const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
           <div className={styles["navbar__content"]}>
             <div className={styles["navbar__logo-section"]}>
               <MenuToggle isOpen={isMenuOpen} setIsOpen={toggleMenu} />
-              <Link href={home.path} aria-label={home["aria-label"]}>
+              <Link href={navLink.path} aria-label={navLink["aria-label"]}>
                 <UrbanEchoLogo />
               </Link>
             </div>
