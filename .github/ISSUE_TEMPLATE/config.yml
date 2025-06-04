@@ -1,48 +1,9 @@
-# Determines whether users can create blank issues without using templates
 blank_issues_enabled: false
-
-# Sets the default title of the issue chooser
-name: 🐞 Report an issue
-about: Choose from the templates below
-
-# External links users can visit instead of creating an issue
 contact_links:
-  - name: 📚 Project Documentation
-    url: https://example.com/docs
+  - name: 📚 Documentation
+    url: https://github.com/JeremichShane-FS/wdv349-o-JeremichShane-FS/blob/main/README.md
     about: Check our documentation before creating an issue
+
   - name: 💬 Discussions
     url: https://github.com/JeremichShane-FS/wdv349-o-JeremichShane-FS/discussions
-    about: Ask questions and discuss ideas here
-  # - name: 📝 Contributing Guidelines
-  #   url: https://github.com/your-org/your-repo/blob/main/CONTRIBUTING.md
-  #   about: Please read our contributing guidelines before submitting a PR
-
-# Optional: Controls how templates appear in the selector
-# This organizes templates into categories
-templates:
-  - name: User-facing Issues
-    about: Issues related to user experience
-    templates:
-      - report-bug.md
-      - request-feature.md
-      - report-accessibility-concern.md
-      - provide-ui-ux-feedback.md
-
-  - name: Development Tasks
-    about: Templates for development-related tasks
-    templates:
-      - develop-component.md
-      - define-data-models.md
-      - define-routes.md
-      - plan-state-management.md
-      - update-documentation.md
-
-  - name: Technical Improvements
-    about: Templates for technical improvements
-    templates:
-      - report-performance-issue.md
-      - report-security-vulnerability.md
-      - update-dependency.md
-      - improve-testing.md
-      - propose-refactoring.md
-      - handle-internationalization.md
+    about: For questions and ideas, please use Discussions
