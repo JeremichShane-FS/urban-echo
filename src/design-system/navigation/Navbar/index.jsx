@@ -7,7 +7,6 @@ const Navbar = () => {
   const [isMenuOpen, toggleMenu, , closeMenu] = useToggle(false);
   const [isSearchOpen, toggleSearch, , closeSearch] = useToggle(false);
 
-  // Close other panel when one is opened
   const handleMenuToggle = () => {
     toggleMenu();
     if (!isMenuOpen && isSearchOpen) {

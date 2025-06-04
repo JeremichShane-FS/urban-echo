@@ -27,6 +27,7 @@ const eslintConfig = [
       ecmaVersion: 2020,
       globals: {
         ...globals.browser,
+        ...globals.node,
         ...globals.jest,
       },
       parserOptions: {
@@ -94,20 +95,28 @@ const eslintConfig = [
         "error",
         {
           groups: [
-            // React and external packages
-            ["^react", "^@?\\w"],
-            // Aliased imports (starting with @)
-            ["^@"],
-            // Internal imports - everything that isn't CSS/SCSS
-            ["^\\./(?!.*\\.(css|scss)$).*$", "^\\.(?!/?$)(?!.*\\.(css|scss)$).*$"],
-            // CSS/SCSS imports - both .css and .scss files
-            [".*\\.(css|scss)$"],
+            // React, Next.js and external packages (npm/node_modules)
+            ["^react", "^next", "^(?!@|\\.)\\w+"],
+
+            // Config imports specifically
+            ["^@(/?)"],
+            ["^@(/?)config"],
+
+            // Internal, parent and sibling imports
+            ["^\\."],
+
+            // Side effect imports and type imports
+            ["^\\u0000", "^.+\\u0000$"],
+
+            // Style and asset imports
+            [
+              "\\.(css|scss|sass|less|styl|module.css|module.scss)$",
+              "\\.(svg|png|jpg|jpeg|gif|webp|ico|mp4|webm|mp3|wav)$",
+            ],
           ],
         },
       ],
       "simple-import-sort/exports": "error",
-
-      // Enforce alphabetical ordering of destructured properties
       "sort-destructure-keys/sort-destructure-keys": "error",
     },
   },
