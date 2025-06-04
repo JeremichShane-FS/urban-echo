@@ -4,6 +4,7 @@ about: Suggest a new feature or enhancement
 title: "[FEATURE] "
 labels: enhancement, needs-discussion
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ✨ Feature Description

@@ -1,9 +1,27 @@
 ---
+<<<<<<< HEAD
+name: Define Data Models
+about: Focus on defining and documenting data models for the application.
+title: 'Model: [Model Name]'
+labels: ''
+assignees: ''
+
+---
+
+---
+
+name: Define Data Models
+about: "Focus on defining and documenting data models for the application."
+title: Model: [Model Name]
+labels: model
+
+=======
 name: 📊 Define Data Models
 about: Focus on defining and documenting data models for the application
 title: "Model: [Model Name]"
 labels: model, data
 assignees: ""
+>>>>>>> reconfig/github-issues-template
 ---
 
 ## 📊 Model: [Model Name]

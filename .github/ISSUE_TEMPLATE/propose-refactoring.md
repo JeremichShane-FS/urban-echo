@@ -4,6 +4,7 @@ about: Suggest code improvements without changing functionality
 title: "[REFACTOR] "
 labels: refactoring, technical-debt
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ♻️ Refactoring Proposal

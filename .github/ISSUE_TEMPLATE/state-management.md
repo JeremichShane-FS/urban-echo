@@ -4,6 +4,7 @@ about: Focus on defining and planning state management for specific application 
 title: "State: [State Name]"
 labels: state-management
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🧠 State: [State Name]

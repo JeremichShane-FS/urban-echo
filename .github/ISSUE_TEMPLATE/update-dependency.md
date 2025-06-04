@@ -4,6 +4,7 @@ about: Track updates to project dependencies
 title: "[DEPENDENCY] "
 labels: dependencies
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📦 Dependency Update

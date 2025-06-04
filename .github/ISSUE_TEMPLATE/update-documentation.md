@@ -4,6 +4,7 @@ about: Suggest improvements or additions to documentation
 title: "[DOCS] "
 labels: documentation
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📚 Documentation Change
@@ -48,7 +49,7 @@ assignees: ""
 - [ ] Regular users
 - [ ] Developers
 - [ ] Administrators
-- [ ] Other: ******\_******
+- [ ] Other: **\*\***\_**\*\***
 
 ## 📊 Documentation Format
 
@@ -59,7 +60,7 @@ assignees: ""
 - [ ] Reference
 - [ ] Explanation
 - [ ] FAQ
-- [ ] Other: ******\_******
+- [ ] Other: **\*\***\_**\*\***
 
 ## 🖼️ Visual Aids
 

@@ -4,6 +4,7 @@ about: Report performance problems or slowdowns
 title: "[PERF] "
 labels: performance, needs-investigation
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ⚡ Performance Issue Description

@@ -4,6 +4,7 @@ about: Suggest improvements to test coverage or methodologies
 title: "[TEST] "
 labels: testing
 assignees: ""
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🧪 Testing Improvement

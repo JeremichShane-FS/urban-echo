@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+
 import useToggle from "@modules/core/hooks/useToggle";
 
 const useNavbar = () => {

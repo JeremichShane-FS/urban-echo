@@ -1,3 +1,6 @@
+import { memo } from "react";
+import Link from "next/link";
+
 import UrbanEchoLogo from "@assets/images/logo/UrbanEchoLogo";
 import MenuToggle from "@design-system/buttons/MenuToggle";
 import Searchbar from "@design-system/forms/Searchbar";
@@ -5,13 +8,15 @@ import Container from "@design-system/layout/Container";
 import ActionIcons from "@design-system/navigation/ActionIcons";
 import MobileMenu from "@design-system/navigation/MobileMenu";
 import NavLinks from "@design-system/navigation/NavLinks";
-import { useNavigation } from "@modules/core/hooks/useNavigation";
-import Link from "next/link";
+import { getNavItemById } from "@modules/core/utils/getNavItems";
+
+import { MAIN_NAV_ITEMS } from "@config/constants";
 
 import styles from "./Navbar.module.scss";
 
 const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
-  const { paths } = useNavigation();
+  const navLink = getNavItemById("home", MAIN_NAV_ITEMS);
+
   return (
     <nav className={styles["navbar"]} aria-label="Main navigation">
       <div className={styles["navbar__inner"]}>
@@ -19,7 +24,7 @@ const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
           <div className={styles["navbar__content"]}>
             <div className={styles["navbar__logo-section"]}>
               <MenuToggle isOpen={isMenuOpen} setIsOpen={toggleMenu} />
-              <Link href={paths.home}>
+              <Link href={navLink.path} aria-label={navLink["aria-label"]}>
                 <UrbanEchoLogo />
               </Link>
             </div>
@@ -44,4 +49,4 @@ const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
   );
 };
 
-export default NavbarView;
+export default memo(NavbarView);
