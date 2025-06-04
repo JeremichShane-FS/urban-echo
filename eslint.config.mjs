@@ -99,7 +99,7 @@ const eslintConfig = [
             ["^react", "^next", "^(?!@|\\.)\\w+"],
 
             // Config imports specifically
-            ["^@"],
+            ["^@(/?)"],
             ["^@(/?)config"],
 
             // Internal, parent and sibling imports
@@ -116,6 +116,7 @@ const eslintConfig = [
           ],
         },
       ],
+      "simple-import-sort/exports": "error",
       "sort-destructure-keys/sort-destructure-keys": "error",
     },
   },
