@@ -1,0 +1,65 @@
+@use "@assets/styles/abstracts" as *;
+
+.searchbar {
+  border-top: 1px solid var(--color-gray-800);
+  padding: var(--spacing-md);
+
+  @include respond-to(md) {
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+
+  &__form {
+    max-width: 28rem;
+    margin: 0 auto;
+  }
+
+  &__input-container {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    color: var(--color-black);
+    background: var(--color-searchbar-bg);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("../../../assets/icons/xmark-solid.svg");
+      background-size: 1rem 1rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 1.5rem;
+      width: 1.5rem;
+      margin-right: 0.25rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+
+  &__button {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-800);
+    background: none;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+}
