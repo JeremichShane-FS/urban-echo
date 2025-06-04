@@ -1,61 +1,57 @@
 ---
-name: Plan State Management
-about: Focus on defining and planning state management for specific application states.
-title: ''
-labels: ''
-assignees: ''
-
----
-
----
-name: "Plan State Management"
-about: "Focus on defining and planning state management for specific application states."
+name: 🧠 Plan State Management
+about: Focus on defining and planning state management for specific application states
 title: "State: [State Name]"
 labels: state-management
+assignees: ""
 ---
 
-## State: [State Name]
+## 🧠 State: [State Name]
 
-### Data to be Tracked
+### 📋 Data Structure
 
-* [List the specific data points that need to be tracked within this state.]
-    * Example: `currentUser`: `object` - Stores the currently logged-in user's information.
-    * Example: `isLoading`: `boolean` - Indicates whether a data-fetching operation is in progress.
-    * Example: `errorMessage`: `string` - Stores any error messages related to this state.
+| Property | Type | Purpose |
+| -------- | ---- | ------- |
 
-### Components with Access
+<!-- Examples:
+| currentUser | object | Stores logged-in user information |
+| isLoading | boolean | Indicates data-fetching operation status |
+| errorMessage | string | Stores error messages | -->
 
-* [List the components that will need to read or modify this state.]
-    * Example: `LoginFormComponent`
-    * Example: `UserProfileComponent`
-    * Example: `ProductListComponent`
+### 🧩 Components With Access
 
-### Proposed Implementation
+<!-- Examples:
+- [ ] LoginFormComponent - Write access
+- [ ] UserProfileComponent - Read access
+- [ ] NavbarComponent - Read access for user info -->
 
-* [Specify the chosen state management approach and provide justification.]
-    * Example: `Context API with useReducer hook` - Provides a lightweight and efficient solution for managing authentication state.
-    * Example: `Redux Toolkit` - Suitable for managing complex global state with multiple reducers and actions.
-    * Example: `Recoil` - Good for fine grained state management, and better performance for large applications.
-    * Example: `Zustand` - Good for simple state management and performance.
+- [ ]
+- [ ]
+- [ ]
 
-### State Transitions and Actions
+### ⚙️ Implementation Approach
 
-* [Describe the possible state transitions and the actions that trigger them.]
-    * **Initial State:** `[Describe the initial state]`
-        * Example: `currentUser: null, isLoading: false, errorMessage: null`
-    * **Actions:**
-        * `LOGIN_REQUEST`: `[Describe the action and its effect on the state]`
-            * Example: Sets `isLoading` to `true`.
-        * `LOGIN_SUCCESS`: `[Describe the action and its effect on the state]`
-            * Example: Sets `currentUser` to the logged-in user object and `isLoading` to `false`.
-        * `LOGIN_FAILURE`: `[Describe the action and its effect on the state]`
-            * Example: Sets `errorMessage` to the error message and `isLoading` to `false`.
-        * `LOGOUT`: `[Describe the action and its effect on the state]`
-            * Example: Sets `currentUser` to `null`.
-        * ... (add all relevant actions)
-    * **State Transitions:**
-        * `[Initial State] -> LOGIN_REQUEST -> [Loading State]`
-        * `[Loading State] -> LOGIN_SUCCESS -> [Authenticated State]`
-        * `[Loading State] -> LOGIN_FAILURE -> [Error State]`
-        * `[Authenticated State] -> LOGOUT -> [Initial State]`
-        * ... (add all state transitions)
+<!-- Example:
+- **Technology:** Redux Toolkit
+- **Justification:** Complex global state with many components needing access
+- **Storage Strategy:** Persist user data in localStorage, keep UI state in memory -->
+
+- **Technology:** [Redux/Context API/Recoil/Zustand]
+- **Justification:**
+- **Storage Strategy:**
+
+### 🔄 State Transitions
+
+| Action | From State | To State | Description |
+| ------ | ---------- | -------- | ----------- |
+
+<!-- Examples:
+| LOGIN_REQUEST | Initial | Loading | Sets isLoading to true |
+| LOGIN_SUCCESS | Loading | Authenticated | Sets currentUser and isLoading to false |
+| LOGOUT | Authenticated | Initial | Clears user data | -->
+
+### 📝 Implementation Notes
+
+<!-- Example: Consider performance implications for large state objects. Plan for synchronization with backend. -->
+
+**🔗 Related States:** #
