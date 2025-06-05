@@ -1,10 +1,10 @@
 ---
-name: ♿ Report Accessibility Concern
+name: "♿ Report Accessibility Concern"
 about: Report issues related to accessibility standards
 title: "[A11Y] "
-labels: accessibility, ux
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+labels: ''
+assignees: ''
+
 ---
 
 ## ♿ Accessibility Concern

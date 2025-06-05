@@ -1,10 +1,10 @@
 ---
-name: 🎨 UI/UX Feedback
+name: "\U0001F3A8 UI/UX Feedback"
 about: Suggest improvements to user interface or experience
 title: "[UI/UX] "
-labels: ui, ux, design
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+labels: ''
+assignees: ''
+
 ---
 
 ## 🎨 UI/UX Feedback
