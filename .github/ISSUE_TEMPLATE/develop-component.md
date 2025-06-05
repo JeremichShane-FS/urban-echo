@@ -1,10 +1,10 @@
 ---
-name: 🧩 Develop Component
+name: "\U0001F9E9 Develop Component"
 about: Track development of UI/functional components
-title: "Component: [Component Name]"
-labels: component
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+title: 'Component: [Component Name]'
+labels: ''
+assignees: ''
+
 ---
 
 ## 🧩 Component: [Component Name]

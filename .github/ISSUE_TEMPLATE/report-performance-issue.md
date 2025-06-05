@@ -1,10 +1,10 @@
 ---
-name: ⚡ Performance Issue
+name: "⚡ Performance Issue"
 about: Report performance problems or slowdowns
 title: "[PERF] "
-labels: performance, needs-investigation
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+labels: ''
+assignees: ''
+
 ---
 
 ## ⚡ Performance Issue Description
