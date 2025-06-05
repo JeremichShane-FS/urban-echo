@@ -1,10 +1,10 @@
 ---
-name: 🧠 Plan State Management
+name: "\U0001F9E0 Plan State Management"
 about: Focus on defining and planning state management for specific application states
-title: "State: [State Name]"
-labels: state-management
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+title: 'State: [State Name]'
+labels: ''
+assignees: ''
+
 ---
 
 ## 🧠 State: [State Name]

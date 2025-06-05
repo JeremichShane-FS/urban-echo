@@ -1,10 +1,10 @@
 ---
-name: 📚 Update Documentation
+name: "\U0001F4DA Update Documentation"
 about: Suggest improvements or additions to documentation
 title: "[DOCS] "
 labels: documentation
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+assignees: ''
+
 ---
 
 ## 📚 Documentation Change

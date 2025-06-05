@@ -1,10 +1,10 @@
 ---
-name: 🧪 Testing Improvement
+name: "\U0001F9EA Testing Improvement"
 about: Suggest improvements to test coverage or methodologies
 title: "[TEST] "
-labels: testing
-assignees: ""
-projects: ["JeremichShane-FS/5"]
+labels: ''
+assignees: ''
+
 ---
 
 ## 🧪 Testing Improvement
