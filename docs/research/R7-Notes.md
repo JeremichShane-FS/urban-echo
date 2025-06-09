@@ -1,18 +1,18 @@
 # Project & Portfolio
 
-- **Research Notes - Getting Started & Project Kickoff**
+- **Research Notes - Milestone 1**
 - **Shane Jeremich**
-- **Assignment Due Date: 06/08/2025**
+- **June 8, 2025**
 
 <br>
 
-## Project Initiation and Discovery
+## Topic - Project Initiation and Discovery
 
 This document contains general notes related to project initiation, discovery processes, and evaluating project readiness. The research focuses on understanding how to properly kick off a project, identify stakeholders, and ensure alignment before development begins.
 
 <br>
 
-## Project Discovery and Selection
+## Sub-Topic 1 - Project Discovery and Selection
 
 Brief overview of research on finding and choosing the right projects.
 
@@ -22,7 +22,7 @@ Brief overview of research on finding and choosing the right projects.
 
 <br>
 
-## Stakeholder Identification and Project Kickoff
+## Sub-Topic 2 - Stakeholder Identification and Project Kickoff
 
 Brief overview of research on identifying who matters and how to start projects properly.
 
@@ -32,7 +32,7 @@ Brief overview of research on identifying who matters and how to start projects 
 
 <br>
 
-## Project Readiness and Evaluation Criteria
+## Sub-Topic 3 - Project Readiness and Evaluation Criteria
 
 Brief overview of research on determining if a project is ready to begin and evaluation methods.
 
@@ -60,17 +60,17 @@ Brief overview of research on determining if a project is ready to begin and eva
 
 ## Reference Links
 
-**Resource 1: Project Management Fundamentals**  
-[Getting Started Chapter - Project Discovery](https://example.com): This comprehensive chapter taught me about the full project lifecycle from discovery through initiation, emphasizing the importance of finding the right projects before starting development.
+**Resource 1: Getting Started**  
+[The Principles of Project Management - Chapter 2](https://learning.oreilly.com/library/view/the-principles-of/9780980285864/Text/ch02.html): Comprehensive guide covering project discovery, stakeholder identification, project initiation documentation, and kickoff meeting best practices for successful project launches.
 
-**Resource 2: Software Development Strategy**  
-[Discovery: Can You Answer Software's Key Kickoff Questions?](https://example.com): This article showed me the critical questions that must be answered before starting any software project, including impact framing, success measurement, and technical considerations.
+**Resource 2: Discovery Process**  
+[Discovery: Can You Answer Software's Key Kickoff Questions?](https://envylabs.com/insights/software-development-discovery-process): Framework of essential pre-development questions covering project impact, success measurement, design guidelines, technical architecture, and deployment considerations.
 
-**Resource 3: Startup Evaluation Framework**  
-[Y Combinator - How to Get and Evaluate Startup Ideas](https://www.youtube.com/watch): This video provided industry-standard methods for evaluating whether an idea is worth pursuing, focusing on problem-solution fit and market validation.
+**Resource 3: Startup Evaluation**  
+[How to Get and Evaluate Startup Ideas - Y Combinator](https://www.youtube.com/watch?v=Th8JoIan4dg): Industry methodology for evaluating startup viability, presented by Jared Friedman, focusing on problem identification, market validation, and execution strategies.
 
-**Resource 4: Pitch Development**  
-[30-Second Pitch Best Practices](https://example.com): Research on elevator pitches revealed the importance of clearly articulating the problem, solution, market, and differentiation in under 30 seconds to test idea clarity.
+**Resource 4: 30-Second Pitch Development**  
+[Independent Research on Elevator Pitches](https://www.indeed.com/career-advice/interviewing/how-to-give-an-elevator-pitch-examples): Best practices for creating concise elevator pitches that effectively communicate problem, solution, market opportunity, and competitive advantage in 30 seconds or less.
 
 <br>
 
