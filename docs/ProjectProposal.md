@@ -166,3 +166,43 @@ Indirect Competitors:
    - Product database
    - User data storage
    - Documentation: https://docs.atlas.mongodb.com/api/
+
+## Change Order
+
+#### 1. Project Scope Confirmation
+
+The Proposal and Tech Stack documents accurately summarize the current project scope for the Urban Echo e-commerce platform. The scope includes:
+
+- Modern e-commerce platform for clothing retail
+- Next.js frontend with CSS styling
+- MongoDB database with user authentication via Auth0
+- Stripe payment processing integration
+- Responsive design with mobile-first approach
+- Product browsing, cart management, and secure checkout functionality
+
+#### 2. Remaining Work Estimate
+
+Approximately **4-6 weeks** of development work remains for **Version 1 (Core MVP)**, broken down as follows:
+
+- **Week 1-2**: Complete component development (Navbar, Footer, Product Cards, etc.)
+- **Week 3-4**: Implement authentication system and user management
+- **Week 5-6**: Build product catalog, shopping cart functionality, and payment processing integration
+
+**Version 1 Scope**: Core e-commerce functionality including user authentication, product browsing, cart management, and secure checkout. Subsequent versions with enhanced features planned for future development cycles.
+
+## 3. Proposed Changes to Original Scope
+
+#### 3.1 Styling Framework Change
+
+**Change**: Replace SASS with standard CSS for component styling
+**Justification**: Simplifies build process and reduces complexity for maintenance and deployment
+
+#### 3.2 State Management Enhancement
+
+**Addition**: Potential Redux integration if project complexity requires advanced state management
+**Justification**: Context API remains primary approach for Version 1. Redux integration reserved for future versions if application complexity necessitates more sophisticated state management patterns
+
+### 3.3 Phased Development Approach
+
+**Addition**: Implement iterative development strategy with defined version milestones
+**Justification**: Version 1 focuses on core MVP deliverables, with enhanced features (wishlist, reviews, admin dashboard) planned for subsequent versions. This approach ensures deployable functionality within timeline while allowing for future feature expansion based on user feedback and business requirements.
