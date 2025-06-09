@@ -275,19 +275,19 @@ Approximately **4-6 weeks** of development work remains for **Version 1 (Core MV
 
 **Version 1 Scope**: Core e-commerce functionality including user authentication, product browsing, cart management, and secure checkout. Subsequent versions with enhanced features planned for future development cycles.
 
-## 3. Proposed Changes to Original Scope
+#### 3. Proposed Changes to Original Scope
 
-#### 3.1 Styling Framework Change
+**3.1 Styling Framework Change**
 
-**Change**: Replace SASS with standard CSS for component styling
-**Justification**: Simplifies build process and reduces complexity for maintenance and deployment
+- **Change:** Replace SASS with standard CSS for component styling
+- **Justification:** Simplifies build process and reduces complexity for maintenance and deployment
 
-#### 3.2 State Management Enhancement
+**3.2 State Management Enhancement**
 
-**Addition**: Potential Redux integration if project complexity requires advanced state management
-**Justification**: Context API remains primary approach for Version 1. Redux integration reserved for future versions if application complexity necessitates more sophisticated state management patterns
+- **Addition:** Potential Redux integration if project complexity requires advanced state management
+- **Justification:** Context API remains primary approach for Version 1. Redux integration reserved for future versions if application complexity necessitates more sophisticated state management patterns
 
-### 3.3 Phased Development Approach
+**3.3 Phased Development Approach**
 
-**Addition**: Implement iterative development strategy with defined version milestones
-**Justification**: Version 1 focuses on core MVP deliverables, with enhanced features (wishlist, reviews, admin dashboard) planned for subsequent versions. This approach ensures deployable functionality within timeline while allowing for future feature expansion based on user feedback and business requirements.
+- **Addition:** Implement iterative development strategy with defined version milestones
+- **Justification:** Version 1 focuses on core MVP deliverables, with enhanced features (wishlist, reviews, admin dashboard) planned for subsequent versions. This approach ensures deployable functionality within timeline while allowing for future feature expansion based on user feedback and business requirements.
