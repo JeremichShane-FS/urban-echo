@@ -4,6 +4,7 @@ import Navbar from "@design-system/navigation/Navbar";
 
 import { montserrat, openSans } from "@config/fonts";
 
+import "@assets/styles/globals.css";
 import "@assets/styles/main.scss";
 
 export const viewport = {
@@ -22,12 +23,9 @@ export const metadata = {
   publisher: "Urban Echo",
   robots: "index, follow",
   icons: {
-    icon: [
-      { url: "/favicon.ico" }, //TODO: add my favicon.ico with correct path
-      // { url: "/icon.svg", type: "image/svg+xml" }, //TODO: Create and add this SVG to your public folder
-    ],
+    icon: { url: "/favicon.ico" },
     apple: [
-      { url: "/apple-icon.png" }, //TODO: Create and add this image to your public folder
+      { url: "/apple-icon.png" }, //TODO: Create and add this image to my public folder
     ],
   },
   openGraph: {
@@ -60,14 +58,12 @@ export const metadata = {
       "en-US": "https://shopurbanecho.com",
     },
   },
-  // verification: {
-  //   google: "google-site-verification-code", //TODO: Add Google verification code
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
-      <body>
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto]">
         <header>
           <Navbar />
         </header>

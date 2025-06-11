@@ -1,0 +1,48 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  max-width: var(--container-max-width);
+
+  @media (min-width: var(--breakpoint-sm)) {
+    max-width: var(--breakpoint-sm);
+  }
+
+  @media (min-width: var(--breakpoint-md)) {
+    max-width: var(--breakpoint-md);
+  }
+
+  @media (min-width: var(--breakpoint-lg)) {
+    max-width: var(--breakpoint-lg);
+  }
+
+  @media (min-width: var(--breakpoint-xl)) {
+    max-width: var(--breakpoint-xl);
+  }
+
+  @media (min-width: var(--breakpoint-xxl)) {
+    max-width: var(--container-max-width);
+  }
+
+  &-fluid {
+    max-width: none;
+  }
+
+  &-sm {
+    @media (min-width: var(--breakpoint-sm)) {
+      max-width: var(--breakpoint-sm);
+    }
+  }
+
+  &-md {
+    @media (min-width: var(--breakpoint-md)) {
+      max-width: var(--breakpoint-md);
+    }
+  }
+
+  &-lg {
+    @media (min-width: var(--breakpoint-lg)) {
+      max-width: var(--breakpoint-lg);
+    }
+  }
+}
