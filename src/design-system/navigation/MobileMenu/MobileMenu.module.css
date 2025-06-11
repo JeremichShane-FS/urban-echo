@@ -1,0 +1,12 @@
+.mobile-menu {
+  padding: var(--spacing-2);
+
+  @media (min-width: var(--breakpoint-sm)) {
+    padding: var(--spacing-3);
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+  }
+}
