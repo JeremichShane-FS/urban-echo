@@ -1,0 +1,35 @@
+.action-icons {
+  &__button {
+    color: var(--color-gray-50);
+    background: transparent;
+    margin-left: var(--spacing-3);
+    border: none;
+
+    &:hover {
+      color: var(--color-white);
+      cursor: pointer;
+    }
+  }
+
+  /* Placeholder for search button modifier */
+  /* &__button--search */ /* TODO: Add styles for the search button */
+
+  &__button--cart {
+    position: relative;
+  }
+
+  &__cart-count {
+    position: absolute;
+    top: var(--spacing-1);
+    right: var(--spacing-1);
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    font-size: var(--font-size-xs);
+    border-radius: var(--border-radius-full);
+    height: var(--spacing-5);
+    width: var(--spacing-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -131,3 +131,35 @@ Each week I will summarize my milestone activity and progress by writing a stand
 My final stand up reflects a productive week of establishing the foundation for the Urban Echo e-commerce platform, with significant progress on branding, project structure, and technical setup.
 
 <br>
+
+### Week 5
+
+**⚙️ Overview** - What I worked on this past week:
+
+- Created GitHub issues for milestone 5 development (#70-77), breaking down the work into specific component and feature tasks
+- Spent significant time investigating a migration from SASS to CSS Modules
+- Conducted Research 7 on project kickoff and getting started methodologies for development best practices
+- Defined the component architecture for the application including Hero Section, Navbar, ProductCard, FeaturedCategories, Footer, and Shop Page Layout
+- Planned the routing structure and Context API implementation for state management
+- Organized development priorities and issue tracking for the upcoming implementation phase
+
+**🌵 Challenges** - What problems did I have & how I'm addressing them:
+
+- Spent a full day converting the SASS architecture to CSS Modules (#69) but realized it was more work than anticipated and I prefer the SASS workflow. After weighing the pros and cons, I've decided to stick with SASS and plan to integrate Tailwind CSS primarily for utility classes to get the best of both worlds.
+- Had some personal time constraints this week that limited my available development hours. To address this going forward, I've restructured my schedule and priorities to dedicate more focused time to the project, ensuring I can meet MVP requirements for each sprint and maintain consistent development momentum.
+
+**🏆 Accomplishments** - What is something I "leveled up" on this week:
+
+- Improved my project planning and issue management skills by creating detailed, well-structured GitHub issues that will guide development in the next milestone. Each issue has clear acceptance criteria and implementation details. Based on feedback received, I will implement proper issue-to-PR linking moving forward, which will improve traceability and help maintain a clear development history for better project management and code review processes.
+- Successfully integrated Tailwind CSS with the existing SASS architecture, achieving my personal goal of becoming more familiar with Tailwind's utility-first approach while maintaining the flexibility of custom SASS styling.
+- Gained valuable experience in evaluating different styling approaches and making informed technical decisions. The CSS Modules investigation, while time-consuming, helped me better understand the trade-offs and confirm that SASS + Tailwind will be the optimal solution for this project.
+- Developed better understanding of development workflow management and the importance of realistic time estimation for technical explorations.
+
+**🔮 Next Steps** - What I plan to prioritize and do next:
+
+- Move the open component issues (#70-77) to the next milestone and begin implementation starting with the core layout components (Navbar and Footer)
+- Begin actual component development and implementation of the Hero Section and ProductCard components
+- Set up the Context API structure for state management across the application
+- Setup MongoDB
+- Focus on delivering a functional MVP for each sprint with the improved time management and dedicated project schedule
+- Complete milestone 5 deliverables with the adjusted timeline and scope
