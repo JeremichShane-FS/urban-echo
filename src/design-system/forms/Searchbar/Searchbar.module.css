@@ -1,0 +1,63 @@
+.searchbar {
+  border-top: 1px solid var(--color-gray-800);
+  padding: var(--spacing-3);
+
+  @media (min-width: var(--breakpoint-md)) {
+    padding: var(--spacing-3) var(--spacing-5);
+  }
+
+  &__form {
+    max-width: 28rem;
+    margin: 0 auto;
+  }
+
+  &__input-container {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-6) var(--spacing-2) var(--spacing-3);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    color: var(--color-black);
+    background: var(--color-searchbar-bg);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("../../../assets/icons/xmark-solid.svg");
+      background-size: var(--spacing-3) var(--spacing-3);
+      background-position: center;
+      background-repeat: no-repeat;
+      height: var(--spacing-4);
+      width: var(--spacing-4);
+      margin-right: var(--spacing-1);
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+
+  &__button {
+    position: absolute;
+    right: var(--spacing-2);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-800);
+    background: none;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+}

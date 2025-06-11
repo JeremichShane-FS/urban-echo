@@ -10,7 +10,6 @@ body {
   text-wrap: pretty;
 }
 
-// Heading styles
 h1,
 h2,
 h3,
@@ -41,7 +40,7 @@ h1 {
 h2 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
-  line-height: $line-height-xs;
+  line-height: var(--line-height-xs);
   letter-spacing: -0.01em;
   text-wrap: balance;
 
@@ -53,7 +52,7 @@ h2 {
 h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  line-height: $line-height-xs;
+  line-height: var(--line-height-xs);
   text-wrap: balance;
 }
 
@@ -72,13 +71,11 @@ h6 {
   font-weight: var(--font-weight-semibold);
 }
 
-// Paragraph styles
 p {
   margin-bottom: var(--spacing-md);
   max-width: 70ch;
 }
 
-// Link styles
 a {
   color: var(--accent-color);
   transition: color 0.2s;
@@ -89,7 +86,6 @@ a {
   }
 }
 
-/* Buttons, navigation, and other UI elements */
 button,
 .btn,
 nav,
