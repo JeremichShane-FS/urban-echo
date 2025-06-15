@@ -174,7 +174,7 @@ Indirect Competitors:
 The Proposal and Tech Stack documents accurately summarize the current project scope for the Urban Echo e-commerce platform. The scope includes:
 
 - Modern e-commerce platform for clothing retail
-- Next.js frontend with CSS styling
+- Next.js frontend with SCSS styling
 - MongoDB database with user authentication via Auth0
 - Stripe payment processing integration
 - Responsive design with mobile-first approach
@@ -192,17 +192,12 @@ Approximately **4-6 weeks** of development work remains for **Version 1 (Core MV
 
 #### 3. Proposed Changes to Original Scope
 
-**3.1 Styling Framework Change**
-
-- **Change:** Replace SASS with standard CSS for component styling
-- **Justification:** Simplifies build process and reduces complexity for maintenance and deployment
-
-**3.2 State Management Enhancement**
+**3.1 State Management Enhancement**
 
 - **Addition:** Potential Redux integration if project complexity requires advanced state management
 - **Justification:** Context API remains primary approach for Version 1. Redux integration reserved for future versions if application complexity necessitates more sophisticated state management patterns
 
-**3.3 Phased Development Approach**
+**3.2 Phased Development Approach**
 
 - **Addition:** Implement iterative development strategy with defined version milestones
 - **Justification:** Version 1 focuses on core MVP deliverables, with enhanced features (wishlist, reviews, admin dashboard) planned for subsequent versions. This approach ensures deployable functionality within timeline while allowing for future feature expansion based on user feedback and business requirements.
