@@ -17,11 +17,11 @@ export const COMPANY_ADDRESS = {
 
 // Social Media Links
 export const SOCIAL_LINKS = {
-  facebook: "https://facebook.com/urbanecho",
-  instagram: "https://instagram.com/urbanecho",
-  twitter: "https://twitter.com/urbanecho",
-  pinterest: "https://pinterest.com/urbanecho",
-  tiktok: "https://tiktok.com/@urbanecho",
+  facebook: "https://www.facebook.com/shopurbanecho",
+  instagram: "https://www.instagram.com/shopurbanecho/",
+  twitter: "https://x.com/shopurbanecho",
+  pinterest: "https://www.pinterest.com/shopurbanecho/",
+  tiktok: "https://tiktok.com/@shopurbanecho",
 };
 
 // SEO defaults

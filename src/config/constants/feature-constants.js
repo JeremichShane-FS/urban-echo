@@ -37,7 +37,7 @@ export const FEATURES = {
 
   PRODUCT_RECOMMENDATIONS: {
     enabled: true,
-    algorithmsEnabled: IS_PRODUCTION, // Use simpler algorithm in non-production
+    algorithmsEnabled: IS_PRODUCTION,
     count: 4,
   },
 
@@ -57,7 +57,7 @@ export const FEATURES = {
   ACCOUNT_BENEFITS: {
     enabled: true,
     signupDiscount: true,
-    signupDiscountAmount: 10, // Percentage
+    signupDiscountAmount: 10,
   },
 
   MULTI_CURRENCY: {
@@ -78,11 +78,6 @@ export const FEATURES = {
   EXPRESS_CHECKOUT: {
     enabled: true,
     providers: ["paypal", "apple-pay", "google-pay"],
-  },
-
-  BUY_NOW_PAY_LATER: {
-    enabled: true,
-    providers: ["klarna", "afterpay"],
   },
 
   SAVED_PAYMENT_METHODS: {
@@ -149,8 +144,6 @@ export const FEATURES = {
 
   ANALYTICS: {
     googleAnalytics: IS_PRODUCTION || IS_STAGING,
-    facebookPixel: IS_PRODUCTION || IS_STAGING,
-    hotjar: IS_PRODUCTION,
     custmoreAnalytics: true,
     productImpressions: true,
     productClicks: true,
@@ -263,21 +256,6 @@ export const AB_TEST_VARIANTS = {
   },
 };
 
-// Feature rollout percentages
-export const FEATURE_ROLLOUT = {
-  NEW_CART_EXPERIENCE: 25, // Show to 25% of users
-  ENHANCED_SEARCH: 50, // Show to 50% of users
-  NEW_CHECKOUT: 10, // Show to 10% of users
-};
-
-// Feature dependencies
-export const FEATURE_DEPENDENCIES = {
-  VIRTUAL_TRY_ON: [BROWSER_FEATURES.WEBGL, BROWSER_FEATURES.WEBP_SUPPORT],
-  AR_PRODUCT_VIEW: [BROWSER_FEATURES.WEBGL],
-  IMAGE_LAZY_LOADING: [BROWSER_FEATURES.INTERSECTION_OBSERVER],
-  EXPRESS_CHECKOUT: [BROWSER_FEATURES.PAYMENT_REQUEST],
-};
-
 // Third party integrations
 export const THIRD_PARTY_FEATURES = {
   GOOGLE_ANALYTICS: {
@@ -285,14 +263,5 @@ export const THIRD_PARTY_FEATURES = {
     trackingId: process.env.NEXT_PUBLIC_GA_TRACKING_ID,
     anonymizeIp: true,
     enhancedEcommerce: true,
-  },
-  FACEBOOK_PIXEL: {
-    enabled: IS_PRODUCTION || IS_STAGING,
-    pixelId: process.env.NEXT_PUBLIC_FB_PIXEL_ID,
-  },
-  HOTJAR: {
-    enabled: IS_PRODUCTION,
-    hjid: process.env.NEXT_PUBLIC_HOTJAR_ID,
-    hjsv: process.env.NEXT_PUBLIC_HOTJAR_SNIPPET_VERSION,
   },
 };

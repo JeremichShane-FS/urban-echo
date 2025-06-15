@@ -1,0 +1,67 @@
+@use "@/assets/styles/abstracts" as *;
+
+.homepage {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  overflow-x: hidden;
+  position: relative;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  background-color: var(--color-background);
+}
+
+.loadingContent {
+  text-align: center;
+  color: var(--color-text-primary);
+
+  h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-header);
+    margin-bottom: var(--spacing-md);
+  }
+
+  p {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+// Smooth scroll behavior for internal navigation
+.homepage {
+  scroll-behavior: smooth;
+}
+
+// Ensure proper spacing between sections
+.homepage section {
+  position: relative;
+
+  // Optional: Add scroll margin for smooth scrolling to anchors
+  scroll-margin-top: var(--header-height);
+}
+
+// Performance optimization: GPU acceleration for smooth scrolling
+.homepage {
+  transform: translateZ(0);
+  will-change: scroll-position;
+}
+
+// Optional: Fade-in animation for the entire homepage
+.homepage {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

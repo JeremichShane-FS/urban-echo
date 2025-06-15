@@ -2,8 +2,8 @@
  * Content management related constants
  */
 
-// Content types
-export const CONTENT_TYPES = {
+// Content categories
+export const CONTENT_CATEGORIES = {
   BLOG: "blog",
   PAGE: "page",
   PRODUCT: "product",

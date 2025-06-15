@@ -25,7 +25,7 @@ export const CHECKOUT_STEP_ORDER = [
 ];
 
 // Shopping thresholds
-export const FREE_SHIPPING_THRESHOLD = 100; // Free shipping for orders over $100
+export const FREE_SHIPPING_THRESHOLD = 100;
 export const STANDARD_SHIPPING_COST = 5.99;
 export const EXPRESS_SHIPPING_COST = 14.99;
 export const NEXT_DAY_SHIPPING_COST = 24.99;
@@ -73,9 +73,6 @@ export const PAYMENT_METHODS = {
   PAYPAL: "paypal",
   APPLE_PAY: "apple_pay",
   GOOGLE_PAY: "google_pay",
-  KLARNA: "klarna",
-  AFTERPAY: "afterpay",
-  GIFT_CARD: "gift_card",
 };
 
 // Credit card types and validation patterns

@@ -92,6 +92,3 @@ export const ICON_SIZES = {
   lg: 32,
   xl: 48,
 };
-
-// Default icon library
-export const DEFAULT_ICON_LIBRARY = "lucide";
