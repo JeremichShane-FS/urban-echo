@@ -26,11 +26,16 @@
 
   &__sale-item,
   &__mobile-menu-sale-item {
-    background-color: var(--color-accent);
-    border-radius: var(--border-radius-sm);
+    @include button-base(
+      $border-color: var(--color-accent),
+      $padding-y: var(--spacing-sm),
+      $padding-x: var(--spacing-md),
+      $font-size: var(--font-size-sm)
+    );
 
     &:hover {
       background-color: var(--color-accent-dark);
+      transform: none;
     }
   }
 }

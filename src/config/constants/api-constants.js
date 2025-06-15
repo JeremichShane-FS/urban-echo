@@ -3,9 +3,10 @@
  */
 
 // Base URLs
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.urbanecho.com";
-export const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_URL || "https://assets.urbanecho.com";
-export const CDN_BASE_URL = process.env.NEXT_PUBLIC_CDN_URL || "https://cdn.urbanecho.com";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_URL;
+export const CDN_BASE_URL = process.env.NEXT_PUBLIC_CDN_URL;
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 // API versions
 export const API_VERSION = "v1";
@@ -96,8 +97,8 @@ export const API_TIMEOUT = 30000; // 30 seconds
 
 // Rate limits
 export const RATE_LIMIT = {
-  maxRequests: 100, // Number of requests
-  timeWindow: 60 * 1000, // Time window in milliseconds (1 minute)
+  maxRequests: 100,
+  timeWindow: 60 * 1000, // 1 minute
 };
 
 // Cache durations (ms)
@@ -113,8 +114,8 @@ export const CACHE_STRATEGIES = {
   products: CACHE_DURATION.medium,
   categories: CACHE_DURATION.long,
   search: CACHE_DURATION.short,
-  cart: 0, // No caching
-  user: 0, // No caching
+  cart: 0,
+  user: 0,
   orders: CACHE_DURATION.short,
 };
 
@@ -159,7 +160,7 @@ export const REQUEST_HEADERS = {
   contentLanguage: "Content-Language",
 };
 
-export const CONTENT_TYPES = {
+export const API_CONTENT_TYPES = {
   json: "application/json",
   formData: "multipart/form-data",
   urlEncoded: "application/x-www-form-urlencoded",
