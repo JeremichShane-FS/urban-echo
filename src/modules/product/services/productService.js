@@ -1,16 +1,7 @@
 export const productService = {
-  // ... existing product service methods
-
-  /**
-   * Fetch featured products for homepage
-   * @returns {Promise<Array>} Featured products
-   */
   async getFeaturedProducts() {
     try {
       // TODO: Replace with actual API call
-      // const response = await apiClient.get('/api/products/featured');
-      // return response.data;
-
       // Mock implementation for now
       await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -27,6 +18,26 @@ export const productService = {
         },
         {
           id: 2,
+          name: "Classic Denim Jeans",
+          price: 300,
+          image: null,
+          slug: "classic-denim-jeans",
+          featured: true,
+          category: "jeans",
+          inStock: true,
+        },
+        {
+          id: 3,
+          name: "Classic Denim Jeans",
+          price: 300,
+          image: null,
+          slug: "classic-denim-jeans",
+          featured: true,
+          category: "jeans",
+          inStock: true,
+        },
+        {
+          id: 4,
           name: "Classic Denim Jeans",
           price: 300,
           image: null,

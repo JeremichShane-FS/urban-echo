@@ -1,32 +1,47 @@
+@use "abstracts" as *;
+
 .navbar {
+  position: fixed;
+  width: 100%;
   background-color: var(--color-header);
   color: var(--color-text-inverse);
+  z-index: var(--z-index-fixed);
+}
+
+.inner {
   width: 100%;
+}
 
-  &__inner {
-    width: 100%;
-  }
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--navbar-height);
+  padding: var(--spacing-md) 0;
+}
 
-  &__content {
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 10rem;
+  height: 5rem;
+  display: flex;
+}
+
+.navigation {
+  display: none;
+  align-items: center;
+  gap: var(--spacing-md);
+
+  @include breakpoint(md) {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: var(--header-height);
-    padding: var(--spacing-md) 0;
   }
+}
 
-  &__logo-section {
-    display: flex;
-    align-items: center;
-
-    svg {
-      width: 10rem;
-      height: 5rem;
-    }
-  }
-
-  &__right-icons {
-    display: flex;
-    align-items: center;
-  }
+.actions {
+  display: flex;
+  align-items: center;
 }

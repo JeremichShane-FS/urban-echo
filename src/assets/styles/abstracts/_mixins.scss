@@ -34,22 +34,7 @@
   overflow: hidden;
 }
 
-// _mixins.scss - Add this to your utilities directory
-
-/**
- * Base button mixin with customizable properties
- * @param {Color} $bg-color - Background color
- * @param {Color} $text-color - Text color
- * @param {Color} $hover-bg - Hover background color
- * @param {Color} $border-color - Border color (optional)
- * @param {String} $border-width - Border width (default: 2px)
- * @param {String} $padding-y - Vertical padding (default: var(--spacing-md))
- * @param {String} $padding-x - Horizontal padding (default: var(--spacing-xl))
- * @param {String} $font-size - Font size (default: var(--font-size-md))
- * @param {String} $border-radius - Border radius (default: var(--border-radius-md))
- * @param {Boolean} $has-shadow - Whether to include hover shadow (default: true)
- * @param {Color} $shadow-color - Shadow color for hover effect
- */
+// Button Mixins
 @mixin button-base(
   $bg-color: var(--color-button-accent-bg),
   $text-color: var(--color-button-accent-text),
@@ -106,11 +91,6 @@
     outline-offset: 2px;
   }
 }
-
-/**
- * Predefined button variants for common use cases
- */
-
 // Primary button (accent colors)
 @mixin button-primary() {
   @include button-base(

@@ -1,6 +1,6 @@
 @use "@/assets/styles/abstracts" as *;
 
-.hero {
+.section {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   color: var(--color-text-inverse);
   padding: var(--spacing-xxl) 0;
@@ -34,7 +34,7 @@
   }
 }
 
-.imageContainer {
+.image {
   position: relative;
   width: 100%;
   min-height: 25rem;
@@ -51,11 +51,11 @@
   }
 }
 
-.heroImage {
+.img {
   object-fit: cover;
 }
 
-.placeholderText {
+.placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +67,7 @@
   font-weight: var(--font-weight-medium);
 }
 
-.textContent {
+.text {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
@@ -101,8 +101,14 @@
   }
 }
 
-.shopButton {
-  @include button-base($border-color: var(--color-accent));
+.cta {
+  text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
 }
 
 .loading {

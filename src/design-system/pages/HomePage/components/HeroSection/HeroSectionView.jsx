@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Button from "@/design-system/buttons/Button";
+
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/config/constants/ui-constants";
+
 import styles from "./HeroSection.module.scss";
 
 const HeroSectionView = ({ heroData, isLoading, onCtaClick }) => {
   if (isLoading) {
     return (
-      <section className={styles.hero}>
+      <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.loading}>Loading...</div>
         </div>
@@ -15,16 +19,16 @@ const HeroSectionView = ({ heroData, isLoading, onCtaClick }) => {
   }
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.content}>
           {heroData.backgroundImage && (
-            <div className={styles.imageContainer}>
+            <div className={styles.image}>
               <Image
                 src={heroData.backgroundImage}
                 alt="Urban Echo Fashion"
                 fill
-                className={styles.heroImage}
+                className={styles.img}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
                 placeholder="blur"
@@ -32,11 +36,14 @@ const HeroSectionView = ({ heroData, isLoading, onCtaClick }) => {
               />
             </div>
           )}
-          <div className={styles.textContent}>
+          <div className={styles.text}>
             <h1 className={styles.title}>{heroData.title}</h1>
             <p className={styles.subtitle}>{heroData.subtitle}</p>
-            <Link href={heroData.ctaLink} className={styles.shopButton} onClick={onCtaClick}>
-              {heroData.ctaText}
+
+            <Link href={heroData.ctaLink} onClick={onCtaClick} className={styles.cta}>
+              <Button variant={BUTTON_VARIANTS.accent} size={BUTTON_SIZES.lg} as="span">
+                {heroData.ctaText}
+              </Button>
             </Link>
           </div>
         </div>

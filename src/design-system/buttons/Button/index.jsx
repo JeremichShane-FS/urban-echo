@@ -1,18 +1,23 @@
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/config/constants/ui-constants";
+
 import styles from "./Button.module.scss";
 
 const Button = ({
+  as = "button",
   children,
   className = "",
   disabled = false,
   onClick,
-  size = "md",
+  size = BUTTON_SIZES.md,
   type = "button",
-  variant = "primary",
+  variant = BUTTON_VARIANTS.primary,
   ...props
 }) => {
+  const Component = as;
+
   return (
-    <button
-      type={type}
+    <Component
+      type={as === "button" ? type : undefined}
       className={`${styles["button"]} ${styles[`button-${variant}`]} ${
         styles[`button-${size}`]
       } ${className}`}
@@ -20,7 +25,7 @@ const Button = ({
       disabled={disabled}
       {...props}>
       {children}
-    </button>
+    </Component>
   );
 };
 

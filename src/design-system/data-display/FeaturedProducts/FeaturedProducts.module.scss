@@ -1,6 +1,6 @@
 @use "@/assets/styles/abstracts" as *;
 
-.featuredProducts {
+.section {
   padding: var(--spacing-xxl) 0;
   background-color: var(--color-background-primary);
 }
@@ -25,21 +25,6 @@
   }
 }
 
-.productsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-xl);
-
-  @include breakpoint(md) {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-  }
-}
-
-.featuredProductCard {
-  // Custom styles for featured product cards if needed
-}
-
 .loading {
   text-align: center;
   padding: var(--spacing-xl);
@@ -49,8 +34,8 @@
 .error {
   text-align: center;
   padding: var(--spacing-xl);
-  color: #dc2626;
-  background-color: #fef2f2;
+  color: var(--color-error);
+  background-color: var(--color-error-light);
   border-radius: var(--border-radius-md);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-error-border);
 }

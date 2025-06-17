@@ -26,10 +26,19 @@
   /* Brand */
   --color-primary: var(--color-black);
   --color-primary-hover: var(--color-gray-800);
-  --color-accent: var(--color-orange-500);
-  --color-accent-hover: var(--color-orange-600);
   --color-secondary: var(--color-blue-500);
   --color-secondary-hover: var(--color-blue-600);
+  --color-accent: var(--color-orange-500);
+  --color-accent-hover: var(--color-orange-600);
+
+  /* Status Colors */
+  --color-error: #e74c3c;
+  --color-error-dark: #c0392b;
+  --color-error-light: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-success: #2ecc71;
+  --color-warning: #f39c12;
+  --color-info: #3498db;
 
   /* Text */
   --color-text-primary: var(--color-gray-800);
@@ -49,17 +58,44 @@
   /* Interactive Elements */
   --color-button-primary-bg: var(--color-primary);
   --color-button-primary-text: var(--color-gray-50);
-  --color-button-primary-hover-bg: var(--color-gray-800);
+  --color-button-primary-hover-bg: var(--color-primary-hover);
 
   --color-button-secondary-bg: var(--color-secondary);
   --color-button-secondary-text: var(--color-gray-50);
-  --color-button-secondary-hover-bg: var(--color-blue-600);
+  --color-button-secondary-hover-bg: var(--color-secondary-hover);
 
   --color-button-accent-bg: var(--color-accent);
   --color-button-accent-text: var(--color-gray-50);
   --color-button-accent-hover-bg: var(--color-accent-hover);
 
+  /* Additional button variants */
+  /* Outline buttons (secondary CTAs like "Learn More") */
+  --color-button-outline-bg: transparent;
+  --color-button-outline-text: var(--color-primary);
+  --color-button-outline-hover-bg: var(--color-primary);
+  --color-button-outline-hover-text: var(--color-gray-50);
+
+  /* Ghost buttons (subtle actions) */
+  --color-button-ghost-bg: transparent;
+  --color-button-ghost-text: var(--color-text-primary);
+  --color-button-ghost-hover-bg: var(--color-gray-100);
+
+  /* Danger buttons (delete, remove actions) */
+  --color-button-danger-bg: var(--color-error);
+  --color-button-danger-text: var(--color-white);
+  --color-button-danger-hover-bg: var(--color-error-dark);
+
+  /* Link buttons (text links that look like buttons) */
+  --color-button-link-bg: transparent;
+  --color-button-link-text: var(--color-primary);
+  --color-button-link-hover-text: var(--color-primary-hover);
+
+  /* Search bar */
   --color-searchbar-bg: var(--color-gray-100);
+
+  /* Border colors */
+  --color-border: var(--color-gray-300);
+  --color-border-hover: var(--color-gray-400);
 
   /* Spacing */
   --spacing-xs: 0.25rem; /* 4px */
@@ -83,7 +119,7 @@
   --z-index-popover: 1060;
   --z-index-tooltip: 1070;
 
-  --header-height: 4rem;
+  --navbar-height: 4rem;
   --footer-height: 12.5rem;
   --sidebar-width: 15.625rem;
 
@@ -122,11 +158,6 @@
   --container-padding: 1rem;
 }
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-}
-
 ::selection {
   background-color: var(--color-accent);
   color: var(--color-gray-50);
@@ -137,9 +168,15 @@ html {
 }
 
 body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  padding-top: var(--navbar-height);
 }
 
 /* Focus visible for accessibility  */
@@ -158,3 +195,17 @@ body {
     display: none !important;
   }
 }
+
+/* Dark mode styles */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-gray-900);
+    --color-background-primary: var(--color-gray-800);
+    --color-background-secondary: var(--color-gray-700);
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-300);
+
+    --color-button-ghost-hover-bg: var(--color-gray-700);
+    --color-border: var(--color-gray-600);
+  }
+} */
