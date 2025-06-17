@@ -10,7 +10,8 @@ export const productService = {
           id: 1,
           name: "Urban Casual Jacket",
           price: 300,
-          image: null,
+          image:
+            "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
           slug: "urban-casual-jacket",
           featured: true,
           category: "jackets",
@@ -20,7 +21,8 @@ export const productService = {
           id: 2,
           name: "Classic Denim Jeans",
           price: 300,
-          image: null,
+          image:
+            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
           slug: "classic-denim-jeans",
           featured: true,
           category: "jeans",
@@ -30,7 +32,8 @@ export const productService = {
           id: 3,
           name: "Classic Denim Jeans",
           price: 300,
-          image: null,
+          image:
+            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
           slug: "classic-denim-jeans",
           featured: true,
           category: "jeans",
@@ -40,7 +43,8 @@ export const productService = {
           id: 4,
           name: "Classic Denim Jeans",
           price: 300,
-          image: null,
+          image:
+            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
           slug: "classic-denim-jeans",
           featured: true,
           category: "jeans",

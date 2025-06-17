@@ -8,17 +8,6 @@ export const useFeaturedProducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
-    const handleError = event => {
-      if (event.message?.includes("hydration")) {
-        console.error("Hydration error detected:", event);
-      }
-    };
-
-    window.addEventListener("error", handleError);
-    return () => window.removeEventListener("error", handleError);
-  }, []);
-
-  useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
         setIsLoading(true);
