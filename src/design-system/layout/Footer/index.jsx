@@ -1,4 +1,6 @@
+import FooterView from "./FooterView";
+
 function Footer() {
-  return <div>Footer</div>;
+  return <FooterView />;
 }
 export default Footer;
