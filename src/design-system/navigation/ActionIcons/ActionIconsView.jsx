@@ -14,7 +14,7 @@ const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
     <>
       <button
         type="button"
-        className={`${styles["action-icons__button"]} ${styles["action-icons__button--search"]}`}
+        className={`${styles.button} ${styles["button--search"]}`}
         onClick={toggleSearch}
         aria-expanded={isSearchOpen}
         aria-controls="search-panel"
@@ -22,19 +22,16 @@ const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
         <Search className="h-6 w-6" aria-hidden="true" />
       </button>
 
-      <Link
-        href={navItems[0].path}
-        className={styles["action-icons__button"]}
-        aria-label={navItems[0].ariaLabel}>
+      <Link href={navItems[0].path} className={styles.button} aria-label={navItems[0].ariaLabel}>
         <User className="h-6 w-6" aria-hidden="true" />
       </Link>
 
       <Link
         href={navItems[1].path}
-        className={`${styles["action-icons__button"]} ${styles["action-icons__button--cart"]}`}
+        className={`${styles.button} ${styles["button--cart"]}`}
         aria-label={navItems[1].getAriaLabel(cartCount)}>
         <ShoppingBag className="h-6 w-6" aria-hidden="true" />
-        {cartCount > 0 && <span className={styles["action-icons__cart-count"]}>{cartCount}</span>}
+        {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
       </Link>
     </>
   );

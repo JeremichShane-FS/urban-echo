@@ -6,9 +6,9 @@ const MobileMenuView = ({ isOpen }) => {
   return (
     <div
       id="mobile-menu"
-      className={isOpen ? styles["mobile-menu"] : `${styles["mobile-menu"]} ${styles["hidden"]}`}
+      className={isOpen ? styles.menu : `${styles.menu} ${styles["menu--hidden"]}`}
       aria-hidden={!isOpen}>
-      <div className={styles.mobileMenuInner}>
+      <div className={styles.inner}>
         <NavLinks isMobile={true} />
       </div>
     </div>

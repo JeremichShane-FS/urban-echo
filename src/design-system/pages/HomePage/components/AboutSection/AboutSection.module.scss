@@ -1,6 +1,6 @@
 @use "@/assets/styles/abstracts" as *;
 
-.aboutSection {
+.section {
   background-color: var(--color-background-secondary);
   padding: var(--spacing-xxl) 0;
   border-top: 1px solid var(--color-gray-300);
@@ -46,33 +46,18 @@
   max-width: none;
 }
 
-.ctaSection {
+.cta {
   margin-top: var(--spacing-xl);
 }
 
-.learnMoreButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  color: var(--color-secondary);
-  border: 2px solid var(--color-secondary);
-  padding: var(--spacing-md) var(--spacing-xl);
-  border-radius: var(--border-radius-md);
+.link {
+  display: inline-block;
   text-decoration: none;
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-md);
-  transition: all 0.3s ease;
 
-  &:hover {
-    background-color: var(--color-secondary);
-    color: var(--color-text-inverse);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px color-alpha(var(--color-secondary), 0.3);
-  }
-
+  &:hover,
+  &:focus,
   &:active {
-    transform: translateY(0);
+    text-decoration: none;
   }
 }
 

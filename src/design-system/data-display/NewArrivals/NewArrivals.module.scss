@@ -1,6 +1,6 @@
 @use "@/assets/styles/abstracts" as *;
 
-.newArrivals {
+.section {
   padding: var(--spacing-xxl) 0;
   background-color: var(--color-background-primary);
 }
@@ -40,7 +40,7 @@
   margin: 0 auto;
 }
 
-.productsGrid {
+.grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-lg);
@@ -60,15 +60,62 @@
   }
 }
 
-.newArrivalCard {
-  // Custom styles for new arrival cards if needed
+.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
-.ctaSection {
+.image {
+  position: relative;
+  margin-bottom: var(--spacing-sm);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+}
+
+.badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.info {
   text-align: center;
 }
 
-.viewAllButton {
+.name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.price {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.cta {
+  text-align: center;
+}
+
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,8 +150,8 @@
 .error {
   text-align: center;
   padding: var(--spacing-xl);
-  color: #dc2626;
-  background-color: #fef2f2;
+  color: var(--color-error);
+  background-color: var(--color-error-light);
   border-radius: var(--border-radius-md);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-error-border);
 }

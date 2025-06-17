@@ -1,6 +1,6 @@
 @use "@/assets/styles/abstracts" as *;
 
-.productCard {
+.card {
   background-color: var(--color-background-primary);
   border-radius: var(--border-radius-md);
   overflow: hidden;
@@ -13,13 +13,13 @@
   }
 }
 
-.productLink {
+.link {
   display: block;
   text-decoration: none;
   color: inherit;
 }
 
-.imageContainer {
+.image {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
@@ -27,16 +27,16 @@
   background-color: var(--color-gray-100);
 }
 
-.productImage {
+.img {
   object-fit: cover;
   transition: transform 0.3s ease;
 
-  .productCard:hover & {
+  .card:hover & {
     transform: scale(1.05);
   }
 }
 
-.placeholderText {
+.placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,7 +48,7 @@
   font-weight: var(--font-weight-medium);
 }
 
-.newBadge {
+.badge {
   position: absolute;
   top: var(--spacing-sm);
   left: var(--spacing-sm);
@@ -60,27 +60,19 @@
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   z-index: 2;
+
+  &--out-of-stock {
+    right: var(--spacing-sm);
+    left: auto;
+    background-color: var(--color-error);
+  }
 }
 
-.outOfStockBadge {
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  background-color: #dc2626;
-  color: var(--color-text-inverse);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  z-index: 2;
-}
-
-.productInfo {
+.info {
   padding: var(--spacing-md);
 }
 
-.productName {
+.name {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-header);
@@ -92,7 +84,7 @@
   }
 }
 
-.productPrice {
+.price {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   color: var(--color-accent);
@@ -103,7 +95,7 @@
   }
 }
 
-.productCategory {
+.category {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   margin: 0;

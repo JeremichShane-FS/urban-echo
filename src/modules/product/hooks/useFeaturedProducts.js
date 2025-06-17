@@ -7,7 +7,6 @@ export const useFeaturedProducts = () => {
   const [error, setError] = useState(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
-  // In your layout.js or a component
   useEffect(() => {
     const handleError = event => {
       if (event.message?.includes("hydration")) {

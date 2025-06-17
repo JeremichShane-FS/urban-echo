@@ -1,3 +1,7 @@
+import Button from "@/design-system/buttons/Button";
+
+import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@/config/constants/ui-constants";
+
 import styles from "./Newsletter.module.scss";
 
 const NewsletterView = ({
@@ -10,10 +14,10 @@ const NewsletterView = ({
   onSubmit,
 }) => {
   return (
-    <section className={styles.newsletter}>
+    <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className={styles.textContent}>
+          <div className={styles.text}>
             <h2 className={styles.title}>Newsletter</h2>
             <p className={styles.description}>
               Stay updated with our latest fashion trends, exclusive offers, and new arrivals. Join
@@ -21,31 +25,42 @@ const NewsletterView = ({
             </p>
           </div>
 
-          <div className={styles.formContainer}>
-            <form onSubmit={onSubmit} className={styles.form}>
-              <div className={styles.inputGroup}>
+          <div className={styles.form}>
+            <form onSubmit={onSubmit} className={styles.wrapper}>
+              <div className={styles.group}>
                 <input
                   type="email"
                   value={email}
                   onChange={onEmailChange}
                   placeholder="Email address"
-                  className={styles.emailInput}
+                  className={styles.input}
                   disabled={isSubmitting}
                   aria-label="Email address for newsletter subscription"
                 />
-                <button
+
+                <Button
                   type="submit"
-                  className={styles.subscribeButton}
+                  variant={BUTTON_VARIANTS.primary}
+                  size={BUTTON_SIZES.md}
                   disabled={!isFormValid}
+                  className={styles.button}
                   aria-label="Subscribe to newsletter">
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
-                </button>
+                </Button>
               </div>
 
               {message && (
                 <div
-                  className={`${styles.message} ${styles[messageType]}`}
-                  role={messageType === "error" ? "alert" : "status"}
+                  className={`${styles.message} ${
+                    messageType === TOAST_TYPES.SUCCESS
+                      ? styles["message--success"]
+                      : messageType === TOAST_TYPES.ERROR
+                      ? styles["message--error"]
+                      : messageType === TOAST_TYPES.WARNING
+                      ? styles["message--warning"]
+                      : styles["message--info"]
+                  }`}
+                  role={messageType === TOAST_TYPES.ERROR ? "alert" : "status"}
                   aria-live="polite">
                   {message}
                 </div>

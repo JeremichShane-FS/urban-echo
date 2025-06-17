@@ -44,8 +44,8 @@ export const DEFAULT_SEO = {
     ],
   },
   twitter: {
-    handle: "@urbanecho",
-    site: "@urbanecho",
+    handle: "@shopurbanecho",
+    site: "@shopurbanecho",
     cardType: "summary_large_image",
   },
 };

@@ -1,10 +1,19 @@
 @use "@/assets/styles/abstracts" as *;
 
-.homepage {
+.page {
   min-height: 100vh;
   background-color: var(--color-background);
   overflow-x: hidden;
   position: relative;
+  scroll-behavior: smooth;
+  transform: translateZ(0);
+  will-change: scroll-position;
+  animation: fadeIn 0.5s ease-in-out;
+
+  section {
+    position: relative;
+    scroll-margin-top: var(--navbar-height);
+  }
 }
 
 .loading {
@@ -15,7 +24,7 @@
   background-color: var(--color-background);
 }
 
-.loadingContent {
+.content {
   text-align: center;
   color: var(--color-text-primary);
 
@@ -31,30 +40,6 @@
     color: var(--color-text-secondary);
     margin: 0;
   }
-}
-
-// Smooth scroll behavior for internal navigation
-.homepage {
-  scroll-behavior: smooth;
-}
-
-// Ensure proper spacing between sections
-.homepage section {
-  position: relative;
-
-  // Optional: Add scroll margin for smooth scrolling to anchors
-  scroll-margin-top: var(--header-height);
-}
-
-// Performance optimization: GPU acceleration for smooth scrolling
-.homepage {
-  transform: translateZ(0);
-  will-change: scroll-position;
-}
-
-// Optional: Fade-in animation for the entire homepage
-.homepage {
-  animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {

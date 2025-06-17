@@ -10,9 +10,9 @@ import styles from "./HomePage.module.scss";
 const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
   if (isLoading) {
     return (
-      <main className={styles.homepage}>
+      <main className={styles.page}>
         <div className={styles.loading}>
-          <div className={styles.loadingContent}>
+          <div className={styles.content}>
             <h1>Loading Urban Echo...</h1>
             <p>Preparing your fashion experience</p>
           </div>
@@ -22,7 +22,7 @@ const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
   }
 
   return (
-    <main className={styles.homepage}>
+    <main className={styles.page}>
       <HeroSection />
       {pageData.showFeaturedProducts && <FeaturedProducts />}
       {pageData.showNewsletter && <Newsletter />}

@@ -130,7 +130,7 @@ export const FEATURES = {
 
   NEWSLETTER_POPUP: {
     enabled: IS_PRODUCTION,
-    delay: 5000, // ms
+    delay: 5000,
     showOncePerVisit: true,
     showOnScrollPercentage: 30,
     dontShowToSubscribers: true,
