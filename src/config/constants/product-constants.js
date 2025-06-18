@@ -2,15 +2,18 @@
  * Product-related constants
  */
 
+import { DEFAULT_IMAGES } from "./media-constants";
+
 // Product display
 export const PRODUCTS_PER_PAGE = 12;
 export const RELATED_PRODUCTS_COUNT = 4;
 export const FEATURED_PRODUCTS_COUNT = 8;
 
+// Items per row in grid view
 export const GRID_VIEW_BREAKPOINTS = {
-  sm: 2, // Items per row on small screens
-  md: 3, // Items per row on medium screens
-  lg: 4, // Items per row on large screens
+  sm: 2,
+  md: 3,
+  lg: 4,
 };
 
 export const PRODUCT_LIST_VIEWS = {
@@ -113,7 +116,7 @@ export const REVIEW_CHAR_LIMIT = 1000;
 export const MIN_REVIEW_LENGTH = 10;
 
 // Default product image (placeholder)
-export const DEFAULT_PRODUCT_IMAGE = "/images/product/placeholder.jpg";
+export const DEFAULT_PRODUCT_IMAGE = DEFAULT_IMAGES.productPlaceholder;
 
 // Wishlist
 export const MAX_WISHLIST_ITEMS = 50;

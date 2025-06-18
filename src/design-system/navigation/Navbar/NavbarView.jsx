@@ -18,25 +18,22 @@ const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
   const navLink = getNavItemById("home", MAIN_NAV_ITEMS);
 
   return (
-    <nav className={styles["navbar"]} aria-label="Main navigation">
-      <div className={styles["navbar__inner"]}>
+    <nav className={styles.navbar} aria-label="Main navigation">
+      <div className={styles.inner}>
         <Container>
-          <div className={styles["navbar__content"]}>
-            <div className={styles["navbar__logo-section"]}>
+          <div className={styles.content}>
+            <div className={styles.brand}>
               <MenuToggle isOpen={isMenuOpen} setIsOpen={toggleMenu} />
-              <Link href={navLink.path} aria-label={navLink["aria-label"]}>
+              <Link href={navLink.path} className={styles.logo} aria-label={navLink["aria-label"]}>
                 <UrbanEchoLogo />
               </Link>
             </div>
 
-            <div
-              className={styles["navbar__nav-links"]}
-              role="navigation"
-              aria-label="Main categories">
+            <div className={styles.navigation} role="navigation" aria-label="Main categories">
               <NavLinks />
             </div>
 
-            <div className={styles["navbar__right-icons"]}>
+            <div className={styles.actions}>
               <ActionIcons isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} cartCount={2} />
             </div>
           </div>

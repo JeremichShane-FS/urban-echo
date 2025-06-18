@@ -163,3 +163,28 @@ My final stand up reflects a productive week of establishing the foundation for 
 - Setup MongoDB
 - Focus on delivering a functional MVP for each sprint with the improved time management and dedicated project schedule
 - Complete milestone 5 deliverables with the adjusted timeline and scope
+
+### Week 6
+
+**⚙️ Overview** - What I worked on this past week:
+
+- Implemented core design system and foundational components for Urban Echo. Established styling architecture, built reusable UI components, and developed product service infrastructure with data flow integration.
+
+**🌵 Challenges** - What problems did I have & how I'm addressing them:
+
+- Resolved product image integration issues between product service and frontend components.
+- Refactored component architecture for improved separation of concerns and maintainability.
+
+**🏆 Accomplishments** - What is something I "leveled up" on this week:
+
+- Implemented modular component architecture with proper separation of concerns
+- Created design system with consistent spacing, typography, and component patterns
+- Built product services with data flow and state management
+
+**🔮 Next Steps** - What I plan to prioritize and do next:
+
+- Configure MongoDB Atlas connection and cluster
+- Create Mongoose schemas for Products, Users, and Orders
+- Build API routes with error handling and validation
+- Seed database with product data
+- Test endpoints before authentication integration

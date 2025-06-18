@@ -2,20 +2,26 @@
 @use "functions" as *;
 
 // Breakpoint Mixins
-@mixin breakpoint($key) {
+@mixin breakpoint($key, $direction: "min") {
   $breakpoint: getBreakpoint($key);
 
   @if $breakpoint != null {
-    @media (min-width: #{$breakpoint}) {
-      @content;
+    @if $direction == "max" {
+      @media (max-width: #{$breakpoint - 0.0625rem}) {
+        @content;
+      }
+    } @else {
+      @media (min-width: #{$breakpoint}) {
+        @content;
+      }
     }
   } @else {
     @warn "Cannot generate media query for invalid breakpoint: #{$key}";
   }
 }
 
-@mixin respond-to($key) {
-  @include breakpoint($key) {
+@mixin respond-to($key, $direction: "min") {
+  @include breakpoint($key, $direction) {
     @content;
   }
 }
@@ -32,4 +38,127 @@
   -webkit-line-clamp: $lines;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+// Button Mixins
+@mixin button-base(
+  $bg-color: var(--color-button-accent-bg),
+  $text-color: var(--color-button-accent-text),
+  $hover-bg: var(--color-button-accent-hover-bg),
+  $border-color: null,
+  $border-width: 2px,
+  $padding-y: var(--spacing-md),
+  $padding-x: var(--spacing-xl),
+  $font-size: var(--font-size-md),
+  $border-radius: var(--border-radius-md),
+  $has-shadow: true,
+  $shadow-color: var(--color-accent)
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-color;
+  color: $text-color;
+  padding: $padding-y $padding-x;
+  border-radius: $border-radius;
+  text-decoration: none;
+  font-weight: var(--font-weight-semibold);
+  font-size: $font-size;
+  transition: all 0.3s ease;
+  width: fit-content;
+  cursor: pointer;
+
+  // Conditional border
+  @if $border-color {
+    border: $border-width solid $border-color;
+  } @else {
+    border: none;
+  }
+
+  @include breakpoint(md) {
+    align-self: center;
+  }
+
+  &:hover {
+    background-color: $hover-bg;
+    transform: translateY(-2px);
+
+    @if $has-shadow and $shadow-color {
+      box-shadow: 0 4px 12px color-alpha($shadow-color, 0.3);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $shadow-color;
+    outline-offset: 2px;
+  }
+}
+// Primary button (accent colors)
+@mixin button-primary() {
+  @include button-base(
+    $bg-color: var(--color-button-accent-bg),
+    $text-color: var(--color-button-accent-text),
+    $hover-bg: var(--color-button-accent-hover-bg),
+    $border-color: var(--color-accent),
+    $shadow-color: var(--color-accent)
+  );
+}
+
+// Secondary button (outlined)
+@mixin button-secondary() {
+  @include button-base(
+    $bg-color: transparent,
+    $text-color: var(--color-accent),
+    $hover-bg: var(--color-accent),
+    $border-color: var(--color-accent),
+    $shadow-color: var(--color-accent)
+  );
+
+  &:hover {
+    color: var(--color-button-accent-text);
+  }
+}
+
+// Ghost button (minimal)
+@mixin button-ghost() {
+  @include button-base(
+    $bg-color: transparent,
+    $text-color: var(--color-text),
+    $hover-bg: var(--color-surface-hover),
+    $border-color: var(--color-border),
+    $has-shadow: false
+  );
+}
+
+// Danger button
+@mixin button-danger() {
+  @include button-base(
+    $bg-color: var(--color-error),
+    $text-color: white,
+    $hover-bg: var(--color-error-dark),
+    $border-color: var(--color-error),
+    $shadow-color: var(--color-error)
+  );
+}
+
+// Small button variant
+@mixin button-small() {
+  @include button-base(
+    $padding-y: var(--spacing-sm),
+    $padding-x: var(--spacing-lg),
+    $font-size: var(--font-size-sm)
+  );
+}
+
+// Large button variant
+@mixin button-large() {
+  @include button-base(
+    $padding-y: var(--spacing-lg),
+    $padding-x: var(--spacing-2xl),
+    $font-size: var(--font-size-lg)
+  );
 }

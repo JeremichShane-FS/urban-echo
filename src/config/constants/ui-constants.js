@@ -26,7 +26,7 @@ export const TOAST_DURATION = {
 };
 
 export const DEFAULT_TOAST_DURATION = TOAST_DURATION.medium;
-export const MAX_TOASTS = 3; // Maximum number of toasts to show at once
+export const MAX_TOASTS = 3;
 
 // Modal sizes
 export const MODAL_SIZES = {
@@ -61,6 +61,7 @@ export const BUTTON_VARIANTS = {
   secondary: "secondary",
   accent: "accent",
   outline: "outline",
+  "outline-secondary": "outline-secondary",
   ghost: "ghost",
   link: "link",
   danger: "danger",

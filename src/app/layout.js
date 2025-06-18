@@ -14,6 +14,7 @@ export const viewport = {
 };
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://shopurbanecho.com"),
   title: "Urban Echo | Modern Fashion E-Commerce",
   description:
     "Discover trendy, high-quality clothing at Urban Echo. Shop our curated collection of contemporary fashion for the modern, fashion-conscious consumer. Secure checkout, fast shipping, and exceptional customer service.",
@@ -23,10 +24,17 @@ export const metadata = {
   publisher: "Urban Echo",
   robots: "index, follow",
   icons: {
-    icon: { url: "/favicon.ico" },
-    apple: [
-      { url: "/apple-icon.png" }, //TODO: Create and add this image to my public folder
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
     ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    title: "Urban Echo",
   },
   openGraph: {
     type: "website",
@@ -37,7 +45,7 @@ export const metadata = {
     siteName: "Urban Echo",
     images: [
       {
-        url: "https://shopurbanecho.com/og-image.jpg", //TODO: Create and host this social sharing image
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Urban Echo - Modern Fashion E-Commerce",
@@ -50,7 +58,7 @@ export const metadata = {
     creator: "@shanejeremich",
     title: "Urban Echo | Modern Fashion E-Commerce",
     description: "Discover trendy, high-quality clothing at Urban Echo.",
-    images: ["https://shopurbanecho.com/twitter-image.jpg"], //TODO: Create and host this Twitter card image
+    images: ["/og-image.jpg"],
   },
   alternates: {
     canonical: "https://shopurbanecho.com",
@@ -70,11 +78,7 @@ export default function RootLayout({ children }) {
         <main>
           <Container>{children}</Container>
         </main>
-        <footer>
-          <Container>
-            <Footer />
-          </Container>
-        </footer>
+        <Footer />
       </body>
     </html>
   );

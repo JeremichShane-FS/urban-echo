@@ -6,12 +6,9 @@
   padding: 0 var(--container-padding);
   max-width: var(--container-max-width);
 
-  @include breakpoint(sm) {
-    max-width: getBreakpoint("sm");
-  }
-
   @include breakpoint(md) {
     max-width: getBreakpoint("md");
+    padding: 0;
   }
 
   @include breakpoint(lg) {
@@ -26,23 +23,23 @@
     max-width: var(--container-max-width);
   }
 
-  &-fluid {
+  &--fluid {
     max-width: none;
   }
 
-  &-sm {
+  &--sm {
     @include breakpoint(sm) {
       max-width: getBreakpoint("sm");
     }
   }
 
-  &-md {
+  &--md {
     @include breakpoint(md) {
       max-width: getBreakpoint("md");
     }
   }
 
-  &-lg {
+  &--lg {
     @include breakpoint(lg) {
       max-width: getBreakpoint("lg");
     }
