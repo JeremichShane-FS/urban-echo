@@ -10,4 +10,4 @@ export * from "./notification-constants";
 export * from "./product-constants";
 export * from "./site-constants";
 export * from "./ui-constants";
-export * from "./userConstants";
+export * from "./user-constants";

@@ -57,7 +57,7 @@ export const UPLOAD_PATHS = {
 export const DEFAULT_IMAGES = {
   productPlaceholder: "/images/product-placeholder.jpg",
   userAvatar: "/images/default-avatar.jpg",
-  logo: "/images/logo.svg",
+  logo: "/images/svg/navbar-logo.svg",
   categoryPlaceholder: "/images/category-placeholder.jpg",
   errorImage: "/images/error-image.svg",
 };
@@ -92,6 +92,3 @@ export const ICON_SIZES = {
   lg: 32,
   xl: 48,
 };
-
-// Default icon library
-export const DEFAULT_ICON_LIBRARY = "lucide";

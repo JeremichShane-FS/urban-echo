@@ -1,0 +1,52 @@
+@use "@/assets/styles/abstracts" as *;
+
+.page {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  overflow-x: hidden;
+  position: relative;
+  scroll-behavior: smooth;
+  transform: translateZ(0);
+  will-change: scroll-position;
+  animation: fadeIn 0.5s ease-in-out;
+
+  section {
+    position: relative;
+    scroll-margin-top: var(--navbar-height);
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  background-color: var(--color-background);
+}
+
+.content {
+  text-align: center;
+  color: var(--color-text-primary);
+
+  h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-header);
+    margin-bottom: var(--spacing-md);
+  }
+
+  p {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
