@@ -1,6 +1,12 @@
-import FooterView from "./FooterView";
+"use client";
 
-function Footer() {
-  return <FooterView />;
-}
+import FooterView from "./FooterView";
+import { useFooter } from "./useFooter";
+
+const Footer = () => {
+  const footerProps = useFooter();
+
+  return <FooterView {...footerProps} />;
+};
+
 export default Footer;
