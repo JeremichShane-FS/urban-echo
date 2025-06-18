@@ -72,42 +72,6 @@ export const ACCOUNT_NAV_ITEMS = [
   { id: "logout", label: "Logout", ariaLabel: "Log Out", path: ROUTES.LOGOUT, icon: "log-out" },
 ];
 
-export const FOOTER_NAV_SECTIONS = [
-  {
-    title: "Shop",
-    links: [
-      { label: "Men", ariaLabel: "Shop Men Clothing", path: ROUTES.MEN },
-      { label: "Women", ariaLabel: "Shop Women Clothing", path: ROUTES.WOMEN },
-      { label: "Accessories", ariaLabel: "Shop Accessories", path: ROUTES.ACCESSORIES },
-      { label: "Sale", ariaLabel: "Shop Sale Items", path: ROUTES.SALE },
-      { label: "New Arrivals", ariaLabel: "Shop New Arrivals", path: ROUTES.NEW_ARRIVALS },
-    ],
-  },
-  {
-    title: "About",
-    links: [
-      { label: "Our Story", ariaLabel: "Learn About Our Story", path: ROUTES.ABOUT },
-      { label: "Stores", ariaLabel: "Find Our Stores", path: ROUTES.STORES },
-      {
-        label: "Sustainability",
-        ariaLabel: "Learn About Sustainability",
-        path: ROUTES.SUSTAINABILITY,
-      },
-      { label: "Careers", ariaLabel: "Explore Careers", path: ROUTES.CAREERS },
-    ],
-  },
-  {
-    title: "Help",
-    links: [
-      { label: "Contact Us", ariaLabel: "Contact Us", path: ROUTES.CONTACT },
-      { label: "FAQs", ariaLabel: "View FAQs", path: ROUTES.FAQS },
-      { label: "Shipping", ariaLabel: "Learn About Shipping", path: ROUTES.SHIPPING },
-      { label: "Returns", ariaLabel: "Learn About Returns", path: ROUTES.RETURNS },
-      { label: "Size Guide", ariaLabel: "View Size Guide", path: ROUTES.SIZE_GUIDE },
-    ],
-  },
-];
-
 // Breadcrumb settings
 export const BREADCRUMB_SEPARATOR = "/";
 export const INCLUDE_HOME_IN_BREADCRUMBS = true;
