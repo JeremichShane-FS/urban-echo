@@ -16,7 +16,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.5.0] - Week 5 (Current)
+## [0.6.0] - Week 6 (Current)
+
+### Added
+
+- **Design System Foundation**:
+  - Font integration (Montserrat and Open Sans)
+  - Spacing variables for consistent layout dimensions
+  - Button component styles with primary and secondary variants
+  - Utility classes for visibility and spacing controls
+- **Component Architecture**:
+  - Responsive Navbar layout with integrated logo SVG
+  - CSS modules for Avatar, ProductCard, and Searchbar components
+  - Newsletter component with enhanced form handling
+  - Footer component with structured responsive layout and state management
+- **Product Management**:
+  - Featured products service with image URL integration
+  - Product constants and data structures
+  - Custom hooks for product fetching (useFeaturedProducts)
+- **User Management Foundation**: Added user-related constants for authentication, roles, and permissions
+- **Business Case Research (R8-Notes)**: E-commerce strategy documentation with validation methodologies
+
+### Changed
+
+- **Homepage Architecture**: Refactored to component-based design with enhanced animations and loading states
+- **Component Structure**: Improved modularity across navigation, content, and layout components
+
+### Enhanced
+
+- **Responsive Design**: Improved mobile responsiveness across components
+- **Code Organization**: Better separation of concerns with container/presentation patterns
+- **Documentation**: Updated project documentation to reflect current tech stack decisions
+
+### Fixed
+
+- **Product Display**: Resolved image integration issues for featured products
+- **Component Integration**: Fixed Button component integration in Newsletter forms
+
+---
+
+## [0.5.0] - Week 5
 
 ### Added
 
