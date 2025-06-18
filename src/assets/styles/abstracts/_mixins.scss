@@ -2,20 +2,26 @@
 @use "functions" as *;
 
 // Breakpoint Mixins
-@mixin breakpoint($key) {
+@mixin breakpoint($key, $direction: "min") {
   $breakpoint: getBreakpoint($key);
 
   @if $breakpoint != null {
-    @media (min-width: #{$breakpoint}) {
-      @content;
+    @if $direction == "max" {
+      @media (max-width: #{$breakpoint - 0.0625rem}) {
+        @content;
+      }
+    } @else {
+      @media (min-width: #{$breakpoint}) {
+        @content;
+      }
     }
   } @else {
     @warn "Cannot generate media query for invalid breakpoint: #{$key}";
   }
 }
 
-@mixin respond-to($key) {
-  @include breakpoint($key) {
+@mixin respond-to($key, $direction: "min") {
+  @include breakpoint($key, $direction) {
     @content;
   }
 }

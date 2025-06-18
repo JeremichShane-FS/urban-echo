@@ -4,7 +4,7 @@
  * @returns {string} Formatted copyright text
  */
 
-export const setCopyright = title => {
-  const year = new Date().getFullYear();
+export const setCopyright = (title, fallbackYear = "") => {
+  const year = typeof window !== "undefined" ? new Date().getFullYear() : fallbackYear;
   return `\u00A9 ${year} ${title}`;
 };
