@@ -57,12 +57,18 @@ jobs:
 
           echo "Analyzing conventional commit: $FULL_COMMIT_MSG"
 
+          # Skip merge commits
+          if echo "$FULL_COMMIT_MSG" | grep -q "^Merge"; then
+            echo "Skipping merge commit"
+            exit 0
+          fi
+
           # Parse conventional commit format: type(scope): subject
           COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
           COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
 
-          # Extract type and scope using regex
-          if [[ $COMMIT_HEADER =~ ^([a-z]+)(\(([^)]+)\))?: ]]; then
+          # Extract type and scope using regex (fixed syntax)
+          if [[ "$COMMIT_HEADER" =~ ^([a-z]+)(\(([^)]+)\))?: ]]; then
             COMMIT_TYPE="${BASH_REMATCH[1]}"
             COMMIT_SCOPE="${BASH_REMATCH[3]}"
             COMMIT_SUBJECT="${COMMIT_HEADER#*: }"
@@ -114,18 +120,21 @@ jobs:
               ;;
             *)
               # Try to infer from scope name
-              if [[ $COMMIT_SCOPE == *"test"* ]]; then
+              if [[ "$COMMIT_SCOPE" == *"test"* ]]; then
                 AREA_LABELS="area: testing"
-              elif [[ $COMMIT_SCOPE == *"deploy"* ]]; then
+              elif [[ "$COMMIT_SCOPE" == *"deploy"* ]]; then
                 AREA_LABELS="area: deployment"
               fi
               ;;
           esac
 
+          # Get GitHub username instead of full name to avoid API issues
+          GITHUB_USER="${{ github.actor }}"
+
           # Create issues based on commit type and content analysis
 
           # Security-related commits
-          if [[ $COMMIT_TYPE == "security" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(security|vulnerability|auth|authentication|password|token|encrypt)"; then
+          if [[ "$COMMIT_TYPE" == "security" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(security|vulnerability|auth|authentication|password|token|encrypt)"; then
             gh issue create \
               --title "🔒 Security Review: $COMMIT_SUBJECT" \
               --body "**Security-Related Commit Detected**
@@ -149,12 +158,11 @@ jobs:
           - [ ] API security confirmed
           - [ ] Payment processing security validated
           - [ ] Access controls verified" \
-              --label "area: security,priority: high,auto-generated" \
-              --assignee "$AUTHOR"
+              --label "area: security,priority: high,auto-generated"
           fi
 
           # Performance-related commits
-          if [[ $COMMIT_TYPE == "perf" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(performance|optimize|slow|speed|bottleneck)"; then
+          if [[ "$COMMIT_TYPE" == "perf" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(performance|optimize|slow|speed|bottleneck)"; then
             gh issue create \
               --title "🚀 Performance Review: $COMMIT_SUBJECT" \
               --body "**Performance-Related Commit Detected**
@@ -178,8 +186,7 @@ jobs:
           - [ ] Bundle size impact assessed
           - [ ] Caching opportunities evaluated
           - [ ] Memory usage analyzed" \
-              --label "performance,$PRIORITY,auto-generated,$AREA_LABELS" \
-              --assignee "$AUTHOR"
+              --label "performance,$PRIORITY,auto-generated"
           fi
 
           # Database-related commits
@@ -207,8 +214,7 @@ jobs:
           - [ ] Indexing strategy reviewed
           - [ ] Backup considerations evaluated
           - [ ] Data integrity verified" \
-              --label "area: database,mongodb,$PRIORITY,auto-generated" \
-              --assignee "$AUTHOR"
+              --label "area: database,mongodb,$PRIORITY,auto-generated"
           fi
 
           # Payment-related commits
@@ -236,8 +242,7 @@ jobs:
           - [ ] Transaction logging validated
           - [ ] Refund processes tested
           - [ ] Security compliance verified" \
-              --label "area: payment,stripe,priority: high,auto-generated" \
-              --assignee "$AUTHOR"
+              --label "area: payment,stripe,priority: high,auto-generated"
           fi
 
           # Breaking changes detection
@@ -265,12 +270,11 @@ jobs:
           - [ ] Deprecation notices added
           - [ ] Version bump planned
           - [ ] Team notified" \
-              --label "type: breaking-change,priority: critical,auto-generated,$AREA_LABELS" \
-              --assignee "$AUTHOR"
+              --label "type: breaking-change,priority: critical,auto-generated"
           fi
 
           # Feature commits that might need follow-up
-          if [[ $COMMIT_TYPE == "feat" ]]; then
+          if [[ "$COMMIT_TYPE" == "feat" ]]; then
             # Check if documentation might be needed
             if ! echo "$FULL_COMMIT_MSG" | grep -iE "(docs|documentation|readme)"; then
               gh issue create \
@@ -296,8 +300,7 @@ jobs:
           - [ ] README updated
           - [ ] Changelog updated
           - [ ] Tests documented" \
-                --label "type: documentation,$AREA_LABELS,priority: medium,auto-generated" \
-                --assignee "$AUTHOR"
+                --label "type: documentation,$PRIORITY,auto-generated"
             fi
           fi
 
@@ -332,8 +335,14 @@ jobs:
             if [[ -f "$file" ]]; then
               echo "Scanning file: $file"
               
-              # Look for debug code
-              if grep -n -E "(console\.log|debugger|alert\()" "$file" 2>/dev/null; then
+              # Skip workflow files to avoid recursive issues
+              if [[ "$file" == ".github/workflows/"* ]]; then
+                echo "Skipping workflow file: $file"
+                continue
+              fi
+              
+              # Look for debug code (fixed regex)
+              if grep -n -E "(console\\\.log|debugger|alert\\()" "$file" 2>/dev/null; then
                 gh issue create \
                   --title "🐛 Debug Code Found: Remove debug statements in $file" \
                   --body "**Debug Code Detected**
@@ -345,16 +354,15 @@ jobs:
           Debug statements found that should be removed before production:
 
           \`\`\`
-          $(grep -n -E "(console\.log|debugger|alert\()" "$file" | head -5)
+          $(grep -n -E "(console\\\.log|debugger|alert\\()" "$file" | head -5)
           \`\`\`
 
           Please remove these debug statements." \
-                  --label "type: bug,cleanup,auto-generated" \
-                  --assignee "$AUTHOR"
+                  --label "type: bug,cleanup,auto-generated"
               fi
               
-              # Look for hardcoded values
-              if grep -n -E "(localhost|127\.0\.0\.1|http://|mongodb://.*password)" "$file" 2>/dev/null; then
+              # Look for hardcoded values (fixed regex)
+              if grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" 2>/dev/null; then
                 gh issue create \
                   --title "⚠️ Hardcoded Values: Environment variables needed in $file" \
                   --body "**Hardcoded Values Detected**
@@ -366,12 +374,11 @@ jobs:
           Hardcoded values found that should use environment variables:
 
           \`\`\`
-          $(grep -n -E "(localhost|127\.0\.0\.1|http://|mongodb://.*password)" "$file" | head -3)
+          $(grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" | head -3)
           \`\`\`
 
           Please move these to environment variables for security and flexibility." \
-                  --label "area: security,priority: high,auto-generated" \
-                  --assignee "$AUTHOR"
+                  --label "area: security,priority: high,auto-generated"
               fi
               
             fi
