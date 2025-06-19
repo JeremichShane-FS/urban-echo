@@ -1,10 +1,10 @@
 ---
-name: "\U0001F4DA Research"
+name: "📚 Research"
 about: Track completion of course research assignments
 title: "[RESEARCH] Research [Number] - [Topic]"
-labels: documentation
-assignees: ''
-
+labels: ["type: documentation", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📚 Research [Number] - [Topic]

@@ -1,27 +1,10 @@
 ---
-<<<<<<< HEAD
-name: Define Data Models
-about: Focus on defining and documenting data models for the application.
-title: 'Model: [Model Name]'
-labels: ''
-assignees: ''
-
----
-
----
-
-name: Define Data Models
-about: "Focus on defining and documenting data models for the application."
-title: Model: [Model Name]
-labels: model
-
-=======
-name: 📊 Define Data Models
-about: Focus on defining and documenting data models for the application
-title: "Model: [Model Name]"
-labels: model, data
-assignees: ""
->>>>>>> reconfig/github-issues-template
+name: "🎯 Define Data Models"
+about: Define and document data structures and relationships
+title: "[DATA] "
+labels: ["area: database", "type: enhancement", "mongodb", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📊 Model: [Model Name]

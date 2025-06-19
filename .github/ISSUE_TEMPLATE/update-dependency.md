@@ -1,10 +1,10 @@
 ---
-name: "\U0001F4E6 Dependency Update"
+name: "📦 Update Dependency"
 about: Track updates to project dependencies
 title: "[DEPENDENCY] "
-labels: ''
-assignees: ''
-
+labels: ["type: enhancement", "priority: low"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 📦 Dependency Update

@@ -1,10 +1,10 @@
 ---
-name: "\U0001F9E0 Plan State Management"
-about: Focus on defining and planning state management for specific application states
-title: 'State: [State Name]'
-labels: ''
-assignees: ''
-
+name: "🗂️ State Management"
+about: Issues related to application state management
+title: "[STATE] "
+labels: ["area: frontend", "type: enhancement", "nextjs", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🧠 State: [State Name]

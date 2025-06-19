@@ -1,10 +1,10 @@
 ---
-name: "⚡ Performance Issue"
-about: Report performance problems or slowdowns
+name: "⚡ Report Performance Issue"
+about: Report performance problems and optimization opportunities
 title: "[PERF] "
-labels: ''
-assignees: ''
-
+labels: ["performance", "type: bug", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ⚡ Performance Issue Description

@@ -1,12 +1,10 @@
 ---
-<<<<<<< HEAD
-name: Define Routes
-about: "\"Focus on defining and documenting routes for specific feature areas of the
-  application."
-title: 'Routes: [Feature Area]'
-labels: ''
-assignees: ''
-
+name: "🔌 Define Routes"
+about: Create and document API endpoints and routing structure
+title: "[ROUTES] "
+labels: ["area: api", "area: backend", "type: enhancement", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ---
@@ -16,13 +14,6 @@ about: "Focus on defining and documenting routes for specific feature areas of t
 title: "Routes: [Feature Area]"
 labels: routing
 
-=======
-name: 🛣️ Define Routes
-about: Focus on defining and documenting routes for specific feature areas
-title: "Routes: [Feature Area]"
-labels: routing, api
-assignees: ""
->>>>>>> reconfig/github-issues-template
 ---
 
 ## 🛣️ Routes: [Feature Area]
