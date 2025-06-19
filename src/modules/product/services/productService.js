@@ -1,8 +1,13 @@
 export const productService = {
   async getFeaturedProducts() {
     try {
-      // TODO: Replace with actual API call
-      // Mock implementation for now
+      // TODO: Define Routes - Featured products API with database integration
+      // Replace mock implementation with actual backend API call.
+      // Required API endpoint: GET /api/products/featured
+      // Backend requirements:
+      // - MongoDB query for products with featured flag
+      // - Admin interface to mark/unmark products as featured
+      // - Caching layer for improved performance
       await new Promise(resolve => setTimeout(resolve, 500));
 
       return [
@@ -65,7 +70,14 @@ export const productService = {
    */
   async getNewArrivals({ limit = 8 } = {}) {
     try {
-      // TODO: Replace with actual API call
+      // TODO: Define Routes - New arrivals API with sorting and filtering
+      // Replace mock with actual API endpoint: GET /api/products/new-arrivals
+      // Query parameters needed:
+      // - limit: number of products to return
+      // - page: for pagination support
+      // - category: filter by product category
+      // - sort: by createdAt desc, price, popularity
+      // Backend should sort by createdAt descending with MongoDB aggregation
       // const response = await apiClient.get(`/api/products/new-arrivals?limit=${limit}`);
       // return response.data;
 

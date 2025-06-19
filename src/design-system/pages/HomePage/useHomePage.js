@@ -10,8 +10,11 @@ export const useHomePage = () => {
       try {
         setIsLoading(true);
 
-        // TODO: Replace with API call for page configuration
-        // setPageData(response.data);
+        // TODO: Define Data Models - CMS integration for homepage configuration
+        // Implement headless CMS integration for dynamic homepage management.
+        // Requirements:
+        // - Content management system for non-technical users
+        // - SEO optimization with dynamic meta tags
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
           seoDescription:
