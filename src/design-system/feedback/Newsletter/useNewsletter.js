@@ -36,7 +36,8 @@ export const useNewsletter = () => {
     setMessageType("");
 
     try {
-      // TODO: Replace with actual API call
+      // TODO: Replace with API call
+      // Eventually I would use a service like `newsletterService` to handle the subscription
       // await newsletterService.subscribe(email);
 
       // Simulate API call
