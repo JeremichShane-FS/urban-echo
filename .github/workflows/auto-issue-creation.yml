@@ -1,9 +1,8 @@
 name: "Auto Issue Creation"
 on:
   push:
-    branches: [main, staging, dev]
-  pull_request:
-    branches: [main, staging]
+    branches: [main, staging, dev] # Only on actual pushes/merges
+  # Removed pull_request triggers to prevent duplicates
 
 jobs:
   todo-to-issue:
@@ -63,6 +62,15 @@ jobs:
             exit 0
           fi
 
+          # Check if this commit already has an issue created
+          # Search for existing issues with this commit hash
+          EXISTING_ISSUE=$(gh issue list --label "auto-generated" --search "$COMMIT_HASH" --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ ! -z "$EXISTING_ISSUE" ]; then
+            echo "Issue already exists for commit $COMMIT_HASH (Issue #$EXISTING_ISSUE)"
+            exit 0
+          fi
+
           # Parse conventional commit format: type(scope): subject
           COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
           COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
@@ -96,40 +104,6 @@ jobs:
               PRIORITY="priority: medium"
               ;;
           esac
-
-          # Determine area labels based on scope
-          AREA_LABELS=""
-          case $COMMIT_SCOPE in
-            "frontend"|"ui"|"components"|"styles")
-              AREA_LABELS="area: frontend"
-              ;;
-            "backend"|"server"|"api")
-              AREA_LABELS="area: backend,area: api"
-              ;;
-            "database"|"db"|"mongo"|"models")
-              AREA_LABELS="area: database,mongodb"
-              ;;
-            "auth"|"authentication"|"login")
-              AREA_LABELS="area: security,auth0"
-              ;;
-            "payment"|"stripe"|"checkout")
-              AREA_LABELS="area: payment,stripe"
-              ;;
-            "docs"|"documentation")
-              AREA_LABELS="area: documentation"
-              ;;
-            *)
-              # Try to infer from scope name
-              if [[ "$COMMIT_SCOPE" == *"test"* ]]; then
-                AREA_LABELS="area: testing"
-              elif [[ "$COMMIT_SCOPE" == *"deploy"* ]]; then
-                AREA_LABELS="area: deployment"
-              fi
-              ;;
-          esac
-
-          # Get GitHub username instead of full name to avoid API issues
-          GITHUB_USER="${{ github.actor }}"
 
           # Create issues based on commit type and content analysis
 
@@ -174,11 +148,6 @@ jobs:
           **Author:** $AUTHOR
           **Branch:** ${{ github.ref_name }}
 
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
-
           **Performance Review Checklist:**
           - [ ] Page load times measured
           - [ ] Database query optimization verified
@@ -201,11 +170,6 @@ jobs:
           **Commit:** $COMMIT_HASH
           **Author:** $AUTHOR
           **Branch:** ${{ github.ref_name }}
-
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
 
           **Database Review Checklist:**
           - [ ] Schema changes validated
@@ -230,11 +194,6 @@ jobs:
           **Author:** $AUTHOR
           **Branch:** ${{ github.ref_name }}
 
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
-
           **Payment System Review Checklist:**
           - [ ] Stripe integration tested
           - [ ] Payment flow verified
@@ -257,11 +216,6 @@ jobs:
           **Commit:** $COMMIT_HASH
           **Author:** $AUTHOR
           **Branch:** ${{ github.ref_name }}
-
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
 
           **Breaking Change Review Checklist:**
           - [ ] Migration guide created
@@ -287,11 +241,6 @@ jobs:
           **Commit:** $COMMIT_HASH
           **Author:** $AUTHOR
           **Branch:** ${{ github.ref_name }}
-
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
 
           **Documentation Checklist:**
           - [ ] API documentation updated
@@ -343,42 +292,52 @@ jobs:
               
               # Look for debug code (fixed regex)
               if grep -n -E "(console\\\.log|debugger|alert\\()" "$file" 2>/dev/null; then
-                gh issue create \
-                  --title "🐛 Debug Code Found: Remove debug statements in $file" \
-                  --body "**Debug Code Detected**
-
-          **File:** $file
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-
-          Debug statements found that should be removed before production:
-
-          \`\`\`
-          $(grep -n -E "(console\\\.log|debugger|alert\\()" "$file" | head -5)
-          \`\`\`
-
-          Please remove these debug statements." \
-                  --label "type: bug,cleanup,auto-generated"
+                # Check if issue already exists for this file
+                EXISTING_DEBUG_ISSUE=$(gh issue list --label "cleanup" --search "Debug Code Found: Remove debug statements in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+                
+                if [ -z "$EXISTING_DEBUG_ISSUE" ]; then
+                  gh issue create \
+                    --title "🐛 Debug Code Found: Remove debug statements in $file" \
+                    --body "**Debug Code Detected**
+            
+            **File:** $file
+            **Commit:** $COMMIT_HASH
+            **Author:** $AUTHOR
+            
+            Debug statements found that should be removed before production:
+            
+            \`\`\`
+            $(grep -n -E "(console\\\.log|debugger|alert\\()" "$file" | head -5)
+            \`\`\`
+            
+            Please remove these debug statements." \
+                    --label "type: bug,cleanup,auto-generated"
+                fi
               fi
               
               # Look for hardcoded values (fixed regex)
               if grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" 2>/dev/null; then
-                gh issue create \
-                  --title "⚠️ Hardcoded Values: Environment variables needed in $file" \
-                  --body "**Hardcoded Values Detected**
-
-          **File:** $file
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-
-          Hardcoded values found that should use environment variables:
-
-          \`\`\`
-          $(grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" | head -3)
-          \`\`\`
-
-          Please move these to environment variables for security and flexibility." \
-                  --label "area: security,priority: high,auto-generated"
+                # Check if issue already exists for this file
+                EXISTING_HARDCODE_ISSUE=$(gh issue list --label "area: security" --search "Hardcoded Values: Environment variables needed in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+                
+                if [ -z "$EXISTING_HARDCODE_ISSUE" ]; then
+                  gh issue create \
+                    --title "⚠️ Hardcoded Values: Environment variables needed in $file" \
+                    --body "**Hardcoded Values Detected**
+            
+            **File:** $file
+            **Commit:** $COMMIT_HASH
+            **Author:** $AUTHOR
+            
+            Hardcoded values found that should use environment variables:
+            
+            \`\`\`
+            $(grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" | head -3)
+            \`\`\`
+            
+            Please move these to environment variables for security and flexibility." \
+                    --label "area: security,priority: high,auto-generated"
+                fi
               fi
               
             fi
