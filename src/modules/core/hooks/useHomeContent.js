@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 import { getHeroImageUrl } from "../utils/imageUtils";
 
-// TODO: Replace with actual API call when backend is ready
+// TODO: Replace with actual API
+// call API when backend is ready
 const data = {
   backgroundImage:
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
@@ -24,7 +25,8 @@ export const useHeroContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Future: Fetch hero content from API
+        // TODO: Fetch hero content from API
+        // For now, using static data
         setHeroData({
           title: "Discover Your Urban Style",
           subtitle: "Trendy, high-quality clothing for the modern, fashion-conscious consumer",
@@ -74,7 +76,8 @@ export const useAboutContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Future: Fetch about content from API
+        // TODO: Fetch about content from API
+
         setAboutContent({
           title: "About Urban Echo",
           paragraphs: [

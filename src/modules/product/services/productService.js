@@ -65,7 +65,7 @@ export const productService = {
    */
   async getNewArrivals({ limit = 8 } = {}) {
     try {
-      // TODO: Replace with actual API call
+      // TODO: Replace with API call
       // const response = await apiClient.get(`/api/products/new-arrivals?limit=${limit}`);
       // return response.data;
 

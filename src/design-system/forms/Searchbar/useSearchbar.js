@@ -3,7 +3,8 @@ import { useCallback } from "react";
 const useSearchbar = () => {
   const handleSubmit = useCallback(e => {
     e.preventDefault();
-    // TODO: Search logic here
+    // TODO: Add Search logic
+    // for now its just a placeholder
   }, []);
 
   return { handleSubmit };

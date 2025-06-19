@@ -13,7 +13,8 @@ export const useFeaturedProducts = () => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Replace with actual API call when backend is ready
+        // TODO: Replace with API useCallback
+        // It's using mock data
         const response = await productService.getFeaturedProducts();
         if (!response || response.length === 0) {
           throw new Error("No featured products found");

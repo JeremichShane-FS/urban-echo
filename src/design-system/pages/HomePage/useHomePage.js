@@ -4,14 +4,16 @@ export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
 
-  // TODO: Future: fetch page configuration
+  // TODO: fetch page configuration
+  // This should be replaced with an API call to fetch the page configuration
   useEffect(() => {
     const fetchPageConfig = async () => {
       try {
         setIsLoading(true);
 
-        // TODO: Replace with API call for page configuration
-        // setPageData(response.data);
+        // TODO: fetch page configuration
+        // For now, using static data
+        // This should be replaced with an API call to fetch the page configuration
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
           seoDescription:

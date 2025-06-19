@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { data } from "../data/newArrivals.data";
 import { productService } from "../services/productService";
 
 export const useNewArrivals = (limit = 8) => {
@@ -24,7 +25,8 @@ export const useNewArrivals = (limit = 8) => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Replace with actual API call when backend is ready
+        // TODO: Replace with API call
+        // It's using mock data
         const response = await productService.getNewArrivals({ limit });
         setNewArrivals(response);
       } catch (err) {
