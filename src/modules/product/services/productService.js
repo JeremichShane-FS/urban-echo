@@ -1,7 +1,7 @@
 export const productService = {
   async getFeaturedProducts() {
     try {
-      // TODO: Define Routes - Featured products API with database integration (Version 2 post-MVP)
+      // TODO: Define Routes - Featured products API with database integration (Version 2 for post-MVP)
       // Replace mock implementation with actual backend API call.
       // Version 2 CMS integration requirements:
       // - MongoDB query for products with featured flag
@@ -70,7 +70,7 @@ export const productService = {
    */
   async getNewArrivals({ limit = 8 } = {}) {
     try {
-      // TODO: Define Routes - New arrivals API with sorting and filtering (Version 2 post-MVP)
+      // TODO: Define Routes - New arrivals API with sorting and filtering (Version 2 for post-MVP)
       // Replace mock with API endpoint: GET /api/products/new-arrivals
       // Version 2 Query parameters needed:
       // - limit: number of products to return

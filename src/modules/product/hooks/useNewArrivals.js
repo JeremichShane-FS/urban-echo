@@ -13,7 +13,7 @@ export const useNewArrivals = (limit = 8) => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Define Routes - Product catalog API endpoints
+        // TODO: Define Routes - Product catalog API endpoints defined
         // Replace productService mock with backend API integration.
         // Required API endpoints:
         // - GET /api/products/new-arrivals?limit={limit}&page={page}
