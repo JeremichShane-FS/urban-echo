@@ -273,6 +273,10 @@ jobs:
               "orders"|"fulfillment")
                 LABELS="$LABELS,area: backend,area: database"
                 ;;
+              "ci"|"workflow"|"automation")
+                # CI/workflow changes are technical debt improvements
+                LABELS="$LABELS,tech-debt"
+                ;;
             esac
             
             # Add scope-based labels
