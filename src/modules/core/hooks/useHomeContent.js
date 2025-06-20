@@ -110,6 +110,8 @@ export const useAboutContent = () => {
     };
 
     fetchAboutContent();
+    // TODO: Test automation
+    // This is a test comment to verify issue creation works.
   }, []);
 
   const handleLearnMoreClick = () => {
