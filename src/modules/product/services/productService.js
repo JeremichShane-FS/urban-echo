@@ -71,7 +71,7 @@ export const productService = {
   async getNewArrivals({ limit = 8 } = {}) {
     try {
       // TODO: Define Routes - New arrivals API with sorting and filtering (Version 2 post-MVP)
-      // Replace mock with actual API endpoint: GET /api/products/new-arrivals
+      // Replace mock with API endpoint: GET /api/products/new-arrivals
       // Version 2 Query parameters needed:
       // - limit: number of products to return
       // - page: for pagination support

@@ -37,7 +37,7 @@ export const useNewsletter = () => {
 
     try {
       // TODO: Define Routes - Newsletter subscription API with email marketing integration (Version 2 post-MVP)
-      // Replace mock with actual backend API endpoint: POST /api/newsletter/subscribe
+      // Replace mock with backend API endpoint: POST /api/newsletter/subscribe
       // Version 2 Backend requirements:
       // - Email validation and duplicate prevention
       // - Integration with email marketing service (Mailchimp, SendGrid, ConvertKit)

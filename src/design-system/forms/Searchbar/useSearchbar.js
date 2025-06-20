@@ -8,7 +8,7 @@ const useSearchbar = () => {
     // Requirements:
     // - Full-text search across product names, descriptions, categories
     // - Auto-complete suggestions with debounced API calls
-    // - Search filters (price range, category, brand, size, color)
+    // - Search filters (price range, category, brand, size, and color)
     // - Search result ranking by relevance, popularity, price
     // - Search analytics tracking for business intelligence
     // - Recently searched items and search history
