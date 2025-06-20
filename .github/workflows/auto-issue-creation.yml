@@ -1,7 +1,8 @@
-name: "Auto Issue Creation - v5 Correct"
+name: "Auto Issue Creation - Full Scan"
 on:
   push:
     branches: [main, staging, dev]
+  workflow_dispatch:
 
 jobs:
   todo-to-issue:
@@ -11,19 +12,20 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Get full repository history
 
-      - name: "TODO to Issue"
-        uses: alstr/todo-to-issue-action@v5 # Use v5 as requested
+      - name: "TODO to Issue - Force Full Scan"
+        uses: alstr/todo-to-issue-action@v5
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          # CRITICAL: Remove these for manual triggers to work
-          # BEFORE: ${{ github.event.before }}
-          # SHA: ${{ github.sha }}
+          # FORCE empty values to disable commit limiting
+          BEFORE: ""
+          SHA: ""
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
 
-  # Keep your other jobs - they're working great
   conventional-commit-analysis:
     runs-on: ubuntu-latest
     permissions:
@@ -36,7 +38,6 @@ jobs:
 
       - name: "Analyze Conventional Commits"
         run: |
-          # [Your existing commit analysis code - it works perfectly]
           FULL_COMMIT_MSG=$(git log -1 --pretty=%B)
           COMMIT_HASH=$(git log -1 --pretty=%H)
           AUTHOR=$(git log -1 --pretty=%an)
