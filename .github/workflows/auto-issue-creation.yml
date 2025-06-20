@@ -1,10 +1,11 @@
-name: "Auto Issue Creation"
+name: "Custom TODO to Issue Parser"
 on:
   push:
-    branches: [main, staging, dev] # Only on actual pushes/merges
+    branches: [main, staging, dev]
+  workflow_dispatch: # Manual trigger for testing
 
 jobs:
-  todo-to-issue:
+  custom-todo-parser:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -12,339 +13,191 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "TODO to Issue"
-        uses: alstr/todo-to-issue-action@v5
-        with:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          # Remove for full scan:
-          # BEFORE: ${{ github.event.before }}
-          # SHA: ${{ github.sha }}
-          INSERT_ISSUE_URLS: "true"
-          CLOSE_ISSUES: "true"
-          AUTO_P: "false"
-          # REMOVED INVALID PARAMETERS:
-          # COMMENT_MARKER: "//"
-          # LINE_SUFFIX: ""
-          # LABEL_LINES: "false"
-          IDENTIFIERS: >
-            [
-              {"name": "TODO", "labels": ["type: enhancement", "auto-generated"]},
-              {"name": "FIXME", "labels": ["type: bug", "auto-generated"]},
-              {"name": "HACK", "labels": ["tech-debt", "auto-generated"]},
-              {"name": "BUG", "labels": ["type: bug", "priority: high"]},
-              {"name": "OPTIMIZE", "labels": ["performance", "auto-generated"]},
-              {"name": "SECURITY", "labels": ["area: security", "priority: high"]},
-              {"name": "REFACTOR", "labels": ["tech-debt", "priority: medium"]},
-              {"name": "UI", "labels": ["area: frontend", "auto-generated"]},
-              {"name": "API", "labels": ["area: api", "auto-generated"]},
-              {"name": "DB", "labels": ["area: database", "mongodb"]}
-            ]
-
-  conventional-commit-analysis:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: "Analyze Conventional Commits"
+      - name: "Parse TODO Comments and Create Issues"
         run: |
-          # Get full commit message
-          FULL_COMMIT_MSG=$(git log -1 --pretty=%B)
-          COMMIT_HASH=$(git log -1 --pretty=%H)
-          AUTHOR=$(git log -1 --pretty=%an)
+          echo "🔍 Scanning for TODO comments..."
 
-          echo "Analyzing conventional commit: $FULL_COMMIT_MSG"
+          # Create a temporary file to track processed TODOs
+          PROCESSED_TODOS=$(mktemp)
 
-          # Skip merge commits
-          if echo "$FULL_COMMIT_MSG" | grep -q "^Merge"; then
-            echo "Skipping merge commit"
-            exit 0
-          fi
-
-          # Check if this commit already has an issue created
-          # Search for existing issues with this commit hash
-          EXISTING_ISSUE=$(gh issue list --label "auto-generated" --search "$COMMIT_HASH" --json number --jq '.[0].number' 2>/dev/null || echo "")
-
-          if [ ! -z "$EXISTING_ISSUE" ]; then
-            echo "Issue already exists for commit $COMMIT_HASH (Issue #$EXISTING_ISSUE)"
-            exit 0
-          fi
-
-          # Parse conventional commit format: type(scope): subject
-          COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
-          COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
-
-          # Extract type and scope using regex (fixed syntax)
-          if [[ "$COMMIT_HEADER" =~ ^([a-z]+)(\(([^)]+)\))?: ]]; then
-            COMMIT_TYPE="${BASH_REMATCH[1]}"
-            COMMIT_SCOPE="${BASH_REMATCH[3]}"
-            COMMIT_SUBJECT="${COMMIT_HEADER#*: }"
-          else
-            echo "Not a conventional commit format, skipping analysis"
-            exit 0
-          fi
-
-          echo "Commit Type: $COMMIT_TYPE"
-          echo "Commit Scope: $COMMIT_SCOPE"
-          echo "Commit Subject: $COMMIT_SUBJECT"
-
-          # Determine priority based on commit type
-          case $COMMIT_TYPE in
-            "fix"|"hotfix"|"security")
-              PRIORITY="priority: high"
-              ;;
-            "feat"|"perf"|"refactor")
-              PRIORITY="priority: medium"
-              ;;
-            "docs"|"style"|"test"|"chore")
-              PRIORITY="priority: low"
-              ;;
-            *)
-              PRIORITY="priority: medium"
-              ;;
-          esac
-
-          # Create issues based on commit type and content analysis
-
-          # Security-related commits
-          if [[ "$COMMIT_TYPE" == "security" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(security|vulnerability|auth|authentication|password|token|encrypt)"; then
-            gh issue create \
-              --title "🔒 Security Review: $COMMIT_SUBJECT" \
-              --body "**Security-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Full Commit Message:**
-          \`\`\`
-          $FULL_COMMIT_MSG
-          \`\`\`
-
-          **Security Review Checklist:**
-          - [ ] Authentication mechanisms reviewed
-          - [ ] Data validation implemented
-          - [ ] Input sanitization verified
-          - [ ] API security confirmed
-          - [ ] Payment processing security validated
-          - [ ] Access controls verified" \
-              --label "area: security,priority: high,auto-generated"
-          fi
-
-          # Performance-related commits
-          if [[ "$COMMIT_TYPE" == "perf" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(performance|optimize|slow|speed|bottleneck)"; then
-            gh issue create \
-              --title "🚀 Performance Review: $COMMIT_SUBJECT" \
-              --body "**Performance-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Performance Review Checklist:**
-          - [ ] Page load times measured
-          - [ ] Database query optimization verified
-          - [ ] Image optimization confirmed
-          - [ ] Bundle size impact assessed
-          - [ ] Caching opportunities evaluated
-          - [ ] Memory usage analyzed" \
-              --label "performance,$PRIORITY,auto-generated"
-          fi
-
-          # Database-related commits
-          if echo "$COMMIT_SCOPE,$FULL_COMMIT_MSG" | grep -iE "(database|mongo|db|query|schema|migration|model)"; then
-            gh issue create \
-              --title "🗄️ Database Review: $COMMIT_SUBJECT" \
-              --body "**Database-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Database Review Checklist:**
-          - [ ] Schema changes validated
-          - [ ] Query performance tested
-          - [ ] Data migration requirements assessed
-          - [ ] Indexing strategy reviewed
-          - [ ] Backup considerations evaluated
-          - [ ] Data integrity verified" \
-              --label "area: database,mongodb,$PRIORITY,auto-generated"
-          fi
-
-          # Payment-related commits
-          if echo "$COMMIT_SCOPE,$FULL_COMMIT_MSG" | grep -iE "(payment|stripe|checkout|billing|transaction)"; then
-            gh issue create \
-              --title "💳 Payment System Review: $COMMIT_SUBJECT" \
-              --body "**Payment-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Payment System Review Checklist:**
-          - [ ] Stripe integration tested
-          - [ ] Payment flow verified
-          - [ ] Error handling confirmed
-          - [ ] Transaction logging validated
-          - [ ] Refund processes tested
-          - [ ] Security compliance verified" \
-              --label "area: payment,stripe,priority: high,auto-generated"
-          fi
-
-          # Breaking changes detection
-          if echo "$FULL_COMMIT_MSG" | grep -E "BREAKING CHANGE|!:"; then
-            gh issue create \
-              --title "⚠️ Breaking Change Review: $COMMIT_SUBJECT" \
-              --body "**Breaking Change Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Breaking Change Review Checklist:**
-          - [ ] Migration guide created
-          - [ ] Documentation updated
-          - [ ] Backward compatibility assessed
-          - [ ] Deprecation notices added
-          - [ ] Version bump planned
-          - [ ] Team notified" \
-              --label "type: breaking-change,priority: critical,auto-generated"
-          fi
-
-          # Feature commits that might need follow-up
-          if [[ "$COMMIT_TYPE" == "feat" ]]; then
-            # Check if documentation might be needed
-            if ! echo "$FULL_COMMIT_MSG" | grep -iE "(docs|documentation|readme)"; then
-              gh issue create \
-                --title "📚 Documentation Update Needed: $COMMIT_SUBJECT" \
-                --body "**New Feature Documentation Required**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Documentation Checklist:**
-          - [ ] API documentation updated
-          - [ ] User guide updated
-          - [ ] Code examples added
-          - [ ] README updated
-          - [ ] Changelog updated
-          - [ ] Tests documented" \
-                --label "type: documentation,$PRIORITY,auto-generated"
-            fi
-          fi
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  file-analysis:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: "Analyze Changed Files for Issues"
-        run: |
-          # Get changed files in this commit
-          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD || echo "")
-          COMMIT_HASH=$(git log -1 --pretty=%H)
-          AUTHOR=$(git log -1 --pretty=%an)
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No changed files detected"
-            exit 0
-          fi
-
-          echo "Analyzing changed files: $CHANGED_FILES"
-
-          for file in $CHANGED_FILES; do
-            if [[ -f "$file" ]]; then
-              echo "Scanning file: $file"
+          # Find all JavaScript/TypeScript files
+          find . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) \
+            -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
+            
+            echo "📄 Processing: $file"
+            
+            # Extract TODO/FIXME/HACK/etc blocks with proper parsing
+            awk -v file="$file" '
+            BEGIN { 
+              in_todo = 0
+              todo_title = ""
+              todo_body = ""
+              todo_type = ""
+              line_num = 0
+            }
+            
+            {
+              line_num++
               
-              # Skip workflow files to avoid recursive issues
-              if [[ "$file" == ".github/workflows/"* ]]; then
-                echo "Skipping workflow file: $file"
-                continue
-              fi
-              
-              # Look for debug code (fixed regex)
-              if grep -n -E "(console\\\.log|debugger|alert\\()" "$file" 2>/dev/null; then
-                # Check if issue already exists for this file
-                EXISTING_DEBUG_ISSUE=$(gh issue list --label "cleanup" --search "Debug Code Found: Remove debug statements in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+              # Match multiple comment types: TODO, FIXME, HACK, BUG, OPTIMIZE, SECURITY, REFACTOR, UI, API, DB
+              if ($0 ~ /\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):/) {
+                # Extract the comment type
+                match($0, /\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):/, arr)
+                todo_type = arr[1]
                 
-                if [ -z "$EXISTING_DEBUG_ISSUE" ]; then
-                  gh issue create \
-                    --title "🐛 Debug Code Found: Remove debug statements in $file" \
-                    --body "**Debug Code Detected**
-            
-            **File:** $file
-            **Commit:** $COMMIT_HASH
-            **Author:** $AUTHOR
-            
-            Debug statements found that should be removed before production:
-            
-            \`\`\`
-            $(grep -n -E "(console\\\.log|debugger|alert\\()" "$file" | head -5)
-            \`\`\`
-            
-            Please remove these debug statements." \
-                    --label "type: bug,cleanup,auto-generated"
-                fi
-              fi
-              
-              # Look for hardcoded values (fixed regex)
-              if grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" 2>/dev/null; then
-                # Check if issue already exists for this file
-                EXISTING_HARDCODE_ISSUE=$(gh issue list --label "area: security" --search "Hardcoded Values: Environment variables needed in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+                # Extract the title after the keyword:
+                todo_title = $0
+                gsub(/.*\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):[ ]*/, "", todo_title)
+                gsub(/^[ \t]+|[ \t]+$/, "", todo_title)  # Trim
                 
-                if [ -z "$EXISTING_HARDCODE_ISSUE" ]; then
-                  gh issue create \
-                    --title "⚠️ Hardcoded Values: Environment variables needed in $file" \
-                    --body "**Hardcoded Values Detected**
-            
-            **File:** $file
-            **Commit:** $COMMIT_HASH
-            **Author:** $AUTHOR
-            
-            Hardcoded values found that should use environment variables:
-            
-            \`\`\`
-            $(grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" | head -3)
-            \`\`\`
-            
-            Please move these to environment variables for security and flexibility." \
-                    --label "area: security,priority: high,auto-generated"
-                fi
-              fi
+                todo_body = "**Type:** " todo_type "\n**File:** " file "\n**Line:** line_num "\n\n"
+                in_todo = 1
+                next
+              }
               
+              # If we are in a TODO block, collect subsequent comment lines
+              if (in_todo && $0 ~ /^[ \t]*\/\//) {
+                comment_line = $0
+                gsub(/^[ \t]*\/\/[ ]*/, "", comment_line)  # Remove // and spaces
+                
+                if (comment_line != "") {
+                  todo_body = todo_body comment_line "\n"
+                }
+                next
+              }
+              
+              # End of comment block
+              if (in_todo && $0 !~ /^[ \t]*\/\//) {
+                # Create the issue with appropriate emoji and labels
+                if (todo_title != "") {
+                  # Clean the title for GitHub
+                  clean_title = todo_title
+                  gsub(/[^a-zA-Z0-9 \-_().]/, "", clean_title)
+                  
+                  # Truncate if too long
+                  if (length(clean_title) > 60) {
+                    clean_title = substr(clean_title, 1, 57) "..."
+                  }
+                  
+                  # Determine emoji and labels based on type
+                  emoji = "📋"
+                  labels = "type: enhancement,auto-generated"
+                  
+                  if (todo_type == "TODO") {
+                    emoji = "📋"
+                    labels = "type: enhancement,auto-generated,todo"
+                  } else if (todo_type == "FIXME") {
+                    emoji = "🐛"
+                    labels = "type: bug,auto-generated,fixme"
+                  } else if (todo_type == "HACK") {
+                    emoji = "⚠️"
+                    labels = "tech-debt,auto-generated,hack"
+                  } else if (todo_type == "BUG") {
+                    emoji = "🐛"
+                    labels = "type: bug,priority: high,auto-generated"
+                  } else if (todo_type == "OPTIMIZE") {
+                    emoji = "🚀"
+                    labels = "performance,auto-generated"
+                  } else if (todo_type == "SECURITY") {
+                    emoji = "🔒"
+                    labels = "area: security,priority: high,auto-generated"
+                  } else if (todo_type == "REFACTOR") {
+                    emoji = "🔧"
+                    labels = "tech-debt,priority: medium,auto-generated"
+                  } else if (todo_type == "UI") {
+                    emoji = "🎨"
+                    labels = "area: frontend,auto-generated"
+                  } else if (todo_type == "API") {
+                    emoji = "🔌"
+                    labels = "area: api,auto-generated"
+                  } else if (todo_type == "DB") {
+                    emoji = "🗄️"
+                    labels = "area: database,mongodb,auto-generated"
+                  }
+                  
+                  # Print the issue creation command
+                  printf "CREATING_ISSUE|||%s %s|||%s|||%s\n", emoji, clean_title, todo_body, labels
+                }
+                
+                # Reset for next comment
+                in_todo = 0
+                todo_title = ""
+                todo_body = ""
+                todo_type = ""
+              }
+            }
+            
+            # Handle comment block at end of file
+            END {
+              if (in_todo && todo_title != "") {
+                clean_title = todo_title
+                gsub(/[^a-zA-Z0-9 \-_().]/, "", clean_title)
+                
+                if (length(clean_title) > 60) {
+                  clean_title = substr(clean_title, 1, 57) "..."
+                }
+                
+                # Determine emoji and labels
+                emoji = "📋"
+                labels = "type: enhancement,auto-generated"
+                
+                if (todo_type == "TODO") {
+                  emoji = "📋"
+                  labels = "type: enhancement,auto-generated,todo"
+                } else if (todo_type == "FIXME") {
+                  emoji = "🐛"
+                  labels = "type: bug,auto-generated,fixme"
+                } else if (todo_type == "HACK") {
+                  emoji = "⚠️"
+                  labels = "tech-debt,auto-generated,hack"
+                } else if (todo_type == "BUG") {
+                  emoji = "🐛"
+                  labels = "type: bug,priority: high,auto-generated"
+                } else if (todo_type == "OPTIMIZE") {
+                  emoji = "🚀"
+                  labels = "performance,auto-generated"
+                } else if (todo_type == "SECURITY") {
+                  emoji = "🔒"
+                  labels = "area: security,priority: high,auto-generated"
+                } else if (todo_type == "REFACTOR") {
+                  emoji = "🔧"
+                  labels = "tech-debt,priority: medium,auto-generated"
+                } else if (todo_type == "UI") {
+                  emoji = "🎨"
+                  labels = "area: frontend,auto-generated"
+                } else if (todo_type == "API") {
+                  emoji = "🔌"
+                  labels = "area: api,auto-generated"
+                } else if (todo_type == "DB") {
+                  emoji = "🗄️"
+                  labels = "area: database,mongodb,auto-generated"
+                }
+                
+                printf "CREATING_ISSUE|||%s %s|||%s|||%s\n", emoji, clean_title, todo_body, labels
+              }
+            }
+            ' "$file"
+          done | while IFS='|||' read -r marker title body labels; do
+            
+            if [[ "$marker" == "CREATING_ISSUE" ]]; then
+              echo "📝 Creating issue: $title"
+              
+              # Check if issue already exists (search by title without emoji)
+              SEARCH_TITLE=$(echo "$title" | sed 's/^[[:space:]]*[[:emoji:]]*[[:space:]]*//')
+              EXISTING=$(gh issue list --search "$SEARCH_TITLE" --json number --jq '.[0].number' 2>/dev/null || echo "")
+              
+              if [[ -z "$EXISTING" ]]; then
+                gh issue create \
+                  --title "$title" \
+                  --body "$body" \
+                  --label "$labels"
+                echo "✅ Created issue: $title"
+              else
+                echo "⏭️  Issue already exists: $title (#$EXISTING)"
+              fi
             fi
           done
+
+          echo "🎉 TODO processing complete!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
