@@ -87,7 +87,7 @@ export const useAboutContent = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
         // TODO: Define Routes - About content management API
-        // Test 1
+        // Test 2
         // Create a API endpoint for dynamic about section content.
         // Backend requirements:
         // - GET /api/content/about (fetch about content)

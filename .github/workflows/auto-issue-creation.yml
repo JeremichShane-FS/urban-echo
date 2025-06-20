@@ -1,11 +1,11 @@
-name: "Custom TODO to Issue Parser"
+name: "TODO to Issue - Working"
 on:
   push:
     branches: [main, staging, dev]
-  workflow_dispatch: # Manual trigger for testing
+  workflow_dispatch:
 
 jobs:
-  custom-todo-parser:
+  todo-to-issue:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -13,191 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Parse TODO Comments and Create Issues"
-        run: |
-          echo "🔍 Scanning for TODO comments..."
-
-          # Create a temporary file to track processed TODOs
-          PROCESSED_TODOS=$(mktemp)
-
-          # Find all JavaScript/TypeScript files
-          find . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) \
-            -not -path "./node_modules/*" -not -path "./.git/*" | while read file; do
-            
-            echo "📄 Processing: $file"
-            
-            # Extract TODO/FIXME/HACK/etc blocks with proper parsing
-            awk -v file="$file" '
-            BEGIN { 
-              in_todo = 0
-              todo_title = ""
-              todo_body = ""
-              todo_type = ""
-              line_num = 0
-            }
-            
-            {
-              line_num++
-              
-              # Match multiple comment types: TODO, FIXME, HACK, BUG, OPTIMIZE, SECURITY, REFACTOR, UI, API, DB
-              if ($0 ~ /\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):/) {
-                # Extract the comment type
-                match($0, /\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):/, arr)
-                todo_type = arr[1]
-                
-                # Extract the title after the keyword:
-                todo_title = $0
-                gsub(/.*\/\/[ ]*(TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB):[ ]*/, "", todo_title)
-                gsub(/^[ \t]+|[ \t]+$/, "", todo_title)  # Trim
-                
-                todo_body = "**Type:** " todo_type "\n**File:** " file "\n**Line:** line_num "\n\n"
-                in_todo = 1
-                next
-              }
-              
-              # If we are in a TODO block, collect subsequent comment lines
-              if (in_todo && $0 ~ /^[ \t]*\/\//) {
-                comment_line = $0
-                gsub(/^[ \t]*\/\/[ ]*/, "", comment_line)  # Remove // and spaces
-                
-                if (comment_line != "") {
-                  todo_body = todo_body comment_line "\n"
-                }
-                next
-              }
-              
-              # End of comment block
-              if (in_todo && $0 !~ /^[ \t]*\/\//) {
-                # Create the issue with appropriate emoji and labels
-                if (todo_title != "") {
-                  # Clean the title for GitHub
-                  clean_title = todo_title
-                  gsub(/[^a-zA-Z0-9 \-_().]/, "", clean_title)
-                  
-                  # Truncate if too long
-                  if (length(clean_title) > 60) {
-                    clean_title = substr(clean_title, 1, 57) "..."
-                  }
-                  
-                  # Determine emoji and labels based on type
-                  emoji = "📋"
-                  labels = "type: enhancement,auto-generated"
-                  
-                  if (todo_type == "TODO") {
-                    emoji = "📋"
-                    labels = "type: enhancement,auto-generated,todo"
-                  } else if (todo_type == "FIXME") {
-                    emoji = "🐛"
-                    labels = "type: bug,auto-generated,fixme"
-                  } else if (todo_type == "HACK") {
-                    emoji = "⚠️"
-                    labels = "tech-debt,auto-generated,hack"
-                  } else if (todo_type == "BUG") {
-                    emoji = "🐛"
-                    labels = "type: bug,priority: high,auto-generated"
-                  } else if (todo_type == "OPTIMIZE") {
-                    emoji = "🚀"
-                    labels = "performance,auto-generated"
-                  } else if (todo_type == "SECURITY") {
-                    emoji = "🔒"
-                    labels = "area: security,priority: high,auto-generated"
-                  } else if (todo_type == "REFACTOR") {
-                    emoji = "🔧"
-                    labels = "tech-debt,priority: medium,auto-generated"
-                  } else if (todo_type == "UI") {
-                    emoji = "🎨"
-                    labels = "area: frontend,auto-generated"
-                  } else if (todo_type == "API") {
-                    emoji = "🔌"
-                    labels = "area: api,auto-generated"
-                  } else if (todo_type == "DB") {
-                    emoji = "🗄️"
-                    labels = "area: database,mongodb,auto-generated"
-                  }
-                  
-                  # Print the issue creation command
-                  printf "CREATING_ISSUE|||%s %s|||%s|||%s\n", emoji, clean_title, todo_body, labels
-                }
-                
-                # Reset for next comment
-                in_todo = 0
-                todo_title = ""
-                todo_body = ""
-                todo_type = ""
-              }
-            }
-            
-            # Handle comment block at end of file
-            END {
-              if (in_todo && todo_title != "") {
-                clean_title = todo_title
-                gsub(/[^a-zA-Z0-9 \-_().]/, "", clean_title)
-                
-                if (length(clean_title) > 60) {
-                  clean_title = substr(clean_title, 1, 57) "..."
-                }
-                
-                # Determine emoji and labels
-                emoji = "📋"
-                labels = "type: enhancement,auto-generated"
-                
-                if (todo_type == "TODO") {
-                  emoji = "📋"
-                  labels = "type: enhancement,auto-generated,todo"
-                } else if (todo_type == "FIXME") {
-                  emoji = "🐛"
-                  labels = "type: bug,auto-generated,fixme"
-                } else if (todo_type == "HACK") {
-                  emoji = "⚠️"
-                  labels = "tech-debt,auto-generated,hack"
-                } else if (todo_type == "BUG") {
-                  emoji = "🐛"
-                  labels = "type: bug,priority: high,auto-generated"
-                } else if (todo_type == "OPTIMIZE") {
-                  emoji = "🚀"
-                  labels = "performance,auto-generated"
-                } else if (todo_type == "SECURITY") {
-                  emoji = "🔒"
-                  labels = "area: security,priority: high,auto-generated"
-                } else if (todo_type == "REFACTOR") {
-                  emoji = "🔧"
-                  labels = "tech-debt,priority: medium,auto-generated"
-                } else if (todo_type == "UI") {
-                  emoji = "🎨"
-                  labels = "area: frontend,auto-generated"
-                } else if (todo_type == "API") {
-                  emoji = "🔌"
-                  labels = "area: api,auto-generated"
-                } else if (todo_type == "DB") {
-                  emoji = "🗄️"
-                  labels = "area: database,mongodb,auto-generated"
-                }
-                
-                printf "CREATING_ISSUE|||%s %s|||%s|||%s\n", emoji, clean_title, todo_body, labels
-              }
-            }
-            ' "$file"
-          done | while IFS='|||' read -r marker title body labels; do
-            
-            if [[ "$marker" == "CREATING_ISSUE" ]]; then
-              echo "📝 Creating issue: $title"
-              
-              # Check if issue already exists (search by title without emoji)
-              SEARCH_TITLE=$(echo "$title" | sed 's/^[[:space:]]*[[:emoji:]]*[[:space:]]*//')
-              EXISTING=$(gh issue list --search "$SEARCH_TITLE" --json number --jq '.[0].number' 2>/dev/null || echo "")
-              
-              if [[ -z "$EXISTING" ]]; then
-                gh issue create \
-                  --title "$title" \
-                  --body "$body" \
-                  --label "$labels"
-                echo "✅ Created issue: $title"
-              else
-                echo "⏭️  Issue already exists: $title (#$EXISTING)"
-              fi
-            fi
-          done
-
-          echo "🎉 TODO processing complete!"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "TODO to Issue"
+        uses: alstr/todo-to-issue-action@v4.6.9
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INSERT_ISSUE_URLS: "true"
+          CLOSE_ISSUES: "true"
+          IDENTIFIERS: >
+            [
+              {"name": "TODO", "labels": ["todo", "auto-generated"]}
+            ]
