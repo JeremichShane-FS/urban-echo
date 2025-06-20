@@ -13,17 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Debug TODO Comments in Repository"
-        run: |
-          echo "🔍 Searching for TODO: comments in repository..."
-          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
-            xargs grep -n "TODO:" | head -10 || echo "No TODO: comments found"
-
-          echo ""
-          echo "📊 TODO: comment count:"
-          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
-            xargs grep -c "TODO:" 2>/dev/null | awk -F: '{sum += $2} END {print sum}' || echo "0"
-
       - name: "TODO to Issue"
         uses: alstr/todo-to-issue-action@v5
         with:
@@ -31,7 +20,7 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          # No labels from the action - we'll add proper ones later
+          # Create with no labels - we'll add professional labels in next job
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": []}
@@ -42,7 +31,8 @@ jobs:
             ---
             **File:** {{ url }}
 
-            ```
+            **Code:**
+            ```javascript
             {{ snippet }}
             ```
 
@@ -53,61 +43,92 @@ jobs:
       issues: write
       contents: read
     steps:
-      - name: "Wait for issues to be fully created"
-        run: sleep 45 # Give time for TODO issues to be created
-
       - name: "Apply Professional Labels from Automation Guide"
         run: |
-          echo "🏷️ Applying professional labels from automation guide..."
+          echo "🏷️ Applying professional labels to all recent issues..."
 
-          # Get the 20 most recent issues (no time filtering)
-          echo "🔍 Getting recent issues to label..."
+          # Wait for TODO issues to be fully created
+          sleep 30
 
-          # Process the most recent issues
-          gh issue list --limit 20 --json number,title,body --jq -r '.[] | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
+          # Get the most recent 10 issues (regardless of age)
+          echo "🔍 Getting recent issues to process..."
+          gh issue list --limit 10 --json number,title,body | jq -r '.[] | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
             if [[ -n "$number" && -n "$title" ]]; then
               echo ""
               echo "📝 Processing issue #$number: $title"
               
-              # Get the issue body
-              BODY=$(gh issue view "$number" --json body --jq -r '.body // ""' 2>/dev/null || echo "")
+              # Get the full issue body for content analysis
+              ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
+              CONTENT="$title $ISSUE_BODY"
               
-              # Always add base labels for any recent issue
-              echo "  🏷️ Adding auto-generated label"
-              gh issue edit "$number" --add-label "auto-generated"
+              echo "🏷️ Adding base professional labels..."
+              # Add base labels to every auto-generated issue
+              gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
+              gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
               
-              # Check if it's a TODO-style issue
-              if [[ "$title" =~ (TODO|Define|Develop|Implement|Create|Component) ]]; then
-                echo "  ✅ Adding type: enhancement"
-                gh issue edit "$number" --add-label "type: enhancement"
-                
-                # Analyze content for specific labels
-                CONTENT="$title $BODY"
-                
-                # Frontend content
-                if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design) ]]; then
-                  echo "  🎨 Adding area: frontend"
-                  gh issue edit "$number" --add-label "area: frontend"
-                fi
-                
-                # API content  
-                if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration) ]]; then
-                  echo "  🔌 Adding area: api"
-                  gh issue edit "$number" --add-label "area: api"
-                fi
-                
-                # Priority based on content
-                if [[ "$CONTENT" =~ (API|integration|CMS|Version) ]]; then
-                  echo "  📋 Adding priority: medium"
-                  gh issue edit "$number" --add-label "priority: medium"
-                fi
-                
-                echo "  ✅ Professional labels applied to TODO issue #$number"
+              # Add AREA labels based on content
+              if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
+                echo "   🔌 Adding API area labels"
+                gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
               fi
               
-              # Show what labels were applied
-              FINAL_LABELS=$(gh issue view "$number" --json labels --jq -r '.labels | map(.name) | join(", ")' 2>/dev/null || echo "none")
-              echo "  🏷️ Final labels: $FINAL_LABELS"
+              if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
+                echo "   🎨 Adding frontend area labels"
+                gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
+                echo "   🗄️ Adding database area labels"
+                gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
+                gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (payment|stripe|checkout|billing|Purchase|Cart) ]]; then
+                echo "   💳 Adding payment area labels"
+                gh issue edit "$number" --add-label "area: payment" 2>/dev/null || true
+                gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
+                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (security|auth|login|token|password|Auth0) ]]; then
+                echo "   🔒 Adding security area labels"
+                gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
+                gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
+                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+              fi
+              
+              # Add PRIORITY labels
+              if [[ "$CONTENT" =~ (critical|urgent|security|payment|breaking) ]]; then
+                echo "   ⚡ Adding high priority"
+                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+              elif [[ "$CONTENT" =~ (API|integration|CMS|Version|Component|Dynamic) ]]; then
+                echo "   📋 Adding medium priority"
+                gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+              else
+                echo "   📝 Adding low priority"
+                gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+              fi
+              
+              # Add TECHNOLOGY labels
+              if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
+                gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (performance|optimize|speed|slow) ]]; then
+                echo "   ⚡ Adding performance label"
+                gh issue edit "$number" --add-label "performance" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (refactor|technical.*debt|hack|legacy) ]]; then
+                echo "   🔧 Adding tech-debt label"
+                gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
+              fi
+              
+              echo "   ✅ Professional labels applied to issue #$number"
+              
+              # Show final labels
+              FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
+              echo "   🏷️ Final labels: $FINAL_LABELS"
             fi
           done
 
@@ -116,7 +137,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  conventional-commit-analysis:
+  analyze-conventional-commits:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -126,7 +147,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Analyze Conventional Commits"
+      - name: "Analyze Conventional Commit and Create Issue"
         run: |
           # Get full commit message
           FULL_COMMIT_MSG=$(git log -1 --pretty=%B)
@@ -136,22 +157,13 @@ jobs:
           echo "Analyzing conventional commit: $FULL_COMMIT_MSG"
 
           # Skip merge commits
-          if echo "$FULL_COMMIT_MSG" | grep -q "^Merge"; then
+          if echo "$FULL_COMMIT_MSG" | grep -q "^Merge\|^merge"; then
             echo "Skipping merge commit"
             exit 0
           fi
 
-          # Check if this commit already has an issue created
-          EXISTING_ISSUE=$(gh issue list --label "auto-generated" --search "$COMMIT_HASH" --json number --jq '.[0].number' 2>/dev/null || echo "")
-
-          if [ ! -z "$EXISTING_ISSUE" ]; then
-            echo "Issue already exists for commit $COMMIT_HASH (Issue #$EXISTING_ISSUE)"
-            exit 0
-          fi
-
-          # Parse conventional commit format: type(scope): subject
-          COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
-          COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
+          # Get first line as header
+          COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n1)
 
           # Extract type and scope using simple string parsing
           COMMIT_TYPE=""
@@ -159,199 +171,96 @@ jobs:
           COMMIT_SUBJECT="$COMMIT_HEADER"
 
           # Check if it matches conventional commit format
-          if [[ "$COMMIT_HEADER" == *":"* ]]; then
-            # Extract everything before the colon
+          if [[ "$COMMIT_HEADER" == *": "* ]]; then
             TYPE_PART="${COMMIT_HEADER%%:*}"
-            # Extract everything after the colon and space
             COMMIT_SUBJECT="${COMMIT_HEADER#*: }"
             
-            # Check if there's a scope in parentheses
+            # Check for scope in parentheses
             if [[ "$TYPE_PART" == *"("*")" ]]; then
               COMMIT_TYPE="${TYPE_PART%%(*}"
-              SCOPE_PART="${TYPE_PART#*(}"
-              COMMIT_SCOPE="${SCOPE_PART%)*}"
+              COMMIT_SCOPE="${TYPE_PART#*(}"
+              COMMIT_SCOPE="${COMMIT_SCOPE%)}"
             else
               COMMIT_TYPE="$TYPE_PART"
             fi
-            
-            echo "Parsed conventional commit successfully"
-          else
-            echo "Not a conventional commit format, skipping analysis"
-            exit 0
           fi
 
-          echo "Commit Type: $COMMIT_TYPE"
-          echo "Commit Scope: $COMMIT_SCOPE"
-          echo "Commit Subject: $COMMIT_SUBJECT"
-
-          # Determine priority based on commit type
-          case $COMMIT_TYPE in
-            "fix"|"hotfix"|"security")
-              PRIORITY="priority: high"
-              ;;
-            "feat"|"perf"|"refactor")
-              PRIORITY="priority: medium"
-              ;;
-            "docs"|"style"|"test"|"chore")
-              PRIORITY="priority: low"
-              ;;
-            *)
-              PRIORITY="priority: medium"
-              ;;
-          esac
-
-          # Create issues based on commit type and content analysis
-
-          # Security-related commits
-          if [[ "$COMMIT_TYPE" == "security" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(security|vulnerability|auth|authentication|password|token|encrypt)"; then
-            gh issue create \
-              --title "🔒 Security Review: $COMMIT_SUBJECT" \
-              --body "**Security-Related Commit Detected**
+          # Only create issues for specific commit types
+          if [[ -n "$COMMIT_TYPE" ]] && [[ "$COMMIT_TYPE" =~ ^(feat|fix|perf|refactor)$ ]]; then
+            
+            # Create issue title
+            if [[ -n "$COMMIT_SCOPE" ]]; then
+              ISSUE_TITLE="[$COMMIT_TYPE($COMMIT_SCOPE)] $COMMIT_SUBJECT"
+            else
+              ISSUE_TITLE="[$COMMIT_TYPE] $COMMIT_SUBJECT"
+            fi
+            
+            # Create issue body
+            ISSUE_BODY="## Conventional Commit Analysis
 
           **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
+          **Scope:** \`${COMMIT_SCOPE:-none}\`
           **Subject:** $COMMIT_SUBJECT
+
           **Commit:** $COMMIT_HASH
           **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
 
-          **Full Commit Message:**
+          ## Full Commit Message
           \`\`\`
           $FULL_COMMIT_MSG
           \`\`\`
 
-          **Security Review Checklist:**
-          - [ ] Authentication mechanisms reviewed
-          - [ ] Data validation implemented
-          - [ ] Input sanitization verified
-          - [ ] API security confirmed
-          - [ ] Payment processing security validated
-          - [ ] Access controls verified" \
-              --label "area: security,priority: high,auto-generated"
-          fi
-
-          # Performance-related commits
-          if [[ "$COMMIT_TYPE" == "perf" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(performance|optimize|slow|speed|bottleneck)"; then
+          ## Analysis
+          This issue was automatically created from a conventional commit to track implementation progress."
+            
+            # Determine labels based on commit type
+            LABELS="auto-generated,conventional-commit"
+            case "$COMMIT_TYPE" in
+              "feat")
+                LABELS="$LABELS,type: enhancement"
+                ;;
+              "fix")
+                LABELS="$LABELS,type: bug"
+                ;;
+              "perf")
+                LABELS="$LABELS,performance"
+                ;;
+              "refactor")
+                LABELS="$LABELS,tech-debt"
+                ;;
+            esac
+            
+            # Add scope-based labels
+            case "$COMMIT_SCOPE" in
+              "api"|"backend")
+                LABELS="$LABELS,area: api"
+                ;;
+              "ui"|"frontend"|"component")
+                LABELS="$LABELS,area: frontend"
+                ;;
+              "db"|"database")
+                LABELS="$LABELS,area: database"
+                ;;
+              "auth"|"security")
+                LABELS="$LABELS,area: security"
+                ;;
+              "ci"|"workflow")
+                LABELS="$LABELS,ci"
+                ;;
+            esac
+            
+            echo "Creating issue: $ISSUE_TITLE"
             gh issue create \
-              --title "🚀 Performance Review: $COMMIT_SUBJECT" \
-              --body "**Performance-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Performance Review Checklist:**
-          - [ ] Page load times measured
-          - [ ] Database query optimization verified
-          - [ ] Image optimization confirmed
-          - [ ] Bundle size impact assessed
-          - [ ] Caching opportunities evaluated
-          - [ ] Memory usage analyzed" \
-              --label "performance,$PRIORITY,auto-generated"
+              --title "$ISSUE_TITLE" \
+              --body "$ISSUE_BODY" \
+              --label "$LABELS"
+          else
+            echo "Skipping commit type: $COMMIT_TYPE (not configured for issue creation)"
           fi
-
-          # Database-related commits
-          if echo "$COMMIT_SCOPE,$FULL_COMMIT_MSG" | grep -iE "(database|mongo|db|query|schema|migration|model)"; then
-            gh issue create \
-              --title "🗄️ Database Review: $COMMIT_SUBJECT" \
-              --body "**Database-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Database Review Checklist:**
-          - [ ] Schema changes validated
-          - [ ] Query performance tested
-          - [ ] Data migration requirements assessed
-          - [ ] Indexing strategy reviewed
-          - [ ] Backup considerations evaluated
-          - [ ] Data integrity verified" \
-              --label "area: database,mongodb,$PRIORITY,auto-generated"
-          fi
-
-          # Payment-related commits
-          if echo "$COMMIT_SCOPE,$FULL_COMMIT_MSG" | grep -iE "(payment|stripe|checkout|billing|transaction)"; then
-            gh issue create \
-              --title "💳 Payment System Review: $COMMIT_SUBJECT" \
-              --body "**Payment-Related Commit Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Payment System Review Checklist:**
-          - [ ] Stripe integration tested
-          - [ ] Payment flow verified
-          - [ ] Error handling confirmed
-          - [ ] Transaction logging validated
-          - [ ] Refund processes tested
-          - [ ] Security compliance verified" \
-              --label "area: payment,stripe,priority: high,auto-generated"
-          fi
-
-          # Breaking changes detection
-          if echo "$FULL_COMMIT_MSG" | grep -E "BREAKING CHANGE|!:"; then
-            gh issue create \
-              --title "⚠️ Breaking Change Review: $COMMIT_SUBJECT" \
-              --body "**Breaking Change Detected**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Breaking Change Review Checklist:**
-          - [ ] Migration guide created
-          - [ ] Documentation updated
-          - [ ] Backward compatibility assessed
-          - [ ] Deprecation notices added
-          - [ ] Version bump planned
-          - [ ] Team notified" \
-              --label "type: breaking-change,priority: critical,auto-generated"
-          fi
-
-          # Feature commits that might need follow-up
-          if [[ "$COMMIT_TYPE" == "feat" ]]; then
-            # Check if documentation might be needed
-            if ! echo "$FULL_COMMIT_MSG" | grep -iE "(docs|documentation|readme)"; then
-              gh issue create \
-                --title "📚 Documentation Update Needed: $COMMIT_SUBJECT" \
-                --body "**New Feature Documentation Required**
-
-          **Type:** \`$COMMIT_TYPE\`
-          **Scope:** \`$COMMIT_SCOPE\`
-          **Subject:** $COMMIT_SUBJECT
-          **Commit:** $COMMIT_HASH
-          **Author:** $AUTHOR
-          **Branch:** ${{ github.ref_name }}
-
-          **Documentation Checklist:**
-          - [ ] API documentation updated
-          - [ ] User guide updated
-          - [ ] Code examples added
-          - [ ] README updated
-          - [ ] Changelog updated
-          - [ ] Tests documented" \
-                --label "type: documentation,$PRIORITY,auto-generated"
-            fi
-          fi
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  file-analysis:
+  analyze-file-changes:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -361,81 +270,98 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Analyze Changed Files for Issues"
+      - name: "Analyze File Changes and Create Issues"
         run: |
-          # Get changed files in this commit
-          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD || echo "")
-          COMMIT_HASH=$(git log -1 --pretty=%H)
-          AUTHOR=$(git log -1 --pretty=%an)
+          echo "🔍 Analyzing file changes..."
 
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No changed files detected"
+          # Get changed files
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "No files changed, skipping analysis"
             exit 0
           fi
 
-          echo "Analyzing changed files: $CHANGED_FILES"
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
 
-          for file in $CHANGED_FILES; do
-            if [[ -f "$file" ]]; then
-              echo "Scanning file: $file"
+          # Analyze significant changes
+          while IFS= read -r file; do
+            if [[ -n "$file" ]]; then
+              echo ""
+              echo "Analyzing: $file"
               
-              # Skip workflow files to avoid recursive issues
-              if [[ "$file" == ".github/workflows/"* ]]; then
-                echo "Skipping workflow file: $file"
-                continue
-              fi
+              # Check file type and determine if it needs tracking
+              SHOULD_CREATE_ISSUE=false
+              ISSUE_TITLE=""
+              ISSUE_LABELS="auto-generated,file-change"
               
-              # Look for debug code (fixed regex)
-              if grep -n -E "(console\\\.log|debugger|alert\\()" "$file" 2>/dev/null; then
-                # Check if issue already exists for this file
-                EXISTING_DEBUG_ISSUE=$(gh issue list --label "cleanup" --search "Debug Code Found: Remove debug statements in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+              case "$file" in
+                *.js|*.jsx|*.ts|*.tsx)
+                  if [[ "$file" == *"component"* ]] || [[ "$file" == *"Component"* ]]; then
+                    SHOULD_CREATE_ISSUE=true
+                    ISSUE_TITLE="Component Update: $file"
+                    ISSUE_LABELS="$ISSUE_LABELS,area: frontend,type: enhancement"
+                  elif [[ "$file" == *"api"* ]] || [[ "$file" == *"API"* ]]; then
+                    SHOULD_CREATE_ISSUE=true
+                    ISSUE_TITLE="API Update: $file"
+                    ISSUE_LABELS="$ISSUE_LABELS,area: api,type: enhancement"
+                  fi
+                  ;;
+                *.scss|*.sass|*.css)
+                  SHOULD_CREATE_ISSUE=true
+                  ISSUE_TITLE="Styling Update: $file"
+                  ISSUE_LABELS="$ISSUE_LABELS,area: frontend,styling"
+                  ;;
+                *package.json|*package-lock.json|*yarn.lock)
+                  SHOULD_CREATE_ISSUE=true
+                  ISSUE_TITLE="Dependency Update: $file"
+                  ISSUE_LABELS="$ISSUE_LABELS,dependencies,type: maintenance"
+                  ;;
+                *.md)
+                  if [[ "$file" == *"README"* ]]; then
+                    SHOULD_CREATE_ISSUE=true
+                    ISSUE_TITLE="Documentation Update: $file"
+                    ISSUE_LABELS="$ISSUE_LABELS,documentation"
+                  fi
+                  ;;
+                .github/workflows/*)
+                  SHOULD_CREATE_ISSUE=true
+                  ISSUE_TITLE="Workflow Update: $file"
+                  ISSUE_LABELS="$ISSUE_LABELS,ci,type: enhancement"
+                  ;;
+              esac
+              
+              if [[ "$SHOULD_CREATE_ISSUE" == "true" ]]; then
+                # Get file diff for analysis
+                FILE_DIFF=$(git diff HEAD~1 HEAD -- "$file" | head -50)
                 
-                if [ -z "$EXISTING_DEBUG_ISSUE" ]; then
-                  gh issue create \
-                    --title "🐛 Debug Code Found: Remove debug statements in $file" \
-                    --body "**Debug Code Detected**
-            
-            **File:** $file
-            **Commit:** $COMMIT_HASH
-            **Author:** $AUTHOR
-            
-            Debug statements found that should be removed before production:
-            
-            \`\`\`
-            $(grep -n -E "(console\\\.log|debugger|alert\\()" "$file" | head -5)
-            \`\`\`
-            
-            Please remove these debug statements." \
-                    --label "type: bug,cleanup,auto-generated"
-                fi
-              fi
-              
-              # Look for hardcoded values (fixed regex)
-              if grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" 2>/dev/null; then
-                # Check if issue already exists for this file
-                EXISTING_HARDCODE_ISSUE=$(gh issue list --label "area: security" --search "Hardcoded Values: Environment variables needed in $file" --json number --jq '.[0].number' 2>/dev/null || echo "")
+                ISSUE_BODY="## File Change Analysis
+
+          **File:** \`$file\`
+          **Change Type:** Automatic detection
+
+          ## Changes Made
+          \`\`\`diff
+          $FILE_DIFF
+          \`\`\`
+
+          ## Next Steps
+          - [ ] Review changes for quality
+          - [ ] Update related documentation if needed
+          - [ ] Test affected functionality
+
+          _This issue was automatically created to track significant file changes._"
                 
-                if [ -z "$EXISTING_HARDCODE_ISSUE" ]; then
-                  gh issue create \
-                    --title "⚠️ Hardcoded Values: Environment variables needed in $file" \
-                    --body "**Hardcoded Values Detected**
-            
-            **File:** $file
-            **Commit:** $COMMIT_HASH
-            **Author:** $AUTHOR
-            
-            Hardcoded values found that should use environment variables:
-            
-            \`\`\`
-            $(grep -n -E "(localhost|127\\\.0\\\.0\\\.1|http://|mongodb://.*password)" "$file" | head -3)
-            \`\`\`
-            
-            Please move these to environment variables for security and flexibility." \
-                    --label "area: security,priority: high,auto-generated"
-                fi
+                echo "Creating issue for: $file"
+                gh issue create \
+                  --title "$ISSUE_TITLE" \
+                  --body "$ISSUE_BODY" \
+                  --label "$ISSUE_LABELS"
               fi
-              
             fi
-          done
+          done <<< "$CHANGED_FILES"
+
+          echo "🎉 File change analysis complete!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
