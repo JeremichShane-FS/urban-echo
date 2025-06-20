@@ -64,16 +64,17 @@ jobs:
           # Much simpler approach - get ALL recent issues
           echo "🔍 All recent issues (last 15 minutes):"
           ALL_RECENT=$(gh issue list --limit 30 --json number,title,labels,createdAt 2>/dev/null || echo "[]")
-          echo "$ALL_RECENT" | jq -r '.[] | select(.createdAt > (now - 900)) | "Issue #\(.number): \(.title) | Labels: \(.labels | map(.name) | join(\", \"))"'
 
-          echo ""
-          echo "🔍 Processing ALL recent issues for labeling:"
+          # Use simpler jq without complex quoting
+          CUTOFF_TIME=$(date -d '15 minutes ago' -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "Cutoff time: $CUTOFF_TIME"
 
-          # Process every recent issue (not just TODO ones)
-          echo "$ALL_RECENT" | jq -r '.[] | select(.createdAt > (now - 900)) | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
+          # Simple processing without complex jq
+          gh issue list --limit 30 --json number,title,createdAt | jq -r '.[] | "\(.number)|\(.title)|\(.createdAt)"' | while IFS='|' read -r number title created_at; do
             if [[ -n "$number" && -n "$title" ]]; then
               echo ""
-              echo "📝 Found recent issue #$number: $title"
+              echo "📝 Processing issue #$number: $title"
+              echo "  📅 Created: $created_at"
               
               # Get the full issue body
               ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
@@ -87,6 +88,7 @@ jobs:
               
               # Check title and body for keywords
               CONTENT="$title $ISSUE_BODY"
+              echo "  🔍 Analyzing content for: $title"
               
               # Add AREA labels based on content
               if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration) ]]; then
