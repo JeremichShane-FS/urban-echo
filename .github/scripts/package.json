@@ -1,0 +1,12 @@
+{
+  "name": "custom-issue-creator",
+  "version": "1.0.0",
+  "description": "A custom script to create GitHub issues from comments.",
+  "main": "create-issues-from-comments.js",
+  "scripts": {
+    "start": "node create-issues-from-comments.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2"
+  }
+}
