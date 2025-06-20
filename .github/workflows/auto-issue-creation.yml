@@ -20,10 +20,10 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          # Use basic labeling, let our custom job handle proper labels
+          # Use a different identifier name to avoid default TODO detection
           IDENTIFIERS: >
             [
-              {"name": "TODO", "labels": ["todo-temp"]}
+              {"name": "TODO:", "labels": ["todo-temp"]}
             ]
           # Try even simpler template to avoid truncation
           ISSUE_TEMPLATE: |
