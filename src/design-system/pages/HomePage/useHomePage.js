@@ -4,7 +4,7 @@ export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
 
-  // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 for post-MVP) (Updated v2)
+  // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 for post-MVP) (Updated v3)
   // Implement headless CMS integration (Strapi, Contentful, or Sanity) to manage homepage content.
   // Version 2 Requirements:
   // - Content management system for non-technical users
