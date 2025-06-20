@@ -13,8 +13,12 @@ export const useFeaturedProducts = () => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Replace with API useCallback
-        // It's using mock data
+        // TODO: Define Routes - Featured products API with admin controls
+        // Replace productService mock with actual backend API integration.
+        // Required API endpoints:
+        // - GET /api/products/featured (fetch current featured products)
+        // - POST /api/admin/products/:id/feature (admin: mark product as featured)
+        // - DELETE /api/admin/products/:id/feature (admin: remove product)
         const response = await productService.getFeaturedProducts();
         if (!response || response.length === 0) {
           throw new Error("No featured products found");

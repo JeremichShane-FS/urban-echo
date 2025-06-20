@@ -1,10 +1,10 @@
 ---
-name: "♻️ Propose Refactoring"
-about: Suggest code improvements without changing functionality
+name: "🔄 Propose Refactoring"
+about: Suggest code improvements and restructuring
 title: "[REFACTOR] "
-labels: refactoring
-assignees: ''
-
+labels: ["tech-debt", "type: enhancement", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ♻️ Refactoring Proposal

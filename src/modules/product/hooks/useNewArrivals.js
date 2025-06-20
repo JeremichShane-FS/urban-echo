@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { data } from "../data/newArrivals.data";
 import { productService } from "../services/productService";
 
 export const useNewArrivals = (limit = 8) => {
@@ -9,24 +8,18 @@ export const useNewArrivals = (limit = 8) => {
   const [newArrivals, setNewArrivals] = useState([]);
 
   useEffect(() => {
-    const handleError = event => {
-      if (event.message?.includes("hydration")) {
-        console.error("Hydration error detected:", event);
-      }
-    };
-
-    window.addEventListener("error", handleError);
-    return () => window.removeEventListener("error", handleError);
-  }, []);
-
-  useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Replace with API call
-        // It's using mock data
+        // TODO: Define Routes - Product catalog API endpoints
+        // Replace productService mock with actual backend API integration.
+        // Required API endpoints:
+        // - GET /api/products/new-arrivals?limit={limit}&page={page}
+        // - GET /api/products/new-arrivals/count (for pagination)
+        // - Include product variants, pricing, inventory status
+        // - Support for filtering by category, size, price range
         const response = await productService.getNewArrivals({ limit });
         setNewArrivals(response);
       } catch (err) {

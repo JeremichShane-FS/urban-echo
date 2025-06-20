@@ -4,16 +4,28 @@ export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
 
-  // TODO: fetch page configuration
-  // This should be replaced with an API call to fetch the page configuration
+  // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 post-MVP)
+  // Implement headless CMS integration for dynamic homepage management.
+  // Version 2 Requirements:
+  // - Content management system for non-technical users
+  // - A/B testing capabilities for different homepage layouts
+  // - Seasonal campaign management and scheduling
+  // - SEO optimization with dynamic meta tags
+  // - Performance tracking for different homepage configurations
   useEffect(() => {
     const fetchPageConfig = async () => {
       try {
         setIsLoading(true);
 
-        // TODO: fetch page configuration
-        // For now, using static data
-        // This should be replaced with an API call to fetch the page configuration
+        // TODO: Define Routes - Homepage configuration API with CMS backend (Version 2 post-MVP)
+        // Replace mock with actual CMS API endpoint: GET /api/pages/homepage
+        // Version 2 Backend requirements:
+        // - Integration with headless CMS (Strapi, Contentful, or Sanity)
+        // - Caching layer for improved page load performance
+        // - Version control for homepage configurations
+        // - A/B testing framework for conversion optimization
+        // - Analytics integration for homepage performance tracking
+        // setPageData(response.data);
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
           seoDescription:
