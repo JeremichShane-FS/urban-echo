@@ -13,7 +13,7 @@ export const useFeaturedProducts = () => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Define Routes - Featured products API w/ admin controls
+        // TODO: Define Routes - Featured products API w/ admin controls (Updated)
         // Replace productService mock with backend API integration.
         // Required API endpoints:
         // - GET /api/products/featured (fetch current featured products)
