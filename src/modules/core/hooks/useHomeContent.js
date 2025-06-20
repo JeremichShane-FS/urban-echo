@@ -34,7 +34,6 @@ export const useHeroContent = () => {
 
         // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v5)
         // Implement API call to fetch hero content from CMS backend.
-        // Version 2 Requirements:
 
         setHeroData({
           title: "Discover Your Urban Style",
