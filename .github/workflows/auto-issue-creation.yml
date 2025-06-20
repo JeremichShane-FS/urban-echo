@@ -13,6 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: "Debug TODO Comments in Repository"
+        run: |
+          echo "🔍 Searching for TODO: comments in repository..."
+          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+            xargs grep -n "TODO:" | head -10 || echo "No TODO: comments found"
+
+          echo ""
+          echo "📊 TODO: comment count:"
+          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+            xargs grep -c "TODO:" 2>/dev/null | awk -F: '{sum += $2} END {print sum}' || echo "0"
+
       - name: "TODO to Issue"
         uses: alstr/todo-to-issue-action@v5
         with:
@@ -50,68 +61,64 @@ jobs:
         run: |
           echo "🏷️ Adding professional labels to TODO issues..."
 
-          # Debug: Show all recent issues first
+          # Much simpler approach - get ALL recent issues
           echo "🔍 All recent issues (last 15 minutes):"
-          gh issue list --limit 20 --json number,title,labels,createdAt --jq '.[] | select(.createdAt > (now - 900)) | "Issue #\(.number): \(.title) | Labels: \(.labels | map(.name) | join(", "))"' 2>/dev/null || echo "No recent issues found"
+          ALL_RECENT=$(gh issue list --limit 30 --json number,title,labels,createdAt 2>/dev/null || echo "[]")
+          echo "$ALL_RECENT" | jq -r '.[] | select(.createdAt > (now - 900)) | "Issue #\(.number): \(.title) | Labels: \(.labels | map(.name) | join(\", \"))"'
 
           echo ""
-          echo "🔍 Looking for TODO issues to enhance:"
+          echo "🔍 Processing ALL recent issues for labeling:"
 
-          # Look for any recent issues with TODO in the title (broader search)
-          RECENT_TODOS=$(gh issue list --limit 20 --json number,title,body,createdAt,labels --jq '.[] | select(.createdAt > (now - 900)) | select(.title | test("TODO|Define|Develop|Implement")) | "\(.number)|\(.title)|\(.body)"' 2>/dev/null || echo "")
-
-          if [[ -z "$RECENT_TODOS" ]]; then
-            echo "❌ No recent TODO-related issues found."
-            exit 0
-          fi
-
-          echo "✅ Found TODO issues to enhance:"
-          echo "$RECENT_TODOS"
-
-          echo "$RECENT_TODOS" | while IFS='|' read -r number title body; do
-            if [[ -n "$number" ]]; then
+          # Process every recent issue (not just TODO ones)
+          echo "$ALL_RECENT" | jq -r '.[] | select(.createdAt > (now - 900)) | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
+            if [[ -n "$number" && -n "$title" ]]; then
               echo ""
-              echo "📝 Processing issue #$number: $title"
+              echo "📝 Found recent issue #$number: $title"
               
-              # Remove any basic labels and add professional ones
-              echo "  🏷️ Removing basic labels"
+              # Get the full issue body
+              ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
+              
+              echo "  🏷️ Removing any basic labels"
               gh issue edit "$number" --remove-label "todo-temp" 2>/dev/null || true
               gh issue edit "$number" --remove-label "todo" 2>/dev/null || true
               
               echo "  🏷️ Adding core professional labels"
               gh issue edit "$number" --add-label "type: enhancement,auto-generated"
               
+              # Check title and body for keywords
+              CONTENT="$title $ISSUE_BODY"
+              
               # Add AREA labels based on content
-              if [[ "$title $body" =~ (API|endpoint|route|backend|integration) ]]; then
+              if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration) ]]; then
                 echo "  🔌 Adding API labels"
                 gh issue edit "$number" --add-label "area: api"
               fi
               
-              if [[ "$title $body" =~ (Component|hero|Dynamic|CMS|frontend|UI) ]]; then
+              if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI) ]]; then
                 echo "  🎨 Adding frontend labels"
                 gh issue edit "$number" --add-label "area: frontend"
               fi
               
-              if [[ "$title $body" =~ (database|DB|mongo|schema|model) ]]; then
+              if [[ "$CONTENT" =~ (database|DB|mongo|schema|model) ]]; then
                 echo "  🗄️ Adding database labels"
                 gh issue edit "$number" --add-label "area: database,mongodb"
               fi
               
-              if [[ "$title $body" =~ (payment|stripe|checkout|billing) ]]; then
+              if [[ "$CONTENT" =~ (payment|stripe|checkout|billing) ]]; then
                 echo "  💳 Adding payment labels"
-                gh issue edit "$number" --add-label "area: payment,stripe"
+                gh issue edit "$number" --add-label "area: payment,stripe,priority: high"
               fi
               
-              if [[ "$title $body" =~ (security|auth|login|token|password) ]]; then
+              if [[ "$CONTENT" =~ (security|auth|login|token|password) ]]; then
                 echo "  🔒 Adding security labels"
-                gh issue edit "$number" --add-label "area: security"
+                gh issue edit "$number" --add-label "area: security,priority: high"
               fi
               
               # Add PRIORITY labels
-              if [[ "$title $body" =~ (critical|urgent|security|payment) ]]; then
+              if [[ "$CONTENT" =~ (critical|urgent|security|payment) ]]; then
                 echo "  ⚡ Adding high priority"
                 gh issue edit "$number" --add-label "priority: high"
-              elif [[ "$title $body" =~ (API|integration|CMS|Version) ]]; then
+              elif [[ "$CONTENT" =~ (API|integration|CMS|Version) ]]; then
                 echo "  📋 Adding medium priority"
                 gh issue edit "$number" --add-label "priority: medium"
               else
