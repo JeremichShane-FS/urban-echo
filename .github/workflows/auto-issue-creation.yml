@@ -18,7 +18,7 @@ jobs:
           echo "🔍 Searching for TODO: comments in repository..."
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
             xargs grep -n "TODO:" | head -10 || echo "No TODO: comments found"
-          
+
           echo ""
           echo "📊 TODO: comment count:"
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
@@ -38,10 +38,10 @@ jobs:
             ]
           ISSUE_TEMPLATE: |
             {{ body }}
-            
+
             ---
             **File:** {{ url }}
-            
+
             ```
             {{ snippet }}
             ```
@@ -56,7 +56,7 @@ jobs:
       - name: "Apply Professional Labels from Automation Guide"
         run: |
           echo "🏷️ Applying professional labels from automation guide..."
-          
+
           # Get recent issues (last 10 minutes)
           echo "🔍 Finding recent issues to label..."
           gh issue list --limit 20 --json number,title,body,createdAt | jq -r '.[] | "\(.number)|\(.title)|\(.body)"' | while IFS='|' read -r number title body; do
@@ -161,11 +161,9 @@ jobs:
               echo "  🏷️ Final labels: $FINAL_LABELS"
             fi
           done
-          
+
           echo ""
           echo "🎉 Professional labeling complete!"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -210,7 +208,7 @@ jobs:
           COMMIT_TYPE=""
           COMMIT_SCOPE=""
           COMMIT_SUBJECT="$COMMIT_HEADER"
-          
+
           # Check if it matches conventional commit format
           if [[ "$COMMIT_HEADER" == *":"* ]]; then
             # Extract everything before the colon
