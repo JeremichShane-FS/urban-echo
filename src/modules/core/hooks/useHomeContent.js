@@ -30,7 +30,7 @@ export const useHeroContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated)
+        // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v2)
         // Implement API call to fetch hero content from CMS backend.
         // Version 2 Requirements:
         // - Error handling with retry logic
