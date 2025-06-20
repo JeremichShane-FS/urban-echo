@@ -48,7 +48,12 @@ jobs:
           echo "🏷️ Adding professional labels to TODO issues..."
 
           # Get recent TODO issues (created in last 5 minutes)
-          RECENT_TODOS=$(gh issue list --limit 20 --json number,title,body,createdAt --jq '.[] | select(.createdAt > (now - 300)) | select(.title | test("TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB")) | "\(.number)|\(.title)|\(.body)"')
+          RECENT_TODOS=$(gh issue list --limit 20 --json number,title,body,createdAt --jq '.[] | select(.createdAt > (now - 300)) | select(.title | test("TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB")) | "\(.number)|\(.title)|\(.body)"' 2>/dev/null || echo "")
+
+          if [[ -z "$RECENT_TODOS" ]]; then
+            echo "ℹ️ No recent TODO issues found to label. This is normal if no TODO comments were added/modified."
+            exit 0
+          fi
 
           echo "$RECENT_TODOS" | while IFS='|' read -r number title body; do
             if [[ -n "$number" ]]; then
