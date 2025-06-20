@@ -51,6 +51,13 @@ export const useHeroContent = () => {
       }
     };
 
+    // TODO: Simple test comment parsing
+    // Line 1 of description
+    // Line 2 of description
+    // Line 3 of description
+    // Line 4 of description
+    // Line 5 of description
+
     fetchHeroContent();
   }, []);
 
