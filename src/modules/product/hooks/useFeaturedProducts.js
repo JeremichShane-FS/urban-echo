@@ -14,7 +14,7 @@ export const useFeaturedProducts = () => {
         setError(null);
 
         // TODO: Define Routes - Featured products API with admin controls
-        // Replace productService mock with actual backend API integration.
+        // Replace productService mock with backend API integration.
         // Required API endpoints:
         // - GET /api/products/featured (fetch current featured products)
         // - POST /api/admin/products/:id/feature (admin: mark product as featured)

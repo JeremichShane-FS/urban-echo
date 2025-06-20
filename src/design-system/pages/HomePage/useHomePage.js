@@ -5,7 +5,7 @@ export const useHomePage = () => {
   const [pageData, setPageData] = useState({});
 
   // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 post-MVP)
-  // Implement headless CMS integration for dynamic homepage management.
+  // Implement headless CMS integration (Strapi, Contentful, or Sanity) to manage homepage content.
   // Version 2 Requirements:
   // - Content management system for non-technical users
   // - A/B testing capabilities for different homepage layouts
@@ -18,7 +18,7 @@ export const useHomePage = () => {
         setIsLoading(true);
 
         // TODO: Define Routes - Homepage configuration API with CMS backend (Version 2 post-MVP)
-        // Replace mock with actual CMS API endpoint: GET /api/pages/homepage
+        // Replace mock with CMS API endpoint: GET /api/pages/homepage
         // Version 2 Backend requirements:
         // - Integration with headless CMS (Strapi, Contentful, or Sanity)
         // - Caching layer for improved page load performance
