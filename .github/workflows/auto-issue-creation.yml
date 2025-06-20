@@ -47,101 +47,114 @@ jobs:
 
       - name: "Apply Professional Labels from Automation Guide"
         run: |
-          echo "🏷️ Applying professional labels to all recent issues..."
+          echo "🏷️ Applying professional labels to recent TODO issues only..."
 
           # Wait for TODO issues to be fully created
           sleep 30
 
-          # Get the most recent 10 issues (regardless of age)
-          echo "🔍 Getting recent issues to process..."
-          gh issue list --limit 10 --json number,title,body | jq -r '.[] | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
+          # Only process issues created in the last 5 minutes (just from this workflow run)
+          CUTOFF_TIME=$(date -d '5 minutes ago' --iso-8601=seconds)
+          echo "🔍 Looking for issues created after: $CUTOFF_TIME"
+
+          # Get recent issues and filter by creation time
+          gh issue list --limit 20 --json number,title,body,createdAt | jq -r --arg cutoff "$CUTOFF_TIME" '.[] | select(.createdAt > $cutoff) | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
             if [[ -n "$number" && -n "$title" ]]; then
               echo ""
-              echo "📝 Processing issue #$number: $title"
+              echo "📝 Processing recent issue #$number: $title"
               
-              # Get the full issue body for content analysis
-              ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
-              CONTENT="$title $ISSUE_BODY"
-              
-              echo "🏷️ Adding base professional labels..."
-              # Add base labels to every auto-generated issue
-              gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
-              gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
-              
-              # Add AREA labels based on content (exact labels from automation guide)
-              if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
-                echo "   🔌 Adding API area labels"
-                gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
-                gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
-              fi
-              
-              if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
-                echo "   🎨 Adding frontend area labels"
-                gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
-              fi
-              
-              if [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
-                echo "   🗄️ Adding database area labels"
-                gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
-                gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
-              fi
-              
-              if [[ "$CONTENT" =~ (payment|stripe|checkout|billing|Purchase|Cart) ]]; then
-                echo "   💳 Adding payment area labels"
-                gh issue edit "$number" --add-label "area: payment" 2>/dev/null || true
-                gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
-                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
-              fi
-              
-              if [[ "$CONTENT" =~ (security|auth|login|token|password|Auth0) ]]; then
-                echo "   🔒 Adding security area labels"
-                gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
-                gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
-                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
-              fi
-              
-              # Add PRIORITY labels (exact labels from automation guide)
-              if [[ "$CONTENT" =~ (critical|urgent|security|payment|breaking) ]]; then
-                echo "   ⚡ Adding critical/high priority"
-                if [[ "$CONTENT" =~ (critical|production.*down) ]]; then
-                  gh issue edit "$number" --add-label "priority: critical" 2>/dev/null || true
-                else
-                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
-                fi
-              elif [[ "$CONTENT" =~ (API|integration|CMS|Version|Component|Dynamic) ]]; then
-                echo "   📋 Adding medium priority"
-                gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-              else
-                echo "   📝 Adding low priority"
+              # Skip workflow update issues - they get basic labels only
+              if [[ "$title" =~ "Workflow Update:" ]]; then
+                echo "   ⚠️ Workflow issue detected - applying basic labels only"
+                gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
+                gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
                 gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                echo "   ✅ Basic labels applied to workflow issue #$number"
+                continue
               fi
               
-              # Add TECHNOLOGY labels (exact labels from automation guide)
-              if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
-                gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
+              # Skip conventional commit issues - they already have correct labels
+              if [[ "$title" =~ ^\[.*\] ]]; then
+                echo "   ⚠️ Conventional commit issue detected - skipping (already labeled)"
+                continue
               fi
               
-              # Add WORKFLOW labels (exact labels from automation guide)
-              if [[ "$CONTENT" =~ (performance|optimize|speed|slow) ]]; then
-                echo "   ⚡ Adding performance label"
-                gh issue edit "$number" --add-label "performance" 2>/dev/null || true
+              # Only process TODO-style issues
+              if [[ "$title" =~ (TODO|Define|Develop|Implement|Create|Component) ]]; then
+                echo "   ✅ TODO issue detected - applying professional labels"
+                
+                # Get the full issue body for content analysis
+                ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
+                CONTENT="$title $ISSUE_BODY"
+                
+                echo "   🏷️ Adding base professional labels..."
+                gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
+                gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
+                
+                # Add AREA labels based on content (exact labels from automation guide)
+                if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
+                  echo "     🔌 Adding API area labels"
+                  gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
+                fi
+                
+                if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
+                  echo "     🎨 Adding frontend area labels"
+                  gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
+                fi
+                
+                if [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
+                  echo "     🗄️ Adding database area labels"
+                  gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
+                fi
+                
+                if [[ "$CONTENT" =~ (payment|stripe|checkout|billing|Purchase|Cart) ]]; then
+                  echo "     💳 Adding payment area labels"
+                  gh issue edit "$number" --add-label "area: payment" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                elif [[ "$CONTENT" =~ (security|auth|login|token|password|Auth0) ]]; then
+                  echo "     🔒 Adding security area labels"
+                  gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                elif [[ "$CONTENT" =~ (API|integration|CMS|Version|Component|Dynamic) ]]; then
+                  echo "     📋 Adding medium priority"
+                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                else
+                  echo "     📝 Adding low priority"
+                  gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                fi
+                
+                # Add TECHNOLOGY labels (exact labels from automation guide)
+                if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
+                  gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
+                fi
+                
+                # Add WORKFLOW labels (exact labels from automation guide)
+                if [[ "$CONTENT" =~ (performance|optimize|speed|slow) ]]; then
+                  echo "     ⚡ Adding performance label"
+                  gh issue edit "$number" --add-label "performance" 2>/dev/null || true
+                fi
+                
+                if [[ "$CONTENT" =~ (refactor|technical.*debt|hack|legacy) ]]; then
+                  echo "     🔧 Adding tech-debt label"
+                  gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
+                fi
+                
+                if [[ "$CONTENT" =~ (debug|console\.log|cleanup) ]]; then
+                  echo "     🧹 Adding cleanup label"
+                  gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
+                fi
+                
+                echo "   ✅ Professional labels applied to TODO issue #$number"
+                
+                # Show final labels
+                FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
+                echo "   🏷️ Final labels: $FINAL_LABELS"
+              else
+                echo "   ⚠️ Not a TODO issue - skipping professional labeling"
               fi
-              
-              if [[ "$CONTENT" =~ (refactor|technical.*debt|hack|legacy) ]]; then
-                echo "   🔧 Adding tech-debt label"
-                gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
-              fi
-              
-              if [[ "$CONTENT" =~ (debug|console\.log|cleanup) ]]; then
-                echo "   🧹 Adding cleanup label"
-                gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
-              fi
-              
-              echo "   ✅ Professional labels applied to issue #$number"
-              
-              # Show final labels
-              FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
-              echo "   🏷️ Final labels: $FINAL_LABELS"
             fi
           done
 
