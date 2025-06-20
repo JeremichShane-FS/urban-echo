@@ -43,6 +43,8 @@ jobs:
       issues: write
       contents: read
     steps:
+      - uses: actions/checkout@v4 # Add this to fix git repository error
+
       - name: "Apply Professional Labels from Automation Guide"
         run: |
           echo "🏷️ Applying professional labels to all recent issues..."
