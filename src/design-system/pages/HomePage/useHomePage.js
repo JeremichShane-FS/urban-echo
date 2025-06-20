@@ -6,7 +6,7 @@ export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
 
-  // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 for post-MVP) (Updated v3)
+  // TODO: Define Data Models - CMS integration for homepage configuration (Version 2 for post-MVP) (Updated v4)
   // Implement headless CMS integration (Strapi, Contentful, or Sanity) to manage homepage content.
   // Version 2 Requirements:
   // - Content management system for non-technical users
@@ -14,13 +14,6 @@ export const useHomePage = () => {
   // - Seasonal campaign management and scheduling
   // - SEO optimization with dynamic meta tags
   // - Performance tracking for different homepage configurations
-
-  // TODO: Bullet PRIVACY_POLICY_SECTIONS
-  // - Privacy Policy Section: ${PRIVACY_POLICY_SECTIONS.map(section => section.title).join(", ")}
-  // - GDPR Compliance: Ensure all data handling meets GDPR standards
-  // - Accessibility Standards: Follow WCAG 2.1 guidelines for homepage content
-  // - Performance Optimization: Implement lazy loading for images and sections
-  // - Security Measures: Use HTTPS and secure cookies for data protection
 
   useEffect(() => {
     const fetchPageConfig = async () => {
