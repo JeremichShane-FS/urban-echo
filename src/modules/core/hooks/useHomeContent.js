@@ -38,6 +38,7 @@ export const useHeroContent = () => {
         // - Loading states for better UX
         // - Cache content for improved performance
         // - Support for multiple hero variants (A/B testing)
+
         setHeroData({
           title: "Discover Your Urban Style",
           subtitle: "Trendy, high-quality clothing for the modern, fashion-conscious consumer",
@@ -72,10 +73,6 @@ export const useHeroContent = () => {
   };
 };
 
-// todo testing
-
-// todo: testing with colon
-
 export const useAboutContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [aboutContent, setAboutContent] = useState({
@@ -91,12 +88,13 @@ export const useAboutContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Define Routes - About content in management API (Updated)
+        // TODO: Define Routes - About content in management API (Updated v2)
         // Create a API endpoint for dynamic about section content.
         // Backend requirements:
         // - GET /api/content/about (fetch about content)
         // - Support for rich text/markdown content
         // - Version control for content updates
+
         setAboutContent({
           title: "About Urban Echo",
           paragraphs: [
