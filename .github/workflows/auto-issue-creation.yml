@@ -18,7 +18,7 @@ jobs:
           echo "🔍 Searching for TODO: comments in repository..."
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
             xargs grep -n "TODO:" | head -10 || echo "No TODO: comments found"
-
+          
           echo ""
           echo "📊 TODO: comment count:"
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
@@ -31,113 +31,141 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          # Use a different identifier name to avoid default TODO detection
+          # No labels from the action - we'll add proper ones later
           IDENTIFIERS: >
             [
-              {"name": "TODO:", "labels": ["todo-temp"]}
+              {"name": "TODO:", "labels": []}
             ]
-          # Try even simpler template to avoid truncation
           ISSUE_TEMPLATE: |
             {{ body }}
-
+            
             ---
             **File:** {{ url }}
-
+            
             ```
             {{ snippet }}
             ```
 
-  enhance-todo-labels:
+  apply-professional-labels:
     needs: todo-to-issue
     runs-on: ubuntu-latest
     permissions:
       issues: write
       contents: read
     steps:
-      - name: "Wait for TODO issues to be created"
-        run: sleep 30 # Give the first job time to complete
-
-      - name: "Add Professional Labels to TODO Issues"
+      - name: "Apply Professional Labels from Automation Guide"
         run: |
-          echo "🏷️ Adding professional labels to TODO issues..."
-
-          # Much simpler approach - get ALL recent issues
-          echo "🔍 All recent issues (last 15 minutes):"
-          ALL_RECENT=$(gh issue list --limit 30 --json number,title,labels,createdAt 2>/dev/null || echo "[]")
-
-          # Use simpler jq without complex quoting
-          CUTOFF_TIME=$(date -d '15 minutes ago' -u +%Y-%m-%dT%H:%M:%SZ)
-          echo "Cutoff time: $CUTOFF_TIME"
-
-          # Simple processing without complex jq
-          gh issue list --limit 30 --json number,title,createdAt | jq -r '.[] | "\(.number)|\(.title)|\(.createdAt)"' | while IFS='|' read -r number title created_at; do
-            if [[ -n "$number" && -n "$title" ]]; then
+          echo "🏷️ Applying professional labels from automation guide..."
+          
+          # Get recent issues (last 10 minutes)
+          echo "🔍 Finding recent issues to label..."
+          gh issue list --limit 20 --json number,title,body,createdAt | jq -r '.[] | "\(.number)|\(.title)|\(.body)"' | while IFS='|' read -r number title body; do
+            if [[ -n "$number" ]]; then
               echo ""
               echo "📝 Processing issue #$number: $title"
-              echo "  📅 Created: $created_at"
               
-              # Get the full issue body
-              ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
+              # Always add these base labels to every auto-generated issue
+              echo "  🏷️ Adding base auto-generated labels"
+              gh issue edit "$number" --add-label "auto-generated"
               
-              echo "  🏷️ Removing any basic labels"
-              gh issue edit "$number" --remove-label "todo-temp" 2>/dev/null || true
-              gh issue edit "$number" --remove-label "todo" 2>/dev/null || true
+              # Determine TYPE based on your automation guide keywords
+              echo "  🔍 Determining issue type..."
+              if [[ "$title" =~ (TODO|Define|Develop|Implement|Create) ]]; then
+                echo "  ✅ Adding type: enhancement"
+                gh issue edit "$number" --add-label "type: enhancement"
+              fi
               
-              echo "  🏷️ Adding core professional labels"
-              gh issue edit "$number" --add-label "type: enhancement,auto-generated"
+              # Determine AREA based on content (from your automation guide)
+              echo "  🔍 Analyzing content for area labels..."
+              CONTENT="$title $body"
               
-              # Check title and body for keywords
-              CONTENT="$title $ISSUE_BODY"
-              echo "  🔍 Analyzing content for: $title"
-              
-              # Add AREA labels based on content
+              # Area: API (API, endpoint, route, backend)
               if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration) ]]; then
-                echo "  🔌 Adding API labels"
+                echo "  🔌 Adding area: api"
                 gh issue edit "$number" --add-label "area: api"
               fi
               
-              if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI) ]]; then
-                echo "  🎨 Adding frontend labels"
+              # Area: Frontend (UI, component, frontend, hero, CMS)
+              if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design) ]]; then
+                echo "  🎨 Adding area: frontend"
                 gh issue edit "$number" --add-label "area: frontend"
               fi
               
-              if [[ "$CONTENT" =~ (database|DB|mongo|schema|model) ]]; then
-                echo "  🗄️ Adding database labels"
+              # Area: Database (database, DB, mongo, schema, model)
+              if [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
+                echo "  🗄️ Adding area: database + mongodb"
                 gh issue edit "$number" --add-label "area: database,mongodb"
               fi
               
-              if [[ "$CONTENT" =~ (payment|stripe|checkout|billing) ]]; then
-                echo "  💳 Adding payment labels"
-                gh issue edit "$number" --add-label "area: payment,stripe,priority: high"
+              # Area: Payment (payment, stripe, checkout, billing)
+              if [[ "$CONTENT" =~ (payment|stripe|checkout|billing|transaction) ]]; then
+                echo "  💳 Adding area: payment + stripe"
+                gh issue edit "$number" --add-label "area: payment,stripe"
               fi
               
-              if [[ "$CONTENT" =~ (security|auth|login|token|password) ]]; then
-                echo "  🔒 Adding security labels"
-                gh issue edit "$number" --add-label "area: security,priority: high"
+              # Area: Security (security, auth, login, token, password)
+              if [[ "$CONTENT" =~ (security|auth|login|token|password|authentication) ]]; then
+                echo "  🔒 Adding area: security"
+                gh issue edit "$number" --add-label "area: security"
               fi
               
-              # Add PRIORITY labels
-              if [[ "$CONTENT" =~ (critical|urgent|security|payment) ]]; then
-                echo "  ⚡ Adding high priority"
+              # Technology Labels (from your guide)
+              if [[ "$CONTENT" =~ (mongo|MongoDB) ]]; then
+                echo "  🗃️ Adding mongodb label"
+                gh issue edit "$number" --add-label "mongodb"
+              fi
+              
+              if [[ "$CONTENT" =~ (stripe|Stripe) ]]; then
+                echo "  💳 Adding stripe label"
+                gh issue edit "$number" --add-label "stripe"
+              fi
+              
+              if [[ "$CONTENT" =~ (auth0|Auth0|authentication) ]]; then
+                echo "  🔐 Adding auth0 label"
+                gh issue edit "$number" --add-label "auth0"
+              fi
+              
+              if [[ "$CONTENT" =~ (next|Next\.js|nextjs) ]]; then
+                echo "  ⚡ Adding nextjs label"
+                gh issue edit "$number" --add-label "nextjs"
+              fi
+              
+              # Priority Labels (from your automation guide)
+              echo "  🔍 Determining priority..."
+              if [[ "$CONTENT" =~ (critical|urgent|security|payment|breaking) ]]; then
+                echo "  🚨 Adding priority: high"
                 gh issue edit "$number" --add-label "priority: high"
-              elif [[ "$CONTENT" =~ (API|integration|CMS|Version) ]]; then
-                echo "  📋 Adding medium priority"
+              elif [[ "$CONTENT" =~ (API|integration|CMS|Version|important|should) ]]; then
+                echo "  📋 Adding priority: medium"
                 gh issue edit "$number" --add-label "priority: medium"
               else
-                echo "  📝 Adding low priority"
+                echo "  📝 Adding priority: low"
                 gh issue edit "$number" --add-label "priority: low"
+              fi
+              
+              # Workflow Labels (from your guide)
+              if [[ "$CONTENT" =~ (performance|optimize|slow|speed|bottleneck) ]]; then
+                echo "  🚀 Adding performance label"
+                gh issue edit "$number" --add-label "performance"
+              fi
+              
+              if [[ "$CONTENT" =~ (refactor|debt|hack|cleanup) ]]; then
+                echo "  🔧 Adding tech-debt label"
+                gh issue edit "$number" --add-label "tech-debt"
               fi
               
               echo "  ✅ Professional labels applied to issue #$number"
               
-              # Show final labels
+              # Show final result
               FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")')
               echo "  🏷️ Final labels: $FINAL_LABELS"
             fi
           done
-
+          
           echo ""
           echo "🎉 Professional labeling complete!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -182,7 +210,7 @@ jobs:
           COMMIT_TYPE=""
           COMMIT_SCOPE=""
           COMMIT_SUBJECT="$COMMIT_HEADER"
-
+          
           # Check if it matches conventional commit format
           if [[ "$COMMIT_HEADER" == *":"* ]]; then
             # Extract everything before the colon
