@@ -1,0 +1,35 @@
+name: Custom Keyword Issue Creator
+
+on:
+  push:
+    branches: [main, staging, dev]
+    paths:
+      - "src/**/*.js"
+      - "src/**/*.jsx"
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+  workflow_dispatch:
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (or Python)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (if your script needs them)
+        run: npm install
+
+      - name: Run custom issue creation script
+        run: node .github/scripts/create-issues-from-comments.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
