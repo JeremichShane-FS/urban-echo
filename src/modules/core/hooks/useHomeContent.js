@@ -51,32 +51,13 @@ export const useHeroContent = () => {
       }
     };
 
-    // TODO: Simple test comment parsing
-    // Line 1 of description
-    // Line 2 of description
-    // Line 3 of description
-    // Line 4 of description
-    // Line 5 of description
-
-    // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v3)
-    // Implement API call to fetch hero content from CMS backend.
-    // Version 2 Requirements:
-    // Error handling with retry logic
-    // Dynamic title and subtitle management
-    // Seasonal campaign content support
-
     // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v3)
     // Implement API call to fetch hero content from CMS backend.
     // Version 2 Requirements:
     // - Error handling with retry logic
     // - Dynamic title and subtitle management
     // - Seasonal campaign content support
-
-    // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v3)
-    // Implement API call to fetch hero content from CMS backend.
-    // Version 2 Requirements include error handling with retry logic,
-    // dynamic title and subtitle management, and seasonal campaign content support
-    // with A/B testing variations for conversion optimization.
+    // - A/B testing variations for conversion optimization
 
     fetchHeroContent();
   }, []);
