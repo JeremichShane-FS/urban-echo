@@ -82,6 +82,10 @@ jobs:
               if [[ "$title" =~ (TODO|Define|Develop|Implement|Create|Component) ]]; then
                 echo "   ✅ TODO issue detected - applying professional labels"
                 
+                # Get the commit author for assignment
+                COMMIT_AUTHOR="${{ github.actor }}"
+                echo "   👤 Assigning to commit author: $COMMIT_AUTHOR"
+                
                 # Get the full issue body for content analysis
                 ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
                 CONTENT="$title $ISSUE_BODY"
@@ -89,6 +93,9 @@ jobs:
                 echo "   🏷️ Adding base professional labels..."
                 gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
                 gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
+                
+                # Assign the issue to the person who pushed the code
+                gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
                 
                 # Add AREA labels based on content (exact labels from automation guide)
                 if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
@@ -148,6 +155,7 @@ jobs:
                 fi
                 
                 echo "   ✅ Professional labels applied to TODO issue #$number"
+                echo "   👤 Assigned to: $COMMIT_AUTHOR"
                 
                 # Show final labels
                 FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
@@ -221,6 +229,9 @@ jobs:
               ISSUE_TITLE="[$COMMIT_TYPE] $COMMIT_SUBJECT"
             fi
             
+            # Get commit author for assignment
+            COMMIT_AUTHOR="${{ github.actor }}"
+            
             # Create issue body
             ISSUE_BODY="## Conventional Commit Analysis
 
@@ -230,6 +241,7 @@ jobs:
 
           **Commit:** $COMMIT_HASH
           **Author:** $AUTHOR
+          **Assigned to:** @$COMMIT_AUTHOR
 
           ## Full Commit Message
           \`\`\`
@@ -295,10 +307,12 @@ jobs:
             esac
             
             echo "Creating issue: $ISSUE_TITLE"
-            gh issue create \
+            CREATED_ISSUE=$(gh issue create \
               --title "$ISSUE_TITLE" \
               --body "$ISSUE_BODY" \
-              --label "$LABELS"
+              --label "$LABELS" \
+              --assignee "$COMMIT_AUTHOR")
+            echo "✅ Created and assigned issue to $COMMIT_AUTHOR: $CREATED_ISSUE"
           else
             echo "Skipping commit type: $COMMIT_TYPE (not configured for issue creation)"
           fi
@@ -385,6 +399,7 @@ jobs:
 
           **File:** \`$file\`
           **Change Type:** Automatic detection
+          **Assigned to:** @${{ github.actor }}
 
           ## Changes Made
           \`\`\`diff
@@ -399,10 +414,12 @@ jobs:
           _This issue was automatically created to track significant file changes._"
                 
                 echo "Creating issue for: $file"
-                gh issue create \
+                CREATED_ISSUE=$(gh issue create \
                   --title "$ISSUE_TITLE" \
                   --body "$ISSUE_BODY" \
-                  --label "$ISSUE_LABELS"
+                  --label "$ISSUE_LABELS" \
+                  --assignee "${{ github.actor }}")
+                echo "✅ Created and assigned issue: $CREATED_ISSUE"
               fi
             fi
           done <<< "$CHANGED_FILES"
