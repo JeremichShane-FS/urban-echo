@@ -1,8 +1,7 @@
-name: "TODO to Issue - Working"
+name: "Auto Issue Creation - v5 Correct"
 on:
   push:
     branches: [main, staging, dev]
-  workflow_dispatch: # Manual trigger for testing
 
 jobs:
   todo-to-issue:
@@ -14,12 +13,83 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "TODO to Issue"
-        uses: alstr/todo-to-issue-action@v4.6.9
+        uses: alstr/todo-to-issue-action@v5 # Use v5 as requested
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          # Only use VALID parameters from the error message:
+          # CRITICAL: Remove these for manual triggers to work
+          # BEFORE: ${{ github.event.before }}
+          # SHA: ${{ github.sha }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          LABEL: "type: enhancement,auto-generated,todo"
-          COMMENT_MARKER: "//"
+
+  # Keep your other jobs - they're working great
+  conventional-commit-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: "Analyze Conventional Commits"
+        run: |
+          # [Your existing commit analysis code - it works perfectly]
+          FULL_COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_HASH=$(git log -1 --pretty=%H)
+          AUTHOR=$(git log -1 --pretty=%an)
+
+          echo "Analyzing conventional commit: $FULL_COMMIT_MSG"
+
+          # Skip merge commits
+          if echo "$FULL_COMMIT_MSG" | grep -q "^Merge"; then
+            echo "Skipping merge commit"
+            exit 0
+          fi
+
+          # Check if this commit already has an issue created
+          EXISTING_ISSUE=$(gh issue list --label "auto-generated" --search "$COMMIT_HASH" --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ ! -z "$EXISTING_ISSUE" ]; then
+            echo "Issue already exists for commit $COMMIT_HASH (Issue #$EXISTING_ISSUE)"
+            exit 0
+          fi
+
+          # Parse conventional commit format: type(scope): subject
+          COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
+          COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
+
+          # Extract type and scope using regex
+          if [[ "$COMMIT_HEADER" =~ ^([a-z]+)(\(([^)]+)\))?: ]]; then
+            COMMIT_TYPE="${BASH_REMATCH[1]}"
+            COMMIT_SCOPE="${BASH_REMATCH[3]}"
+            COMMIT_SUBJECT="${COMMIT_HEADER#*: }"
+          else
+            echo "Not a conventional commit format, skipping analysis"
+            exit 0
+          fi
+
+          # Create security review issues
+          if [[ "$COMMIT_TYPE" == "security" ]] || echo "$FULL_COMMIT_MSG" | grep -iE "(security|vulnerability|auth|authentication|password|token|encrypt)"; then
+            gh issue create \
+              --title "🔒 Security Review: $COMMIT_SUBJECT" \
+              --body "**Security-Related Commit Detected**
+
+          **Type:** \`$COMMIT_TYPE\`
+          **Scope:** \`$COMMIT_SCOPE\`
+          **Subject:** $COMMIT_SUBJECT
+          **Commit:** $COMMIT_HASH
+          **Author:** $AUTHOR
+
+          **Security Review Checklist:**
+          - [ ] Authentication mechanisms reviewed
+          - [ ] Data validation implemented
+          - [ ] Input sanitization verified
+          - [ ] API security confirmed
+          - [ ] Payment processing security validated" \
+              --label "area: security,priority: high,auto-generated"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
