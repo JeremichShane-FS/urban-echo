@@ -279,25 +279,6 @@ jobs:
                 ;;
             esac
             
-            # Add scope-based labels
-            case "$COMMIT_SCOPE" in
-              "api"|"backend")
-                LABELS="$LABELS,area: api"
-                ;;
-              "ui"|"frontend"|"component")
-                LABELS="$LABELS,area: frontend"
-                ;;
-              "db"|"database")
-                LABELS="$LABELS,area: database"
-                ;;
-              "auth"|"security")
-                LABELS="$LABELS,area: security"
-                ;;
-              "ci"|"workflow")
-                LABELS="$LABELS,ci"
-                ;;
-            esac
-            
             echo "Creating issue: $ISSUE_TITLE"
             gh issue create \
               --title "$ISSUE_TITLE" \
