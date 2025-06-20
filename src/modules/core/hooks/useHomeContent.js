@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getHeroImageUrl } from "../utils/imageUtils";
 
-// TODO: Define Routes - Backend API integration for hero content (Version 2 for post-MVP)
+// TODO: Define Routes - Backend API integration for hero content (Version 2 for post-MVP) (Updated)
 // Replace hardcoded data with API endpoints for hero section.
 // Version 2 CMS integration will provide:
 // - Dynamic hero titles and subtitles
@@ -30,7 +30,7 @@ export const useHeroContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP)
+        // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated)
         // Implement API call to fetch hero content from CMS backend.
         // Version 2 Requirements:
         // - Error handling with retry logic
@@ -86,7 +86,7 @@ export const useAboutContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Define Routes - About content in management API
+        // TODO: Define Routes - About content in management API (Updated)
         // Create a API endpoint for dynamic about section content.
         // Backend requirements:
         // - GET /api/content/about (fetch about content)
