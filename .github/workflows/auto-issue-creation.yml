@@ -147,11 +147,28 @@ jobs:
           COMMIT_HEADER=$(echo "$FULL_COMMIT_MSG" | head -n 1)
           COMMIT_BODY=$(echo "$FULL_COMMIT_MSG" | tail -n +3)
 
-          # Extract type and scope using regex (fixed syntax)
-          if [[ "$COMMIT_HEADER" =~ ^([a-z]+)(\(([^)]+)\))?:\ ]]; then
-            COMMIT_TYPE="${BASH_REMATCH[1]}"
-            COMMIT_SCOPE="${BASH_REMATCH[3]}"
+          # Extract type and scope using simple string parsing
+          COMMIT_TYPE=""
+          COMMIT_SCOPE=""
+          COMMIT_SUBJECT="$COMMIT_HEADER"
+
+          # Check if it matches conventional commit format
+          if [[ "$COMMIT_HEADER" == *":"* ]]; then
+            # Extract everything before the colon
+            TYPE_PART="${COMMIT_HEADER%%:*}"
+            # Extract everything after the colon and space
             COMMIT_SUBJECT="${COMMIT_HEADER#*: }"
+            
+            # Check if there's a scope in parentheses
+            if [[ "$TYPE_PART" == *"("*")" ]]; then
+              COMMIT_TYPE="${TYPE_PART%%(*}"
+              SCOPE_PART="${TYPE_PART#*(}"
+              COMMIT_SCOPE="${SCOPE_PART%)*}"
+            else
+              COMMIT_TYPE="$TYPE_PART"
+            fi
+            
+            echo "Parsed conventional commit successfully"
           else
             echo "Not a conventional commit format, skipping analysis"
             exit 0
