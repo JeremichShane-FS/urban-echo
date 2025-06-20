@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 
 import { getHeroImageUrl } from "../utils/imageUtils";
 
-// TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v4)
+// TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v5)
 // Implement API call to fetch hero content from CMS backend.
 // Version 2 Requirements:
 // - Error handling with retry logic
 // - Dynamic title and subtitle management
 // - Seasonal campaign content support
 // - A/B testing variations for conversion optimization
+
 const data = {
   backgroundImage:
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
