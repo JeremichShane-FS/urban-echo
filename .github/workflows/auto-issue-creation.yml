@@ -22,19 +22,24 @@ jobs:
           SHA: ${{ github.sha }}
           INSERT_ISSUE_URLS: "true"
           CLOSE_ISSUES: "true"
-          AUTO_P: "true"
+          # KEY FIXES FOR BLOCK COMMENTS:
+          AUTO_P: "false" # Disable auto-paragraph detection
+          COMMENT_MARKER: "//" # Specify comment type
+          LINE_SUFFIX: "" # Don't require line suffix
+          LABEL_LINES: "false" # Don't process each line separately
+          # Process multi-line blocks as single issues
           IDENTIFIERS: >
             [
-              {"name": "TODO", "labels": ["type: enhancement", "auto-generated"]},
-              {"name": "FIXME", "labels": ["type: bug", "auto-generated"]},
-              {"name": "HACK", "labels": ["tech-debt", "auto-generated"]},
-              {"name": "BUG", "labels": ["type: bug", "priority: high"]},
-              {"name": "OPTIMIZE", "labels": ["performance", "auto-generated"]},
-              {"name": "SECURITY", "labels": ["area: security", "priority: high"]},
-              {"name": "REFACTOR", "labels": ["tech-debt", "priority: medium"]},
-              {"name": "UI", "labels": ["area: frontend", "auto-generated"]},
-              {"name": "API", "labels": ["area: api", "auto-generated"]},
-              {"name": "DB", "labels": ["area: database", "mongodb"]}
+              {"name": "TODO", "labels": ["type: enhancement", "auto-generated"], "caseSensitive": true},
+              {"name": "FIXME", "labels": ["type: bug", "auto-generated"], "caseSensitive": true},
+              {"name": "HACK", "labels": ["tech-debt", "auto-generated"], "caseSensitive": true},
+              {"name": "BUG", "labels": ["type: bug", "priority: high"], "caseSensitive": true},
+              {"name": "OPTIMIZE", "labels": ["performance", "auto-generated"], "caseSensitive": true},
+              {"name": "SECURITY", "labels": ["area: security", "priority: high"], "caseSensitive": true},
+              {"name": "REFACTOR", "labels": ["tech-debt", "priority: medium"], "caseSensitive": true},
+              {"name": "UI", "labels": ["area: frontend", "auto-generated"], "caseSensitive": true},
+              {"name": "API", "labels": ["area: api", "auto-generated"], "caseSensitive": true},
+              {"name": "DB", "labels": ["area: database", "mongodb"], "caseSensitive": true}
             ]
 
   conventional-commit-analysis:
