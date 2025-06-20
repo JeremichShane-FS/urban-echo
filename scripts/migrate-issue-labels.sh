@@ -51,3 +51,8 @@ gh issue edit 54 --remove-label "frontend" --add-label "area: frontend"
 gh issue edit 54 --remove-label "medium priority" --add-label "priority: medium"
 gh issue edit 52 --remove-label "frontend" --add-label "area: frontend"
 gh issue edit 52 --remove-label "low priority" --add-label "priority: low"
+gh label create "cleanup" --description "Code cleanup (debug statements, etc.)" --color "ffc107" --force
+gh label create "performance" --description "Performance optimization needed" --color "28a745" --force
+gh label create "refactoring" --description "Code restructuring and cleanup" --color "6f42c1" --force
+gh label create "good first issue" --description "Good for newcomers to the project" --color "7057ff" --force
+gh label create "help wanted" --description "Extra attention is needed from community" --color "008672" --force
