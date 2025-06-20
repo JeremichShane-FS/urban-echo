@@ -2,7 +2,6 @@ name: "Auto Issue Creation"
 on:
   push:
     branches: [main, staging, dev] # Only on actual pushes/merges
-  # Removed pull_request triggers to prevent duplicates
 
 jobs:
   todo-to-issue:
@@ -18,8 +17,8 @@ jobs:
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          BEFORE: ${{ github.event.before }}
-          SHA: ${{ github.sha }}
+          # BEFORE: ${{ github.event.before }}
+          # SHA: ${{ github.sha }}
           INSERT_ISSUE_URLS: "true"
           CLOSE_ISSUES: "true"
           # KEY FIXES FOR BLOCK COMMENTS:
