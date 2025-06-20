@@ -20,21 +20,20 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
+          # Specify only TODO: pattern (with colon)
+          IDENTIFIERS: >
+            [
+              {"name": "TODO", "labels": ["todo"]}
+            ]
           ISSUE_TEMPLATE: |
-            **TODO Details:**
-
             {{ body }}
 
-            **File Location:**
-            [{{ url }}]({{ url }})
+            **File:** [{{ url }}]({{ url }})
 
-            **Code Context:**
+            **Code:**
             ```javascript
             {{ snippet }}
             ```
-
-            ---
-            *This issue was automatically generated from a TODO comment.*
 
   enhance-todo-labels:
     needs: todo-to-issue
@@ -47,65 +46,61 @@ jobs:
         run: |
           echo "🏷️ Adding professional labels to TODO issues..."
 
-          # Get recent TODO issues (created in last 5 minutes)
-          RECENT_TODOS=$(gh issue list --limit 20 --json number,title,body,createdAt --jq '.[] | select(.createdAt > (now - 300)) | select(.title | test("TODO|FIXME|HACK|BUG|OPTIMIZE|SECURITY|REFACTOR|UI|API|DB")) | "\(.number)|\(.title)|\(.body)"' 2>/dev/null || echo "")
+          # Get recent issues (created in last 10 minutes, broader search)
+          RECENT_TODOS=$(gh issue list --limit 20 --json number,title,body,createdAt,labels --jq '.[] | select(.createdAt > (now - 600)) | select(.labels[]?.name == "todo") | "\(.number)|\(.title)|\(.body)"' 2>/dev/null || echo "")
 
           if [[ -z "$RECENT_TODOS" ]]; then
             echo "ℹ️ No recent TODO issues found to label. This is normal if no TODO comments were added/modified."
             exit 0
           fi
 
+          echo "Found TODO issues to process:"
+          echo "$RECENT_TODOS"
+
           echo "$RECENT_TODOS" | while IFS='|' read -r number title body; do
             if [[ -n "$number" ]]; then
               echo "📝 Processing issue #$number: $title"
               
-              # Always add auto-generated label
-              gh issue edit "$number" --add-label "auto-generated"
-              
-              # Add TYPE labels based on keyword in title
-              if [[ "$title" =~ TODO ]]; then
-                gh issue edit "$number" --add-label "type: enhancement"
-              elif [[ "$title" =~ (FIXME|BUG) ]]; then
-                gh issue edit "$number" --add-label "type: bug"
-              elif [[ "$title" =~ (HACK|REFACTOR) ]]; then
-                gh issue edit "$number" --add-label "tech-debt"
-              elif [[ "$title" =~ OPTIMIZE ]]; then
-                gh issue edit "$number" --add-label "performance"
-              elif [[ "$title" =~ SECURITY ]]; then
-                gh issue edit "$number" --add-label "area: security,priority: high"
-              fi
+              # Always add auto-generated and type: enhancement
+              gh issue edit "$number" --add-label "auto-generated,type: enhancement"
               
               # Add AREA labels based on content
               if [[ "$title $body" =~ (API|endpoint|route|backend) ]]; then
+                echo "  🔌 Adding API labels"
                 gh issue edit "$number" --add-label "area: api"
               fi
               
               if [[ "$title $body" =~ (database|DB|mongo|schema|model) ]]; then
+                echo "  🗄️ Adding database labels"
                 gh issue edit "$number" --add-label "area: database,mongodb"
               fi
               
               if [[ "$title $body" =~ (payment|stripe|checkout|billing) ]]; then
-                gh issue edit "$number" --add-label "area: payment,stripe"
-                # Payment issues are always high priority
-                gh issue edit "$number" --add-label "priority: high"
+                echo "  💳 Adding payment labels"
+                gh issue edit "$number" --add-label "area: payment,stripe,priority: high"
               fi
               
               if [[ "$title $body" =~ (security|auth|login|token|password) ]]; then
+                echo "  🔒 Adding security labels"
                 gh issue edit "$number" --add-label "area: security,priority: high"
               fi
               
               if [[ "$title $body" =~ (frontend|UI|component|design|hero|CMS) ]]; then
+                echo "  🎨 Adding frontend labels"
                 gh issue edit "$number" --add-label "area: frontend"
               fi
               
               if [[ "$title $body" =~ (performance|optimize|slow|speed) ]]; then
+                echo "  🚀 Adding performance labels"
                 gh issue edit "$number" --add-label "performance"
               fi
               
               # Add PRIORITY labels for critical items
               if [[ "$title $body" =~ (critical|urgent|breaking|security) ]]; then
+                echo "  ⚡ Adding high priority"
                 gh issue edit "$number" --add-label "priority: high"
               elif [[ "$title $body" =~ (important|should|CMS|API) ]]; then
+                echo "  📋 Adding medium priority"
                 gh issue edit "$number" --add-label "priority: medium"
               fi
               
