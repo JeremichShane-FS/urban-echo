@@ -66,10 +66,11 @@ jobs:
               gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
               gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
               
-              # Add AREA labels based on content
+              # Add AREA labels based on content (exact labels from automation guide)
               if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
                 echo "   🔌 Adding API area labels"
                 gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
+                gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
               fi
               
               if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
@@ -97,10 +98,14 @@ jobs:
                 gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
               fi
               
-              # Add PRIORITY labels
+              # Add PRIORITY labels (exact labels from automation guide)
               if [[ "$CONTENT" =~ (critical|urgent|security|payment|breaking) ]]; then
-                echo "   ⚡ Adding high priority"
-                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                echo "   ⚡ Adding critical/high priority"
+                if [[ "$CONTENT" =~ (critical|production.*down) ]]; then
+                  gh issue edit "$number" --add-label "priority: critical" 2>/dev/null || true
+                else
+                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                fi
               elif [[ "$CONTENT" =~ (API|integration|CMS|Version|Component|Dynamic) ]]; then
                 echo "   📋 Adding medium priority"
                 gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
@@ -109,11 +114,12 @@ jobs:
                 gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
               fi
               
-              # Add TECHNOLOGY labels
+              # Add TECHNOLOGY labels (exact labels from automation guide)
               if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
                 gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
               fi
               
+              # Add WORKFLOW labels (exact labels from automation guide)
               if [[ "$CONTENT" =~ (performance|optimize|speed|slow) ]]; then
                 echo "   ⚡ Adding performance label"
                 gh issue edit "$number" --add-label "performance" 2>/dev/null || true
@@ -122,6 +128,11 @@ jobs:
               if [[ "$CONTENT" =~ (refactor|technical.*debt|hack|legacy) ]]; then
                 echo "   🔧 Adding tech-debt label"
                 gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
+              fi
+              
+              if [[ "$CONTENT" =~ (debug|console\.log|cleanup) ]]; then
+                echo "   🧹 Adding cleanup label"
+                gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
               fi
               
               echo "   ✅ Professional labels applied to issue #$number"
@@ -213,13 +224,13 @@ jobs:
           ## Analysis
           This issue was automatically created from a conventional commit to track implementation progress."
             
-            # Determine labels based on commit type
-            LABELS="auto-generated,conventional-commit"
+            # Determine labels based on commit type (using exact automation guide labels)
+            LABELS="auto-generated"
             case "$COMMIT_TYPE" in
               "feat")
                 LABELS="$LABELS,type: enhancement"
                 ;;
-              "fix")
+              "fix"|"hotfix")
                 LABELS="$LABELS,type: bug"
                 ;;
               "perf")
@@ -227,6 +238,40 @@ jobs:
                 ;;
               "refactor")
                 LABELS="$LABELS,tech-debt"
+                ;;
+              "docs")
+                LABELS="$LABELS,type: documentation"
+                ;;
+              "security")
+                LABELS="$LABELS,area: security,priority: critical"
+                ;;
+            esac
+            
+            # Add scope-based labels (using exact automation guide labels)
+            case "$COMMIT_SCOPE" in
+              "frontend"|"ui"|"components")
+                LABELS="$LABELS,area: frontend"
+                ;;
+              "backend"|"server"|"api")
+                LABELS="$LABELS,area: backend,area: api"
+                ;;
+              "database"|"db"|"mongo")
+                LABELS="$LABELS,area: database,mongodb"
+                ;;
+              "auth"|"authentication"|"login")
+                LABELS="$LABELS,area: security,auth0"
+                ;;
+              "payment"|"stripe"|"checkout")
+                LABELS="$LABELS,area: payment,stripe,priority: high"
+                ;;
+              "cart"|"shopping")
+                LABELS="$LABELS,area: frontend,area: backend"
+                ;;
+              "products"|"catalog")
+                LABELS="$LABELS,area: database,area: api"
+                ;;
+              "orders"|"fulfillment")
+                LABELS="$LABELS,area: backend,area: database"
                 ;;
             esac
             
@@ -291,10 +336,10 @@ jobs:
               echo ""
               echo "Analyzing: $file"
               
-              # Check file type and determine if it needs tracking
+              # Check file type and determine if it needs tracking (using exact automation guide labels)
               SHOULD_CREATE_ISSUE=false
               ISSUE_TITLE=""
-              ISSUE_LABELS="auto-generated,file-change"
+              ISSUE_LABELS="auto-generated"
               
               case "$file" in
                 *.js|*.jsx|*.ts|*.tsx)
@@ -305,30 +350,30 @@ jobs:
                   elif [[ "$file" == *"api"* ]] || [[ "$file" == *"API"* ]]; then
                     SHOULD_CREATE_ISSUE=true
                     ISSUE_TITLE="API Update: $file"
-                    ISSUE_LABELS="$ISSUE_LABELS,area: api,type: enhancement"
+                    ISSUE_LABELS="$ISSUE_LABELS,area: api,area: backend,type: enhancement"
                   fi
                   ;;
                 *.scss|*.sass|*.css)
                   SHOULD_CREATE_ISSUE=true
                   ISSUE_TITLE="Styling Update: $file"
-                  ISSUE_LABELS="$ISSUE_LABELS,area: frontend,styling"
+                  ISSUE_LABELS="$ISSUE_LABELS,area: frontend,type: enhancement"
                   ;;
                 *package.json|*package-lock.json|*yarn.lock)
                   SHOULD_CREATE_ISSUE=true
                   ISSUE_TITLE="Dependency Update: $file"
-                  ISSUE_LABELS="$ISSUE_LABELS,dependencies,type: maintenance"
+                  ISSUE_LABELS="$ISSUE_LABELS,type: enhancement,priority: low"
                   ;;
                 *.md)
                   if [[ "$file" == *"README"* ]]; then
                     SHOULD_CREATE_ISSUE=true
                     ISSUE_TITLE="Documentation Update: $file"
-                    ISSUE_LABELS="$ISSUE_LABELS,documentation"
+                    ISSUE_LABELS="$ISSUE_LABELS,type: documentation"
                   fi
                   ;;
                 .github/workflows/*)
                   SHOULD_CREATE_ISSUE=true
                   ISSUE_TITLE="Workflow Update: $file"
-                  ISSUE_LABELS="$ISSUE_LABELS,ci,type: enhancement"
+                  ISSUE_LABELS="$ISSUE_LABELS,type: enhancement,priority: medium"
                   ;;
               esac
               
