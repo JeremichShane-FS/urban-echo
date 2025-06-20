@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 
 import { getHeroImageUrl } from "../utils/imageUtils";
 
-// TODO: Define Routes - Backend API integration for hero content
+// TODO: Define Routes - Backend API integration for hero content (Version 2 post-MVP)
 // Replace hardcoded data with actual API endpoints for hero section.
-// Will need to create /api/hero endpoint to fetch:
+// Version 2 CMS integration will provide:
 // - Dynamic hero titles and subtitles
 // - Featured product promotions
+// - Seasonal campaign content
+// - A/B testing variations for conversion optimization
 const data = {
   backgroundImage:
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
@@ -28,12 +30,13 @@ export const useHeroContent = () => {
         // Simulate API delay for now
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
-        // TODO: Develop Component - Dynamic hero content API integration
-        // Implement actual API call to fetch hero content from backend.
-        // Requirements:
+        // TODO: Develop Component - Dynamic hero content API integration (Version 2 post-MVP)
+        // Implement actual API call to fetch hero content from CMS backend.
+        // Version 2 Requirements:
         // - Error handling with retry logic
         // - Loading states for better UX
         // - Cache content for improved performance
+        // - Support for multiple hero variants (A/B testing)
         setHeroData({
           title: "Discover Your Urban Style",
           subtitle: "Trendy, high-quality clothing for the modern, fashion-conscious consumer",

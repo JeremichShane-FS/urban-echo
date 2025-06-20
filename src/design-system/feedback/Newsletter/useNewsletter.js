@@ -36,9 +36,9 @@ export const useNewsletter = () => {
     setMessageType("");
 
     try {
-      // TODO: Define Routes - Newsletter subscription API with email marketing integration
+      // TODO: Define Routes - Newsletter subscription API with email marketing integration (Version 2 post-MVP)
       // Replace mock with actual backend API endpoint: POST /api/newsletter/subscribe
-      // Backend requirements:
+      // Version 2 Backend requirements:
       // - Email validation and duplicate prevention
       // - Integration with email marketing service (Mailchimp, SendGrid, ConvertKit)
       // - GDPR compliance with consent tracking and unsubscribe links
@@ -46,8 +46,6 @@ export const useNewsletter = () => {
       // - Double opt-in confirmation email workflow
       // - Analytics tracking for conversion rates and email engagement
       // - Rate limiting to prevent spam subscriptions
-      // await newsletterService.subscribe(email);
-      // This is a future feature to integrate with an actual newsletter service.
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
