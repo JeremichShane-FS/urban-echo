@@ -2,7 +2,8 @@ name: "TODO to Issue - Working"
 on:
   push:
     branches: [main, staging, dev]
-  workflow_dispatch:
+  workflow_dispatch: # Manual trigger for testing
+
 jobs:
   todo-to-issue:
     runs-on: ubuntu-latest
@@ -17,7 +18,8 @@ jobs:
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          # Only use VALID parameters from the error message:
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          LABEL: "todo,auto-generated"
+          LABEL: "type: enhancement,auto-generated,todo"
           COMMENT_MARKER: "//"
