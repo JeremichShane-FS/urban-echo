@@ -92,10 +92,6 @@ export const useAboutContent = () => {
 
         // TODO: Define Routes - About content in management API (Updated v2)
         // Create a API endpoint for dynamic about section content.
-        // Backend requirements:
-        // - GET /api/content/about (fetch about content)
-        // - Support for rich text/markdown content
-        // - Version control for content updates
 
         setAboutContent({
           title: "About Urban Echo",
