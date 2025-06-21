@@ -3,7 +3,17 @@ import Link from "next/link";
 
 import styles from "./Footer.module.scss";
 
-const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
+const FooterView = ({
+  companyInfo,
+  copyrightText,
+  getNavigationSection,
+  onLinkClick,
+  socialLinks,
+}) => {
+  const shopSection = getNavigationSection("Shop");
+  const aboutSection = getNavigationSection("About");
+  const helpSection = getNavigationSection("Help");
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -34,8 +44,8 @@ const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
           <div className={`md:row-span-2 ${styles.company}`}>
             <Link href="/" className={styles.logo}>
               <Image
-                src={footerData.company.logo}
-                alt={`${footerData.company.name} Logo`}
+                src={companyInfo.logo}
+                alt={`${companyInfo.name} Logo`}
                 fill
                 className={styles.logo__image}
                 sizes="(max-width: 640px) 128px, 128px"
@@ -43,22 +53,22 @@ const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
             </Link>
             <div className={styles.company__info}>
               <p className={styles.address}>
-                {footerData.company.address}
+                {companyInfo.address}
                 <br />
-                {footerData.company.city}
+                {companyInfo.city}
               </p>
             </div>
           </div>
 
           <div className={styles.section}>
-            <h4 className={styles.section__title}>Main Menu</h4>
+            <h4 className={styles.section__title}>Shop</h4>
             <ul className={styles.links}>
-              {footerData.mainMenu.map((link, index) => (
+              {shopSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.href}
+                    href={link.path}
                     className={styles.link}
-                    onClick={() => onLinkClick(link.label, link.href)}>
+                    onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
                 </li>
@@ -67,14 +77,14 @@ const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
           </div>
 
           <div className={styles.section}>
-            <h4 className={styles.section__title}>Company</h4>
+            <h4 className={styles.section__title}>About</h4>
             <ul className={styles.links}>
-              {footerData.companyLinks.map((link, index) => (
+              {aboutSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.href}
+                    href={link.path}
                     className={styles.link}
-                    onClick={() => onLinkClick(link.label, link.href)}>
+                    onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
                 </li>
@@ -83,14 +93,14 @@ const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
           </div>
 
           <div className={styles.section}>
-            <h4 className={styles.section__title}>Discover</h4>
+            <h4 className={styles.section__title}>Help</h4>
             <ul className={styles.links}>
-              {footerData.discover.map((link, index) => (
+              {helpSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.href}
+                    href={link.path}
                     className={styles.link}
-                    onClick={() => onLinkClick(link.label, link.href)}>
+                    onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
                 </li>
@@ -101,7 +111,7 @@ const FooterView = ({ copyrightText, footerData, onLinkClick }) => {
           <div className={styles.section}>
             <h4 className={styles.section__title}>Find Us On</h4>
             <ul className={styles.links}>
-              {footerData.social.map((link, index) => (
+              {socialLinks.map((link, index) => (
                 <li key={index}>
                   <a
                     href={link.href}

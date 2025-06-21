@@ -1,5 +1,6 @@
 /**
- * Notification related constants
+ * @fileoverview This file contains constants related to notifications, including types, priorities, durations, and events.
+ * It serves as a centralized location for managing all notification-related constants used in the application.
  */
 
 // Notification types

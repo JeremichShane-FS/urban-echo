@@ -1,5 +1,6 @@
 /**
- * Checkout and shopping cart related constants
+ * @fileoverview This file contains constants related to the checkout process, including cart limits, shipping methods, payment methods, and order statuses.
+ * It serves as a centralized location for managing all checkout-related constants used in the application.
  */
 
 // Cart

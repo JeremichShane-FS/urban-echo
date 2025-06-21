@@ -1,5 +1,6 @@
 /**
- * Navigation-related constants
+ * @fileoverview This file contains constants related to navigation items, breadcrumbs, and other UI elements.
+ * It serves as a centralized location for managing all navigation-related constants used in the application.
  */
 
 import ROUTES from "@config/routes";

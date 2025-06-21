@@ -1,5 +1,6 @@
 /**
- * Content management related constants
+ * @fileoverview This file contains constants related to content management, including content categories, statuses, blog categories, media types, and more.
+ * It serves as a centralized location for managing all content-related constants used in the application.
  */
 
 // Content categories

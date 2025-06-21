@@ -1,5 +1,6 @@
 /**
- * API-related constants
+ * @fileoverview This file contains constants related to API endpoints, versions, and configurations.
+ * It serves as a centralized location for managing all API-related constants used in the application.
  */
 
 // Base URLs

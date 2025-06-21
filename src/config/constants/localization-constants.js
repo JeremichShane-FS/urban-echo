@@ -1,5 +1,6 @@
 /**
- * Localization and internationalization constants
+ * @fileoverview This file contains constants related to localization, including supported languages, default settings, currency formats, date and time formats, and more.
+ * It serves as a centralized location for managing all localization-related constants used in the application.
  */
 
 // Supported languages

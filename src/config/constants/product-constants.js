@@ -1,5 +1,6 @@
 /**
- * Product-related constants
+ * @fileoverview This file contains constants related to product display, sorting, filtering, and other product-related configurations.
+ * It serves as a centralized location for managing all product-related constants used in the application.
  */
 
 import { DEFAULT_IMAGES } from "./media-constants";

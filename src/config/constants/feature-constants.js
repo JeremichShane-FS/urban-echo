@@ -1,5 +1,6 @@
 /**
- * Feature flags and configuration constants
+ * @fileoverview This file contains constants related to feature flags, environment detection, and A/B testing configurations.
+ * It serves as a centralized location for managing all feature-related constants used in the application.
  */
 
 // Environment detection
