@@ -1,5 +1,6 @@
 /**
- * User account related constants
+ * @fileoverview This file contains constants related to user authentication, roles, permissions, and account management.
+ * It serves as a centralized location for managing all user-related constants used in the application.
  */
 
 // Authentication

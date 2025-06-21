@@ -1,5 +1,6 @@
 /**
- * General site information constants
+ * @fileoverview This file contains constants related to the site configuration, including site name, description, contact information, social media links, SEO defaults, and legal pages.
+ * It serves as a centralized location for managing all site-related constants used in the application.
  */
 
 export const SITE_NAME = "Urban Echo";
