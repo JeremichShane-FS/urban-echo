@@ -28,11 +28,11 @@ export const useHomePage = () => {
         // - Analytics integration for homepage performance tracking
         // setPageData(response.data);
 
-        // TODO: Create user profile settings page for account management
-        // Design and implement a settings page where users can update their personal information.
-        // Include form fields for name, email, phone number, and profile picture upload.
-        // Add form validation to ensure data integrity before submission.
-        // Integrate with existing user authentication system to save changes securely.
+        // TODO: Implement secure payment processing workflow with Stripe integration
+        // Set up payment form validation for credit card information input.
+        // Configure Stripe webhooks to handle successful and failed payment events.
+        // Add payment confirmation emails and receipt generation for customers.
+        // Implement refund processing system for customer service representatives.
 
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
