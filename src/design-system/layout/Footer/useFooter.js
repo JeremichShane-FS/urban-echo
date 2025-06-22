@@ -16,23 +16,23 @@ import {
 } from "@config/constants/footer-constants";
 import { SITE_NAME } from "@config/constants/site-constants";
 
-// TODO: [COMPONENT] ProductCard: implement add to cart functionality with quantity selector
-// Create reusable product card component for shop page display.
-// Include product image, title, price, size selector, and add to cart button.
-// Integrate with shopping cart context for state management.
-// Add hover effects and loading states for better user experience.
+// TODO: [DOCS] Update API documentation for new authentication endpoints
+// Create comprehensive documentation for Auth0 integration endpoints.
+// Include examples of request/response formats and error handling.
+// Add authentication flow diagrams and troubleshooting guide.
+// Update developer onboarding guide with new API changes.
 
-// FIX: Cart total calculation incorrect when applying discount codes
-// Shopping cart shows wrong total after discount is applied.
-// Discount percentage is calculated correctly but not reflected in final price.
-// Issue occurs specifically with percentage-based coupons over 20%.
-// Need to fix the cart calculation logic in checkout process.
+// FIX: [PERF] Product page loading takes over 5 seconds on mobile devices
+// Performance bottleneck identified in product image carousel component.
+// Large image files not being optimized for mobile viewport sizes.
+// Need to implement lazy loading and WebP format conversion.
+// Target load time under 2 seconds for better user experience.
 
-// FIX: [SECURITY] Auth0 token validation bypassed on expired sessions
-// Critical security vulnerability where expired JWT tokens are still accepted.
-// Users can access protected routes even after token expiration time.
-// Issue discovered in production affecting user data protection.
-// Immediate fix required to validate token expiration properly.
+// FIX: Search functionality returns duplicate results when filtering by category
+// Search bar shows same products multiple times in results list.
+// Issue occurs when user selects category filter after entering search term.
+// Duplicate entries appear specifically for products with multiple color variants.
+// Need to deduplicate results before displaying to user.
 
 export const useFooter = () => {
   const [copyrightText, setCopyrightText] = useState(`© ${SITE_NAME}. All rights reserved`);
