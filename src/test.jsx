@@ -1,134 +1,112 @@
-// src/components/WorkflowTest.jsx
 import { useEffect, useState } from "react";
 
-const WorkflowTest = () => {
+const CleanupValidationTest = () => {
   const [testData, setTestData] = useState([]);
 
-  // ✅ VALID: Component with proper template
-  // TODO: [COMPONENT] Add loading spinner while data fetches
-  // Need to show a spinner component during API calls
-  // Should integrate with existing UI design system
-  const LoadingSpinner = () => {
-    return <div className="spinner">Loading...</div>;
+  // ✅ SHOULD GET cleanup label (mentions console.log in comment)
+  // FIX: [BUG] Remove debug console.log statements from production code
+  // Found console.log statements that expose sensitive user data
+  // Need to clean up all debugging artifacts before deployment
+  const removeDebugLogs = () => {
+    return "Fixed debug logs";
   };
 
-  // ✅ VALID: Security FIX (should get type: bug + high priority)
-  // FIX: [SECURITY] Sanitize user input to prevent XSS attacks
-  // Current implementation allows script injection through comments
-  // Need to implement DOMPurify or similar sanitization library
-  const sanitizeInput = input => {
-    return input; // Vulnerable implementation
+  // ✅ SHOULD GET cleanup label (mentions console error in comment)
+  // TODO: [REFACTOR] Clean up console error statements in error handlers
+  // Remove console error debugging from production build
+  // Replace with proper error logging service
+  const cleanupErrors = () => {
+    return "Clean error handling";
   };
 
-  // ✅ VALID: Bug template (should remove enhancement, add bug)
-  // TODO: [BUG] Fix calculation error in shopping cart total
-  // Cart total doesn't include tax in final calculation
-  // Results in incorrect checkout amounts for customers
-  const calculateTotal = items => {
-    return items.reduce((sum, item) => sum + item.price, 0);
+  // ✅ SHOULD GET cleanup label (mentions alert statements)
+  // FIX: [BUG] Remove alert() debugging statements from checkout flow
+  // Found alert statements used for payment testing
+  // These block the UI and should be removed
+  const removeAlerts = () => {
+    return "No more alerts";
   };
 
-  // ✅ VALID: Docs with low priority
-  // TODO: [DOCS] Create API documentation for new endpoints
-  // Document REST API endpoints for user authentication
-  // Include request/response examples and error codes
-  const apiDocs = null;
-
-  // ✅ VALID: Performance optimization
-  // TODO: [PERF] Optimize image loading with lazy loading
-  // Large images cause slow initial page load
-  // Implement intersection observer for viewport detection
-  const ImageComponent = ({ src }) => {
-    return <img src={src} alt="Product" />;
+  // ✅ SHOULD GET cleanup label (mentions debugger)
+  // TODO: [REFACTOR] Remove debugger statements from authentication module
+  // Clean up debugger breakpoints left in production code
+  // Use proper development tools instead
+  const removeDebugger = () => {
+    return "Clean debugging";
   };
 
-  // ❌ INVALID: No template prefix
-  // TODO: Add user profile page
+  // ✅ SHOULD NOT GET cleanup label (no debug keywords in comment)
+  // TODO: [COMPONENT] Add user profile management interface
+  // Create form for users to update their personal information
+  // Include validation and error handling for all fields
+  const userProfileForm = () => {
+    console.log("This console.log is in code, not comment");
+    return "User profile component";
+  };
+
+  // ✅ SHOULD NOT GET cleanup label (mentions cleanup but not debug-related)
+  // TODO: [REFACTOR] Cleanup component structure and prop validation
+  // Reorganize component hierarchy for better maintainability
+  // Add proper TypeScript types and prop validation
+  const componentCleanup = () => {
+    return "Better component structure";
+  };
+
+  // ❌ SHOULD GET validation-failed (no template)
+  // TODO: Add shopping cart functionality
   // This should fail validation - missing [TEMPLATE]
-  const userProfile = null;
+  const noTemplate = null;
 
-  // ❌ INVALID: Multiple templates
-  // TODO: [SECURITY] [COMPONENT] Fix authentication flow
+  // ❌ SHOULD GET validation-failed (multiple templates)
+  // TODO: [SECURITY] [COMPONENT] Fix user authentication flow
   // This should fail - only one template allowed
-  const authFlow = null;
+  const multipleTemplates = null;
 
-  // ❌ INVALID: Invalid template name
-  // TODO: [BACKEND] Implement new API endpoints
-  // This should fail - BACKEND not in approved list
-  const apiEndpoints = null;
+  // ❌ SHOULD GET validation-failed (invalid template)
+  // TODO: [BACKEND] Create new API endpoints
+  // This should fail - BACKEND not in approved template list
+  const invalidTemplate = null;
 
-  // ❌ INVALID: Empty TODO
+  // ❌ SHOULD GET validation-failed (too short)
+  // TODO: [BUG] Fix
+  // This should fail - under 10 character minimum
+  const tooShort = null;
+
+  // ❌ SHOULD GET validation-failed (special characters)
+  // TODO: [BUG] Fix issue with $variable && command
+  // This should fail - contains $ and && characters
+  const specialChars = null;
+
+  // ❌ SHOULD GET validation-failed (non-English)
+  // TODO: [DOCS] Add documentation for 中文 support
+  // This should fail - contains non-ASCII characters
+  const nonEnglish = null;
+
+  // ❌ SHOULD GET validation-failed (empty TODO)
   // TODO:
-  // This should fail - too short
+  // This should fail - essentially empty
   const emptyTodo = null;
 
-  // ❌ INVALID: Non-English characters
-  // TODO: [COMPONENT] Add support for 中文 and español
-  // This should fail - non-ASCII characters
-  const i18nSupport = null;
-
-  // ❌ INVALID: Special characters that break CLI
-  // TODO: [BUG] Fix issue with $PATH && echo "test"
-  // This should fail - contains $ && characters
-  const cliBreaker = null;
-
-  // ❌ INVALID: Wrong case (should be normalized to uppercase)
-  // TODO: [component] Add navigation menu
-  // This should work but normalize to [COMPONENT]
-  const navigation = null;
-
-  // ✅ VALID: Should get cleanup label (console.log)
-  // FIX: [BUG] Remove debug console.log statements in production
-  // Found console log statements that expose sensitive data
-  // Need to remove all debugging code before deployment
-  const debugCode = () => {
-    console.log("Debug info");
-  };
-
-  // ✅ VALID: Should get cleanup label (console space)
-  // TODO: [REFACTOR] Remove all console error statements
-  // Clean up debugging artifacts from development
-  const cleanupCode = null;
-
-  // ✅ VALID: Very long title (should be truncated)
-  // TODO: [FEATURE] Implement comprehensive user authentication system with OAuth2 integration supporting Google, Facebook, GitHub, and Microsoft Azure Active Directory
-  // This title should be truncated to 80 characters with ...
-  const longFeature = null;
-
-  // ✅ VALID: Different area labels
-  // TODO: [ROUTES] Create RESTful API routes for products
-  // Should get area: api and area: backend labels
-  const apiRoutes = null;
-
-  // TODO: [DATA] Implement MongoDB schema for user profiles
-  // Should get area: api and area: backend labels
-  const dataSchema = null;
-
-  // TODO: [UI/UX] Redesign checkout flow for mobile users
-  // Should get area: frontend label
-  const uiRedesign = null;
-
-  // ✅ VALID: FIX without template (should fail now)
-  // FIX: Memory leak in useEffect cleanup
-  // This should fail - FIX requires template
-  const memoryLeak = null;
-
-  // ✅ VALID: Technology detection
-  // TODO: [COMPONENT] Migrate component to Next.js App Router
-  // Should add nextjs label based on content
-  const nextjsComponent = null;
-
-  // ✅ VALID: Case sensitivity test
-  // TODO: [Security] Implement rate limiting for API
-  // Should normalize to [SECURITY] and work properly
-  const rateLimiting = null;
+  // ✅ SHOULD PASS and normalize case (but no cleanup label)
+  // TODO: [component] Add navigation menu to header
+  // This should normalize to [COMPONENT] and pass validation
+  // No debug keywords so no cleanup label
+  const caseNormalization = null;
 
   return (
-    <div className="workflow-test">
-      <h1>Workflow Test Component</h1>
-      <p>This component contains test TODO/FIX comments</p>
+    <div className="cleanup-validation-test">
+      <h1>Cleanup & Validation Test</h1>
+      <p>Testing cleanup label detection and validation failures</p>
+
+      {/* This code has debug statements but they're in code, not comments */}
+      {testData.map(item => {
+        console.log("Processing item:", item); // Should NOT trigger cleanup label
+        // eslint-disable-next-line
+        debugger; // Should NOT trigger cleanup label
+        return <div key={item.id}>{item.name}</div>;
+      })}
     </div>
   );
 };
 
-export default WorkflowTest;
+export default CleanupValidationTest;
