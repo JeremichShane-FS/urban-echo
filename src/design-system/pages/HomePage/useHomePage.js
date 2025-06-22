@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { PRIVACY_POLICY_SECTIONS } from "../../../config/constants/content-constants";
-
 export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
@@ -30,10 +28,10 @@ export const useHomePage = () => {
         // - Analytics integration for homepage performance tracking
         // setPageData(response.data);
 
-        // TODO: Test automated issue creation system (Updated for testing v1)
-        // Verify that only TODO comments create issues after workflow simplification.
-        // This test should create a single issue with professional labels and auto-assignment.
-        // Expected labels: auto-generated, type: enhancement, priority: low (or medium/high based on content)
+        // TODO: Test corrected labeling system after cleanup (Updated for v2 testing)
+        // Verify that workflow only creates clean labels from automation guide.
+        // This should get proper priority based on content keywords.
+        // Expected: auto-generated, type: enhancement, and one clean priority label.
 
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
