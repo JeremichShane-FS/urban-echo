@@ -2,447 +2,239 @@
 
 ## Urban Echo E-commerce Platform
 
-_A comprehensive guide to the automated issue creation system for professional project management._
+_A comprehensive guide to the automated issue creation system with strict validation for professional project management._
 
 ---
 
 ## 📚 Table of Contents
 
-- [GitHub Issue Automation Reference Guide](#github-issue-automation-reference-guide)
-  - [Urban Echo E-commerce Platform](#urban-echo-e-commerce-platform)
-  - [📚 Table of Contents](#-table-of-contents)
-  - [🎯 Overview](#-overview)
-  - [🏷️ Professional Label System](#️-professional-label-system)
-    - [**Type Labels**](#type-labels)
-    - [**Priority Labels**](#priority-labels)
-    - [**Area Labels**](#area-labels)
-    - [**Status Labels**](#status-labels)
-    - [**Workflow Labels**](#workflow-labels)
-    - [**E-commerce Technology Labels**](#e-commerce-technology-labels)
-  - [💬 Comment Standards for Urban Echo](#-comment-standards-for-urban-echo)
-    - [**Format:**](#format)
-    - [**Keywords:**](#keywords)
-    - [**Urban Echo Issue Templates:**](#urban-echo-issue-templates)
-    - [**Urban Echo Examples:**](#urban-echo-examples)
-      - [**E-commerce Feature Development:**](#e-commerce-feature-development)
-      - [**Payment System:**](#payment-system)
-      - [**Shopping Cart Features:**](#shopping-cart-features)
-      - [**User Authentication:**](#user-authentication)
-      - [**Performance Issues:**](#performance-issues)
-      - [**Database Operations:**](#database-operations)
-      - [**API Development:**](#api-development)
-  - [🔄 Conventional Commit Automation](#-conventional-commit-automation)
-    - [**Commit Format:**](#commit-format)
-    - [**Type → Priority Mapping:**](#type--priority-mapping)
-      - [**High Priority:**](#high-priority)
-      - [**Medium Priority:**](#medium-priority)
-      - [**Low Priority:**](#low-priority)
-    - [**Urban Echo Scope → Area Mapping:**](#urban-echo-scope--area-mapping)
-    - [**Urban Echo Automated Issue Types:**](#urban-echo-automated-issue-types)
-      - [**Security Reviews:**](#security-reviews)
-      - [**Performance Reviews:**](#performance-reviews)
-      - [**Payment System Reviews:**](#payment-system-reviews)
-      - [**Breaking Changes:**](#breaking-changes)
-      - [**Documentation Follow-ups:**](#documentation-follow-ups)
-  - [🤖 Workflow Triggers](#-workflow-triggers)
-    - [**Automation Runs On:**](#automation-runs-on)
-    - [**What Gets Detected:**](#what-gets-detected)
-      - [**Code Patterns:**](#code-patterns)
-      - [**Commit Patterns:**](#commit-patterns)
-    - [**Branch Workflow:**](#branch-workflow)
-  - [📊 Issue Management](#-issue-management)
-    - [**Viewing Auto-Generated Issues:**](#viewing-auto-generated-issues)
-    - [**Issue Lifecycle:**](#issue-lifecycle)
-    - [**Best Practices for Urban Echo:**](#best-practices-for-urban-echo)
-  - [🔧 Maintenance](#-maintenance)
-    - [**Weekly Review:**](#weekly-review)
-    - [**Monthly Review:**](#monthly-review)
-  - [📚 Configuration Files](#-configuration-files)
-    - [**Workflow File:**](#workflow-file)
-    - [**Label Setup Script:**](#label-setup-script)
-    - [**Issue Templates:**](#issue-templates)
-  - [🎯 Benefits for Urban Echo](#-benefits-for-urban-echo)
-    - [**For E-commerce Development:**](#for-e-commerce-development)
-    - [**For Project Management:**](#for-project-management)
-    - [**For Portfolio Demonstration:**](#for-portfolio-demonstration)
-  - [📝 Quick Reference](#-quick-reference)
-    - [**Create TODO Comment:**](#create-todo-comment)
-    - [**Payment Security Commit:**](#payment-security-commit)
-    - [**Check Automation:**](#check-automation)
-    - [**View Payment Issues:**](#view-payment-issues)
+- [🎯 Overview](#-overview)
+- [🛡️ Validation System](#️-validation-system)
+- [🏷️ Label System](#️-label-system)
+- [💬 Comment Standards](#-comment-standards)
+- [📊 Issue Management](#-issue-management)
+- [🔧 Maintenance](#-maintenance)
+- [📝 Quick Reference](#-quick-reference)
 
 ---
 
 ## 🎯 Overview
 
-Urban Echo uses automated GitHub Actions to create issues from:
+Urban Echo uses a **strict automated GitHub Actions system** to create and label issues from TODO/FIX comments in code. The system enforces high-quality standards through comprehensive validation and professional labeling.
 
-- **TODO/FIXME comments** in code
-- **Conventional commit patterns** (security, performance, payments)
-- **Breaking change detection**
-- **Code quality patterns** (debug code, hardcoded values)
+### **Key Features:**
 
-All issues are automatically labeled using our professional label system and assigned appropriate priorities.
+- **Strict validation** - All TODO/FIX comments must meet quality standards
+- **Template enforcement** - Required template prefixes for categorization
+- **Auto-assignment** - Issues assigned to code author automatically
+- **Professional labeling** - Consistent labeling based on content and templates
+- **Defense in depth** - Works with pre-commit hooks for bulletproof quality
 
-[↑ Back to Top](#github-issue-automation-reference-guide)
+### **Supported Comment Types:**
+
+- `TODO:` - New features, enhancements, and planned work
+- `FIX:` - Bug fixes, security vulnerabilities, and corrections
 
 ---
 
-## 🏷️ Professional Label System
+## 🛡️ Validation System
 
-### **Type Labels**
+### **Strict Requirements (All Must Pass):**
 
-- `type: bug` - Something isn't working correctly
-- `type: enhancement` - New feature or request
-- `type: documentation` - Improvements or additions to documentation
-- `type: question` - Further information is requested
+1. **Template Required** - Must include approved template like `[COMPONENT]`, `[SECURITY]`, etc.
+2. **Single Template** - Only one template allowed per comment
+3. **Valid Template** - Template must be from approved list
+4. **Minimum Length** - Content after template must be ≥10 characters
+5. **Maximum Length** - Titles truncated at 80 characters for readability
+6. **English Only** - No non-ASCII characters allowed
+7. **Safe Characters** - No CLI-breaking special characters (`$`, `&`, `|`, etc.)
+8. **Case Normalization** - Templates automatically converted to uppercase
 
-### **Priority Labels**
+### **Approved Templates:**
 
-- `priority: critical` - Requires immediate attention (production down)
-- `priority: high` - Requires immediate attention
-- `priority: medium` - Requires semi-immediate attention
-- `priority: low` - Does not require immediate attention
+```
+[COMPONENT]  [UI/UX]      [ROUTES]     [DATA]       [SECURITY]
+[BUG]        [PERF]       [REFACTOR]   [TEST]       [DOCS]
+[DEPENDENCY] [ONBOARDING] [I18N]       [A11Y]       [FEATURE]
+[RESEARCH]   [STATE]
+```
 
-### **Area Labels**
+### **Validation Failures:**
 
-- `area: frontend` - Issues related to UI/UX and client-side code
-- `area: backend` - Issues related to server-side logic and APIs
-- `area: database` - Database-specific issues and queries
-- `area: api` - API endpoint and integration issues
-- `area: payment` - Payment processing and Stripe integration
-- `area: security` - Security-related concerns and vulnerabilities
+- Issues that fail validation get `validation-failed` label
+- Detailed error comments explain what needs fixing
+- No other labels applied until validation passes
+- Processing stops - no normal workflow continues
 
-### **Status Labels**
+### **Example Validations:**
 
-- `status: needs-triage` - Needs initial assessment and categorization
-- `status: in-progress` - Currently being worked on
-- `status: needs-review` - Ready for code review or testing
-- `status: blocked` - Cannot proceed due to external dependency
+✅ **VALID:**
 
-### **Workflow Labels**
+```javascript
+// TODO: [COMPONENT] Add user profile management interface
+// Create comprehensive profile editing form with validation
+```
+
+❌ **INVALID:**
+
+```javascript
+// TODO: Add profile form              // Missing template
+// TODO: [COMPONENT] Fix               // Too short (3 chars after template)
+// TODO: [BACKEND] Add API             // Invalid template (BACKEND not approved)
+// TODO: [BUG] [PERF] Fix slow query   // Multiple templates
+// TODO: [COMPONENT] Add 中文 support   // Non-English characters
+```
+
+---
+
+## 🏷️ Label System
+
+### **Base Labels (Always Applied):**
 
 - `auto-generated` - Issues created by automation
-- `tech-debt` - Technical debt that needs addressing
-- `performance` - Performance optimization needed
-- `cleanup` - Code cleanup (debug statements, etc.)
+- `type: enhancement` - Default type (overridden by specific templates)
 
-### **E-commerce Technology Labels**
+### **Type Labels:**
 
-- `mongodb` - MongoDB database specific issues
-- `stripe` - Stripe payment integration issues
-- `auth0` - Authentication and user management
-- `nextjs` - Next.js framework specific issues
+- `type: bug` - Applied to `[BUG]` template and FIX+`[SECURITY]`
+- `type: enhancement` - Default for most templates
+- `type: documentation` - Applied to `[DOCS]` template
 
-[↑ Back to Top](#github-issue-automation-reference-guide)
+### **Priority Labels:**
 
----
+- `priority: high` - `[SECURITY]`, `[BUG]` (when FIX comment)
+- `priority: medium` - `[COMPONENT]`, `[ROUTES]`, `[PERF]`, `[REFACTOR]`, `[TEST]`
+- `priority: low` - `[DOCS]`, `[DEPENDENCY]`
 
-## 💬 Comment Standards for Urban Echo
+### **Area Labels:**
 
-Structure TODO comments to match GitHub issue templates for consistency:
+- `area: frontend` - `[COMPONENT]`, `[UI/UX]`
+- `area: api` + `area: backend` - `[ROUTES]`, `[DATA]`
+- `area: security` - `[SECURITY]`
 
-### **Format:**
+### **Workflow Labels:**
 
-```javascript
-// [KEYWORD]: [Template Category] - [Short Description]
-// [Detailed explanation]
-// [Requirements/Steps/Context]
-```
+- `tech-debt` - `[REFACTOR]` template
+- `performance` - `[PERF]` template or performance keywords in comments
+- `cleanup` - When comments mention debug code (`console.log`, `debugger`, `alert`)
 
-### **Keywords:**
+### **Technology Labels:**
 
-- `TODO` - New features or enhancements
-- `FIXME` - Bug fixes needed
-- `HACK` - Technical debt or code improvements
-- `OPTIMIZE` - Performance improvements
-- `SECURITY` - Security concerns
-- `REFACTOR` - Code restructuring needed
-- `UI` - User interface improvements
-- `API` - API-related tasks
-- `DB` - Database-related tasks
+- `nextjs` - When Next.js mentioned in comment
+- `mongodb` - Database-related content
+- `stripe` - Payment-related content
+- `auth0` - Authentication-related content
 
-### **Urban Echo Issue Templates:**
+### **Smart Type Detection:**
 
-- 📚 Research
-- 🎯 Define Data Models
-- 🔌 Define Routes
-- 🧩 Develop Component
-- 🌐 Handle Internationalization
-- 🧪 Improve Testing
-- 🔄 Propose Refactoring
-- 🎨 Provide UI/UX Feedback
-- ♿ Report Accessibility Concern
-- 🐛 Report Bug
-- ⚡ Report Performance Issue
-- 🔒 Report Security Vulnerability
-- ✨ Request Feature
-- 🗂️ State Management
-- 📦 Update Dependency
-- 📚 Update Documentation
-
-### **Urban Echo Examples:**
-
-#### **E-commerce Feature Development:**
-
-```javascript
-// TODO: Develop Component - Product listing page
-// Create responsive product grid component for shop page.
-// Requirements:
-// - Product image lazy loading
-// - Filter by category, price, size
-// - Sort by price, popularity, newest
-// - Add to cart functionality
-// - Wishlist integration
-```
-
-#### **Payment System:**
-
-```javascript
-// SECURITY: Report Security Vulnerability - Stripe webhook validation
-// Current webhook handler doesn't verify signatures from Stripe.
-// This could allow malicious requests to trigger false payment confirmations.
-// Critical for e-commerce security - affects order processing system.
-// Need to implement webhook signature verification using Stripe's library.
-```
-
-#### **Shopping Cart Features:**
-
-```javascript
-// TODO: State Management - Shopping cart persistence
-// Implement cart state management with localStorage backup.
-// Requirements:
-// - Add/remove items from cart
-// - Update quantities with validation
-// - Persist cart across browser sessions
-// - Sync with user account when logged in
-// - Clear cart after successful checkout
-```
-
-#### **User Authentication:**
-
-```javascript
-// FIXME: Report Bug - Auth0 login redirect loop
-// Users get stuck in redirect loop when accessing protected checkout pages.
-// Happens specifically with Google OAuth login after cart creation.
-// Steps to reproduce:
-// 1. Add items to cart as guest user
-// 2. Proceed to checkout
-// 3. Login with Google via Auth0
-// 4. Gets redirected in loop instead of back to checkout
-```
-
-#### **Performance Issues:**
-
-```javascript
-// OPTIMIZE: Report Performance Issue - Product image loading
-// Product images on shop page load too slowly (3+ seconds on mobile).
-// Target: Reduce to under 1 second load time for better conversion.
-// Solutions to implement:
-// - Lazy loading for below-the-fold products
-// - WebP format with JPEG fallbacks
-// - Multiple image sizes for different viewports
-// - CDN integration for image delivery
-```
-
-#### **Database Operations:**
-
-```javascript
-// TODO: Define Data Models - Order management schema
-// Create MongoDB schemas for comprehensive order management.
-// Models needed:
-// - Order (customer info, items, totals, status)
-// - OrderItem (product reference, quantity, price snapshot)
-// - ShippingAddress (customer address with validation)
-// - PaymentRecord (Stripe payment details, refund tracking)
-```
-
-#### **API Development:**
-
-```javascript
-// TODO: Define Routes - Product catalog endpoints
-// Create RESTful API routes for product management.
-// Endpoints needed:
-// - GET /api/products (list with filtering/pagination)
-// - GET /api/products/:id (single product with variants)
-// - GET /api/categories (product categories)
-// - POST /api/products/:id/reviews (customer reviews)
-// - GET /api/products/search (search with autocomplete)
-```
-
-[↑ Back to Top](#github-issue-automation-reference-guide)
+- **FIX + [SECURITY]** → `type: bug` (security vulnerability)
+- **TODO + [SECURITY]** → `type: enhancement` (new security feature)
+- **FIX + [BUG]** → `priority: high` (actual bug)
+- **TODO + [BUG]** → `priority: medium` (planned investigation)
 
 ---
 
-## 🔄 Conventional Commit Automation
+## 💬 Comment Standards
 
-Urban Echo's system automatically analyzes conventional commits and creates relevant issues.
+### **Required Format:**
 
-### **Commit Format:**
-
-```
-type(scope): subject
-
-body
-
-footer
+```javascript
+// TODO: [TEMPLATE] Brief description (≥10 chars after template)
+// Detailed explanation of what needs to be done
+// Additional context, requirements, or steps
 ```
 
-### **Type → Priority Mapping:**
+### **Template Usage Guidelines:**
 
-#### **High Priority:**
+**Frontend Work:**
 
-- `fix` - Bug fixes affecting user experience
-- `hotfix` - Critical e-commerce functionality fixes
-- `security` - Security patches for payment/user data
-
-#### **Medium Priority:**
-
-- `feat` - New e-commerce features
-- `perf` - Performance improvements for conversion
-- `refactor` - Code restructuring for maintainability
-
-#### **Low Priority:**
-
-- `docs` - Documentation updates
-- `style` - UI/CSS formatting changes
-- `test` - Test additions and improvements
-- `chore` - Build/deployment maintenance
-
-### **Urban Echo Scope → Area Mapping:**
-
-- `frontend`, `ui`, `components` → `area: frontend`
-- `backend`, `server`, `api` → `area: backend, area: api`
-- `database`, `db`, `mongo` → `area: database, mongodb`
-- `auth`, `authentication`, `login` → `area: security, auth0`
-- `payment`, `stripe`, `checkout` → `area: payment, stripe`
-- `cart`, `shopping` → `area: frontend, area: backend`
-- `products`, `catalog` → `area: database, area: api`
-- `orders`, `fulfillment` → `area: backend, area: database`
-
-### **Urban Echo Automated Issue Types:**
-
-#### **Security Reviews:**
-
-```bash
-security(auth): implement rate limiting for login attempts
+```javascript
+// TODO: [COMPONENT] Create responsive navigation menu
+// Implement mobile-first navigation with hamburger menu
+// Include accessibility features and keyboard navigation
 ```
 
-**→ Creates:** 🔒 Security Review with e-commerce security checklist
+**Security Issues:**
 
-#### **Performance Reviews:**
-
-```bash
-perf(frontend): optimize product page loading
+```javascript
+// FIX: [SECURITY] Implement input sanitization for user comments
+// Current form allows script injection through comment field
+// Use DOMPurify library to sanitize all user-generated content
 ```
 
-**→ Creates:** 🚀 Performance Review with conversion optimization checklist
+**Performance Optimization:**
 
-#### **Payment System Reviews:**
-
-```bash
-feat(payment): integrate Stripe subscription billing
+```javascript
+// TODO: [PERF] Optimize product image loading with lazy loading
+// Large product images cause slow initial page load
+// Implement intersection observer for viewport-based loading
 ```
 
-**→ Creates:** 💳 Payment System Review with payment integration checklist
+**Bug Fixes:**
 
-#### **Breaking Changes:**
-
-```bash
-feat(api)!: update product schema structure
-
-BREAKING CHANGE: Product variants now use separate collection
+```javascript
+// FIX: [BUG] Shopping cart total calculation incorrect for discounts
+// Cart shows wrong total when percentage discount applied
+// Fix calculation logic in checkout component
 ```
 
-**→ Creates:** ⚠️ Breaking Change Review with migration checklist
+**Documentation:**
 
-#### **Documentation Follow-ups:**
-
-```bash
-feat(api): add product search endpoint
+```javascript
+// TODO: [DOCS] Create API documentation for authentication endpoints
+// Document OAuth2 flow, error responses, and rate limiting
+// Include code examples for common integration patterns
 ```
 
-**→ Creates:** 📚 Documentation Update Needed (for new API features)
+### **Content Detection:**
 
-[↑ Back to Top](#github-issue-automation-reference-guide)
+The system analyzes comment content for additional labeling:
 
----
-
-## 🤖 Workflow Triggers
-
-### **Automation Runs On:**
-
-- **Push to:** `main`, `staging`, `dev` branches
-- **Commit Analysis:** Every push to monitored branches
-- **File Analysis:** Scans changed files for patterns
-
-### **What Gets Detected:**
-
-#### **Code Patterns:**
-
-- `console.log()`, `debugger`, `alert()` → Cleanup issues
-- `localhost`, hardcoded URLs → Security issues
-- TODO/FIXME comments → Task issues
-
-#### **Commit Patterns:**
-
-- Security keywords → Security review issues
-- Performance keywords → Performance review issues
-- Payment keywords → Payment review issues
-- E-commerce keywords → Business logic review issues
-- Breaking change indicators → Critical review issues
-
-### **Branch Workflow:**
-
-```
-feature/branch → dev → staging → main
-     ❌          ✅      ✅       ✅
-  (no automation) (automation triggers)
-```
-
-Automation only triggers when code enters shared branches (`dev`, `staging`, `main`), not on feature branches.
-
-[↑ Back to Top](#github-issue-automation-reference-guide)
+- **Cleanup Detection:** Mentions of `console.log`, `debugger`, `alert` → `cleanup` label
+- **Performance Detection:** Keywords like "optimize", "performance" → `performance` label
+- **Tech Detection:** Framework mentions → relevant technology labels
 
 ---
 
 ## 📊 Issue Management
 
-### **Viewing Auto-Generated Issues:**
+### **Viewing Issues:**
 
 ```bash
-# List all automated issues
+# All automated issues
 gh issue list --label "auto-generated"
 
-# Filter by e-commerce areas
-gh issue list --label "area: payment,auto-generated"
-gh issue list --label "stripe,auto-generated"
-gh issue list --label "area: security,auto-generated"
+# Validation failures (need fixing)
+gh issue list --label "validation-failed"
 
-# Filter by priority
+# By priority
 gh issue list --label "priority: high,auto-generated"
 
-# View specific issue
-gh issue view [issue-number]
+# By area
+gh issue list --label "area: frontend,auto-generated"
+gh issue list --label "area: security,auto-generated"
+
+# Cleanup tasks
+gh issue list --label "cleanup,auto-generated"
 ```
 
-### **Issue Lifecycle:**
+### **Issue Workflow:**
 
-1. **Created** - Automatically labeled and categorized
-2. **Triage** - Review during daily standups
-3. **Work** - Address using provided checklists
-4. **Review** - Code review with focus on e-commerce impact
-5. **Close** - Mark complete after testing
+1. **Code Push** - Developer pushes TODO/FIX comments
+2. **Validation** - System validates comment quality
+3. **Issue Creation** - Valid comments become issues
+4. **Auto-Assignment** - Issues assigned to code author
+5. **Labeling** - Professional labels applied based on content
+6. **Triage** - Team reviews during standups
+7. **Development** - Work tracked through issue lifecycle
+8. **Closure** - Issues closed when work completed
 
-### **Best Practices for Urban Echo:**
+### **Best Practices:**
 
-- ✅ Review payment-related issues immediately
-- ✅ Test security changes in staging environment
-- ✅ Verify performance changes don't affect conversion
-- ✅ Document API changes for frontend integration
-- ✅ Close issues only after user acceptance testing
-
-[↑ Back to Top](#github-issue-automation-reference-guide)
+- **Review validation failures first** - Fix comment quality issues
+- **Prioritize security/payment issues** - High business impact
+- **Group similar issues** - Batch related work for efficiency
+- **Update templates as needed** - Evolve standards with project needs
 
 ---
 
@@ -450,98 +242,112 @@ gh issue view [issue-number]
 
 ### **Weekly Review:**
 
-- Check for duplicate issues and close them
-- Review payment and security related issues first
-- Update labels for better categorization
-- Assign high-priority e-commerce issues
+- Check for `validation-failed` issues and fix comment quality
+- Review high-priority security and payment issues
+- Close completed issues
+- Update project documentation as needed
 
 ### **Monthly Review:**
 
-- Analyze patterns in automated issue creation
-- Update automation for new e-commerce features
-- Review conversion impact of performance issues
-- Document process improvements
+- Analyze labeling accuracy and adjust templates if needed
+- Review automation effectiveness metrics
+- Update approved template list for new project areas
+- Document lessons learned and process improvements
 
-[↑ Back to Top](#github-issue-automation-reference-guide)
+### **Quality Metrics:**
 
----
-
-## 📚 Configuration Files
-
-### **Workflow File:**
-
-`.github/workflows/auto-issue-creation.yml`
-
-### **Label Setup Script:**
-
-`scripts/setup-labels.sh`
-
-### **Issue Templates:**
-
-`.github/ISSUE_TEMPLATE/`
-
-[↑ Back to Top](#github-issue-automation-reference-guide)
-
----
-
-## 🎯 Benefits for Urban Echo
-
-### **For E-commerce Development:**
-
-- ✅ **Payment Security** - Automatic security review for payment changes
-- ✅ **Performance Monitoring** - Conversion-focused performance alerts
-- ✅ **Quality Control** - Automated detection of e-commerce anti-patterns
-- ✅ **User Experience** - Early detection of UX-breaking changes
-
-### **For Project Management:**
-
-- ✅ **Business Priority** - Payment and security issues get high priority
-- ✅ **Feature Tracking** - New e-commerce features trigger documentation
-- ✅ **Quality Assurance** - Automated quality checks for customer-facing code
-- ✅ **Risk Management** - Breaking changes get immediate attention
-
-### **For Portfolio Demonstration:**
-
-- ✅ **Industry Standards** - Shows understanding of e-commerce best practices
-- ✅ **Security Focus** - Demonstrates attention to payment security
-- ✅ **Process Automation** - Exhibits advanced DevOps capabilities
-- ✅ **Business Thinking** - Shows consideration for conversion and UX
-
-[↑ Back to Top](#github-issue-automation-reference-guide)
+- **Validation Pass Rate** - Target: >95% of comments pass validation
+- **Label Accuracy** - Manual review of auto-generated labels
+- **Issue Resolution Time** - Track from creation to closure
+- **Template Usage** - Monitor which templates are most/least used
 
 ---
 
 ## 📝 Quick Reference
 
-### **Create TODO Comment:**
+### **Create Valid TODO Comment:**
 
 ```javascript
-// TODO: [Template Category] - [Short Description]
-// [E-commerce context and requirements]
+// TODO: [TEMPLATE] Description with at least 10 characters
+// Additional details explaining the work needed
+// Context about why this is important
 ```
 
-### **Payment Security Commit:**
+### **Common Validation Fixes:**
 
 ```bash
-git commit -m "security(payment): implement webhook signature validation
+# Add template prefix
+- TODO: Fix login bug
++ TODO: [BUG] Fix login validation error
 
-Added Stripe webhook signature verification to prevent unauthorized
-payment confirmations. Critical for e-commerce transaction security."
+# Make content longer
+- TODO: [COMPONENT] Add form
++ TODO: [COMPONENT] Add user registration form with validation
+
+# Use approved template
+- TODO: [BACKEND] Add API
++ TODO: [ROUTES] Add user management API endpoints
+
+# Remove special characters
+- TODO: [BUG] Fix $ variable & command
++ TODO: [BUG] Fix variable expansion and command execution
+
+# Use English only
+- TODO: [DOCS] Add 中文 support
++ TODO: [DOCS] Add Chinese language support documentation
 ```
 
-### **Check Automation:**
+### **Check Workflow Status:**
 
 ```bash
-gh issue list --label "auto-generated"
+# View recent workflow runs
 gh run list --limit 5
+
+# Check for validation failures
+gh issue list --label "validation-failed" --limit 10
+
+# View all auto-generated issues
+gh issue list --label "auto-generated" --state open
 ```
 
-### **View Payment Issues:**
+### **Emergency Procedures:**
 
 ```bash
-gh issue list --label "area: payment" --label "auto-generated"
+# If workflow fails, check logs
+gh run view [run-id] --log
+
+# If validation-failed label missing, create it
+gh label create "validation-failed" --description "Issues that failed validation checks" --color "d73a4a"
+
+# Manually fix issue labels if needed
+gh issue edit [issue-number] --add-label "validation-failed"
 ```
 
-_This automation system ensures Urban Echo maintains high e-commerce standards while demonstrating professional development practices. All issues are automatically categorized with focus on payment security, performance optimization, and user experience._
+---
 
-[↑ Back to Top](#github-issue-automation-reference-guide)
+## 🎯 Benefits
+
+### **Quality Assurance:**
+
+- ✅ **Consistent Standards** - All TODO/FIX comments meet quality requirements
+- ✅ **Professional Labeling** - Proper categorization and prioritization
+- ✅ **Automated Validation** - Catch quality issues before they become technical debt
+- ✅ **Clear Ownership** - Auto-assignment ensures accountability
+
+### **Development Efficiency:**
+
+- ✅ **Reduced Triage Time** - Issues pre-labeled and categorized
+- ✅ **Better Prioritization** - Security and payment issues elevated appropriately
+- ✅ **Improved Tracking** - All TODO items become trackable issues
+- ✅ **Team Coordination** - Clear visibility into planned work
+
+### **Portfolio Demonstration:**
+
+- ✅ **Industry Standards** - Shows understanding of professional development practices
+- ✅ **Quality Focus** - Demonstrates attention to code quality and documentation
+- ✅ **Process Automation** - Exhibits advanced DevOps and workflow automation skills
+- ✅ **Scalable Systems** - Shows ability to build systems that enforce standards
+
+---
+
+_This automation system ensures Urban Echo maintains enterprise-grade development standards while demonstrating professional software engineering practices. The strict validation system prevents technical debt accumulation and ensures all planned work is properly tracked and prioritized._
