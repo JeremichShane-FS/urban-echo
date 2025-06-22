@@ -85,8 +85,14 @@ jobs:
                 # Check if this was a FIX comment without template - add [BUG] behavior
                 if [[ ! "$title" =~ \[.*\] ]] && [[ "$ISSUE_BODY" =~ FIX: ]]; then
                   echo "   🐛 FIX comment without template detected - applying [BUG] behavior"
+                  # Add [BUG] prefix to title
+                  NEW_TITLE="[BUG] $title"
+                  gh issue edit "$number" --title "$NEW_TITLE" 2>/dev/null || true
+                  echo "   📝 Title updated to: $NEW_TITLE"
+                  # Change type to bug
                   gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
                   gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
+                  echo "   🏷️ Changed type from enhancement to bug"
                 fi
                 
                 # Assign the issue to the person who pushed the code
@@ -111,12 +117,25 @@ jobs:
                   echo "     🔒 Security template detected: $title"
                   gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  # If this was a FIX comment, change to type: bug (security vulnerability)
+                  if [[ "$ISSUE_BODY" =~ FIX: ]]; then
+                    echo "     🐛 Security FIX detected - changing to type: bug"
+                    gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
+                    gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
+                  fi
                   AREA_DETECTED=true
                 elif [[ "$title" =~ \[BUG\] ]]; then
                   echo "     🐛 Bug template detected: $title"
                   gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
                   gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  # Higher priority for FIX bugs (actual issues) vs TODO bugs (planned fixes)
+                  if [[ "$ISSUE_BODY" =~ FIX: ]]; then
+                    echo "     🚨 Bug FIX detected - critical priority"
+                    gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  else
+                    echo "     📋 Bug TODO detected - medium priority"
+                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                  fi
                   AREA_DETECTED=true
                 elif [[ "$title" =~ \[PERF\] ]]; then
                   echo "     ⚡ Performance template detected: $title"
