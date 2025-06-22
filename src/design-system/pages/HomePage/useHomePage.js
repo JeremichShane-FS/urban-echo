@@ -29,6 +29,12 @@ export const useHomePage = () => {
         // - A/B testing framework for conversion optimization
         // - Analytics integration for homepage performance tracking
         // setPageData(response.data);
+
+        // TODO: Test automated issue creation system (Updated for testing v1)
+        // Verify that only TODO comments create issues after workflow simplification.
+        // This test should create a single issue with professional labels and auto-assignment.
+        // Expected labels: auto-generated, type: enhancement, priority: low (or medium/high based on content)
+
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
           seoDescription:
