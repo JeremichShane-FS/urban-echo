@@ -28,10 +28,11 @@ export const useHomePage = () => {
         // - Analytics integration for homepage performance tracking
         // setPageData(response.data);
 
-        // TODO: Test corrected labeling system after cleanup (Updated for v2 testing)
-        // Verify that workflow only creates clean labels from automation guide.
-        // This should get proper priority based on content keywords.
-        // Expected: auto-generated, type: enhancement, and one clean priority label.
+        // TODO: Create user profile settings page for account management
+        // Design and implement a settings page where users can update their personal information.
+        // Include form fields for name, email, phone number, and profile picture upload.
+        // Add form validation to ensure data integrity before submission.
+        // Integrate with existing user authentication system to save changes securely.
 
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
