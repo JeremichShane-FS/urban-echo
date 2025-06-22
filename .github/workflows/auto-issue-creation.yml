@@ -79,7 +79,7 @@ jobs:
                 echo "   ✅ Confirmed TODO/FIX issue - validating and applying labels"
                 
                 # VALIDATION: Check for required template format
-                if [[ ! "$title" =~ ^\[.*\] ]] && [[ ! "$ISSUE_BODY" =~ FIX:.*[^[].*[^]] ]]; then
+                if [[ ! "$title" =~ ^\[.*\] ]]; then
                   echo "   ❌ ERROR: TODO/FIX comment must have template prefix [TEMPLATE]"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must include a template prefix like [COMPONENT], [SECURITY], [DOCS], etc." 2>/dev/null || true
@@ -236,18 +236,25 @@ jobs:
                   gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
                 fi
                 
-                # Add WORKFLOW labels only if specifically mentioned
-                if [[ "$CONTENT" =~ (performance.*optimize|optimize.*speed) ]]; then
+                # Add WORKFLOW labels only if specifically mentioned in TODO comment text (not code snippet)
+                TODO_COMMENT_TEXT="$title"
+                if [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
+                  # Extract just the TODO comment lines from the code block
+                  TODO_LINES=$(echo "$ISSUE_BODY" | sed -n '/```javascript/,/```/p' | grep -E '^[[:space:]]*//[[:space:]]*(TODO|FIX)')
+                  TODO_COMMENT_TEXT="$title $TODO_LINES"
+                fi
+                
+                if [[ "$TODO_COMMENT_TEXT" =~ (performance.*optimize|optimize.*speed) ]]; then
                   echo "     ⚡ Adding performance label"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (refactor.*code|technical.*debt) ]]; then
+                if [[ "$TODO_COMMENT_TEXT" =~ (refactor.*code|technical.*debt) ]]; then
                   echo "     🔧 Adding tech-debt label"
                   gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (console\.|console |alert\(|debugger) ]]; then
+                if [[ "$TODO_COMMENT_TEXT" =~ (console\.|console |alert\(|debugger) ]]; then
                   echo "     🧹 Adding cleanup label"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
