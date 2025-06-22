@@ -27,7 +27,7 @@ jobs:
               {"name": "TODO:", "labels": []},
               {"name": "FIX:", "labels": []}
             ]
-          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n```javascript\n{{ snippet }}\n```"
+          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n```javascript\n{{ snippet }}\n```\n```auto-issue-creation.yml\n{{ issue_body }}\n```\n\n**Created by:** @{{ author }}\n\n**Created at:** {{ created_at }}\n\n**Commit:** [{{ commit_url }}]({{ commit_url }})\n\n**Branch:** {{ branch }}\n\n**SHA:** {{ sha }}\n \n\n**Issue Number:** {{ issue_number }}\n\n**Issue URL:** [{{ issue_url }}]({{ issue_url }})\n\n**Labels:** {{ labels }}\n\n---\n\n**Note:** This issue was automatically created from a TODO/FIX comment in the code.\n\nPlease review and update as necessary."
 
   apply-labels:
     needs: todo-to-issue
