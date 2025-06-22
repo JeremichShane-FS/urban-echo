@@ -118,13 +118,15 @@ jobs:
                 
                 if [[ "$VALID_TEMPLATE" == "false" ]]; then
                   echo "   ❌ ERROR: Invalid template [$TEMPLATE_NAME] - not in approved list"
+                  echo "   🏷️ Adding validation-failed label and comment"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   gh issue comment "$number" --body "🚫 **Validation Failed**: Template [$TEMPLATE_NAME] is not valid. Use one of: [COMPONENT], [SECURITY], [DOCS], [BUG], [PERF], [REFACTOR], [TEST], [ROUTES], [DATA], [UI/UX], [DEPENDENCY], [ONBOARDING], [I18N], [A11Y], [FEATURE], [RESEARCH], [STATE]." 2>/dev/null || true
+                  echo "   ✅ Validation-failed label applied"
                   continue
                 fi
                 
                 # VALIDATION: Check for non-English characters
-                if [[ "$title" =~ [^[:ascii:]] ]]; then
+                if echo "$title" | grep -q '[^[:print:][:space:]]' || echo "$title" | grep -qP '[^\x00-\x7F]'; then
                   echo "   ❌ ERROR: Non-English characters detected in title"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must use English characters only." 2>/dev/null || true
