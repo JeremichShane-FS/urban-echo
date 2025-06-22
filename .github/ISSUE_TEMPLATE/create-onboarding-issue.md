@@ -1,10 +1,10 @@
 ---
-name: "\U0001F44B Create Onboarding Issue"
+name: "👋 Create Onboarding Issue"
 about: Beginner-friendly issues for new contributors
 title: "[ONBOARDING] "
-labels: documentation
-assignees: ''
-
+labels: ["good-first-issue", "help-wanted", "type: documentation", "priority: low"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 👋 Onboarding Issue
