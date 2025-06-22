@@ -4,7 +4,7 @@ const FailedValidationTests = () => {
   const [testData, setTestData] = useState([]);
 
   // Test line number display in GitHub issue
-  // TODO: [COMPONENT] Create responsive header navigation component (v5)
+  // TODO: [COMPONENT] Create responsive header navigation component (v6)
   // Build a mobile-first navigation bar with hamburger menu functionality
   // Include accessibility features like ARIA labels and keyboard navigation
   // Integrate with authentication system to show user profile menu
