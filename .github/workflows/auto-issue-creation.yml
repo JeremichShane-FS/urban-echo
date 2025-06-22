@@ -27,7 +27,7 @@ jobs:
               {"name": "TODO:", "labels": []},
               {"name": "FIX:", "labels": []}
             ]
-          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n**Code Context:**\n```javascript\n{{ snippet }}\n```"
+          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n```javascript\n{{ snippet }}\n```"
 
   apply-labels:
     needs: todo-to-issue
@@ -126,10 +126,10 @@ jobs:
                 fi
                 
                 # VALIDATION: Check for special characters that might break CLI
-                if [[ "$title" =~ [\$\`\&\|\>\<\;\(\)\{\}] ]]; then
+                if [[ "$title" =~ [\$\`\&\|\>\<\;] ]]; then
                   echo "   ❌ ERROR: Special characters detected that may cause issues"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments cannot contain special characters: \$ \` & | > < ; ( ) { }" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments cannot contain special characters: \$ \` & | > < ;" 2>/dev/null || true
                   continue
                 fi
                 
