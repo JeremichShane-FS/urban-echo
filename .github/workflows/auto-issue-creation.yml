@@ -20,7 +20,7 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          # Create with no labels - we'll add professional labels in next job
+          # Create with no labels - labels added in next job
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": []},
@@ -30,14 +30,14 @@ jobs:
             {{ body }}
 
             ---
-            **File:** {{ url }}
+            **File:** {{ url }} (Line {{ line }})
 
-            **Code:**
+            **Code Context:**
             ```javascript
             {{ snippet }}
             ```
 
-  apply-professional-labels:
+  apply-labels:
     needs: todo-to-issue
     runs-on: ubuntu-latest
     permissions:
@@ -46,9 +46,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Apply Professional Labels to TODO Issues"
+      - name: "Apply Labels to TODO Issues"
         run: |
-          echo "🏷️ Applying professional labels to recent TODO/FIX issues..."
+          echo "🏷️ Applying labels to recent TODO/FIX issues..."
 
           # Wait for TODO issues to be fully created
           sleep 30
@@ -75,7 +75,7 @@ jobs:
               
               # Check if this issue was created from TODO/FIX comment by looking for file path in body
               if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
-                echo "   ✅ Confirmed TODO/FIX issue - applying professional labels"
+                echo "   ✅ Confirmed TODO/FIX issue - applying labels"
                 
                 echo "   🏷️ Adding base labels..."
                 # Always add these labels first
@@ -214,7 +214,7 @@ jobs:
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
                 
-                echo "   ✅ Professional labels applied to TODO/FIX issue #$number"
+                echo "   ✅ Labels applied to TODO/FIX issue #$number"
                 echo "   👤 Assigned to: $COMMIT_AUTHOR"
                 
                 # Show final labels
@@ -227,6 +227,6 @@ jobs:
           done
 
           echo ""
-          echo "🎉 TODO/FIX professional labeling complete!"
+          echo "🎉 TODO/FIX labeling complete!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
