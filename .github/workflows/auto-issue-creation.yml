@@ -179,13 +179,11 @@ jobs:
                   echo "     🎨 Frontend template detected: $title"
                   gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[ROUTES\]|\[DATA\] ]]; then
                   echo "     🔌 API/Backend template detected: $title"
                   gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
                   gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[SECURITY\] ]]; then
                   echo "     🔒 Security template detected: $title"
                   gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
@@ -196,7 +194,6 @@ jobs:
                     gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
                     gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
                   fi
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[BUG\] ]]; then
                   echo "     🐛 Bug template detected: $title"
                   gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
@@ -209,31 +206,25 @@ jobs:
                     echo "     📋 Bug TODO detected - medium priority"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                   fi
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[PERF\] ]]; then
                   echo "     ⚡ Performance template detected: $title"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[REFACTOR\] ]]; then
                   echo "     🔧 Refactor template detected: $title"
                   gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[TEST\] ]]; then
                   echo "     🧪 Test template detected: $title"
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[DOCS\] ]]; then
                   echo "     📚 Documentation template detected: $title"
                   gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
                   gh issue edit "$number" --add-label "type: documentation" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
-                  AREA_DETECTED=true
                 elif [[ "$title" =~ \[DEPENDENCY\] ]]; then
                   echo "     📦 Dependency template detected: $title"
                   gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
-                  AREA_DETECTED=true
                 else
                   echo "   ❌ ERROR: No template detected - this should have been caught in validation"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
