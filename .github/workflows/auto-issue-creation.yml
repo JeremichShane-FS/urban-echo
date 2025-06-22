@@ -31,7 +31,7 @@ jobs:
             {{ body }}
 
             ---
-            **File:** {{ url }} (Line {{ line }})
+            **File:** [{{ url }}#L{{ line }}]({{ url }}#L{{ line }})
 
             **Code Context:**
             ```javascript
