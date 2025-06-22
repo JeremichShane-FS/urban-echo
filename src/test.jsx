@@ -1,126 +1,108 @@
-// src/components/ProductPage/ProductPage.js
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { getProductById } from "@/api/products";
-import { addToCart } from "@/utils/cart";
+const TestComponent = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [cartItems, setCartItems] = useState([]);
 
-const ProductPage = ({ productId }) => {
-  const [product, setProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      setIsLoading(true);
-      const productData = await getProductById(productId);
-      setProduct(productData);
-      setIsLoading(false);
-    };
-    fetchProduct();
-  }, [productId]);
-
-  // TODO: [COMPONENT] Add image zoom functionality for product gallery
-  // Users should be able to click and zoom into product images
-  // Include magnifying glass cursor and overlay zoom view
-  const ProductImageGallery = ({ images }) => {
+  // TODO: [DOCS] Create user guide for cart management features
+  // Document how users can save items for later, apply coupons, and manage quantities
+  // Include screenshots of cart interface and step-by-step instructions
+  const CartDocumentation = () => {
     return (
-      <div className="product-gallery">
-        {images.map((image, index) => (
-          <img key={index} src={image.url} alt={`Product view ${index + 1}`} />
-        ))}
+      <div className="cart-help">
+        <h3>Need Help?</h3>
+        <p>Cart documentation coming soon...</p>
       </div>
     );
   };
 
-  const handleSizeChange = size => {
-    setSelectedSize(size);
+  const calculateSubtotal = () => {
+    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
-  const handleQuantityChange = newQuantity => {
-    setQuantity(newQuantity);
+  const applyDiscount = code => {
+    setDiscountCode(code);
   };
 
-  // FIX: [SECURITY] Validate product availability before allowing cart addition
-  // Currently users can add out-of-stock items to cart
-  // Need to check inventory levels and show appropriate error messages
-  const handleAddToCart = async () => {
-    if (!selectedSize) {
-      alert("Please select a size");
-      return;
+  // FIX: [SECURITY] Validate discount codes on server side before applying
+  // Current implementation trusts client-side discount validation
+  // Malicious users can manipulate discount percentages in browser
+  // Need server-side verification with rate limiting to prevent abuse
+  const validateDiscountCode = async code => {
+    const validCodes = ["SAVE10", "WELCOME20", "STUDENT15"];
+    return validCodes.includes(code.toUpperCase());
+  };
+
+  const handleCheckout = async () => {
+    setIsProcessing(true);
+
+    try {
+      for (const item of cartItems) {
+        console.log("Processing item:", item.name);
+      }
+
+      console.log("Payment successful");
+    } catch (error) {
+      console.error("Checkout failed:", error);
+    } finally {
+      setIsProcessing(false);
     }
-
-    // This code needs the security fix above
-    await addToCart({
-      productId,
-      size: selectedSize,
-      quantity,
-    });
   };
 
-  if (isLoading) {
-    return <div>Loading product...</div>;
-  }
-
-  // FIX: Product reviews section shows incorrect average rating calculation
-  // The average rating is calculated incorrectly when there are no reviews
-  // Should show "No reviews yet" instead of NaN or undefined
-  const ProductReviews = ({ reviews }) => {
-    const averageRating =
-      reviews.length > 0
-        ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-        : 0; // This calculation needs fixing
-
+  // FIX: Quantity selector allows negative values and decimals
+  // Users can enter -5 or 2.5 as quantity which breaks cart calculations
+  // Input validation should restrict to positive integers only
+  // Also need maximum quantity limit per item (e.g., 10 units max)
+  const QuantitySelector = ({ item, onQuantityChange }) => {
     return (
-      <div className="product-reviews">
-        <h3>Customer Reviews</h3>
-        <div className="average-rating">Average: {averageRating || "No reviews yet"}</div>
-        {reviews.map(review => (
-          <div key={review.id} className="review">
-            <p>{review.comment}</p>
-            <span>Rating: {review.rating}/5</span>
-          </div>
-        ))}
+      <div className="quantity-selector">
+        <label>Quantity:</label>
+        <input
+          type="number"
+          value={item.quantity}
+          onChange={e => onQuantityChange(item.id, parseInt(e.target.value))}
+          min="1"
+        />
       </div>
     );
   };
 
   return (
-    <div className="product-page">
-      <h1>{product?.name}</h1>
-      <ProductImageGallery images={product?.images || []} />
+    <div className="test-component">
+      <h2>Test Component</h2>
 
-      <div className="product-details">
-        <p>Price: ${product?.price}</p>
-
-        <div className="size-selector">
-          <label>Size:</label>
-          {product?.sizes?.map(size => (
-            <button
-              key={size}
-              onClick={() => handleSizeChange(size)}
-              className={selectedSize === size ? "selected" : ""}>
-              {size}
-            </button>
+      {cartItems.length === 0 ? (
+        <p>No items</p>
+      ) : (
+        <div className="content">
+          {cartItems.map(item => (
+            <div key={item.id} className="item">
+              <QuantitySelector item={item} onQuantityChange={() => {}} />
+            </div>
           ))}
+
+          <div className="summary">
+            <p>Subtotal: ${calculateSubtotal().toFixed(2)}</p>
+
+            <input
+              type="text"
+              placeholder="Discount code"
+              value={discountCode}
+              onChange={e => setDiscountCode(e.target.value)}
+            />
+            <button onClick={() => applyDiscount(discountCode)}>Apply</button>
+
+            <button onClick={handleCheckout} disabled={isProcessing}>
+              {isProcessing ? "Processing..." : "Checkout"}
+            </button>
+          </div>
         </div>
+      )}
 
-        <div className="quantity-selector">
-          <label>Quantity:</label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={e => handleQuantityChange(parseInt(e.target.value))}
-            min="1"
-          />
-        </div>
-
-        <button onClick={handleAddToCart}>Add to Cart</button>
-      </div>
-
-      <ProductReviews reviews={product?.reviews || []} />
+      <CartDocumentation />
     </div>
   );
 };
 
-export default ProductPage;
+export default TestComponent;
