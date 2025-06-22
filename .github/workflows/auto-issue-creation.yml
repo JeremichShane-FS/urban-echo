@@ -27,16 +27,7 @@ jobs:
               {"name": "TODO:", "labels": []},
               {"name": "FIX:", "labels": []}
             ]
-          ISSUE_TEMPLATE: |
-            {{ body }}
-
-            ---
-            **File:** [{{ url }}#L{{ line }}]({{ url }}#L{{ line }})
-
-            **Code Context:**
-            ```javascript
-            {{ snippet }}
-            ```
+          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n**Code Context:**\n```javascript\n{{ snippet }}\n```"
 
   apply-labels:
     needs: todo-to-issue
