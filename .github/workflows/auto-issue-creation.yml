@@ -29,8 +29,91 @@ jobs:
             ]
           ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
 
+  workflow-changes-to-issue:
+    runs-on: ubuntu-latest
+    if: |
+      contains(toJSON(github.event.commits[*].modified), '.github/workflows/') ||
+      contains(toJSON(github.event.commits[*].added), '.github/workflows/') ||
+      contains(toJSON(github.event.head_commit.modified), '.github/workflows/') ||
+      contains(toJSON(github.event.head_commit.added), '.github/workflows/')
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Create Issue for Workflow Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          #!/bin/bash
+          set -e
+
+          echo "Detecting workflow file changes..."
+
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '^\.github/workflows/.*\.(yml|yaml)$' || true)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No workflow files changed"
+            exit 0
+          fi
+
+          echo "Found workflow changes:"
+          echo "$CHANGED_FILES"
+
+          FIRST_FILE=$(echo "$CHANGED_FILES" | head -n1)
+          FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
+
+          if [ "$FILE_COUNT" -gt 1 ]; then
+            ISSUE_TITLE="[WORKFLOW] Updates to $FILE_COUNT workflow files"
+          else
+            ISSUE_TITLE="[WORKFLOW] Update to $(basename "$FIRST_FILE" | sed 's/\.[^.]*$//')"
+          fi
+
+          {
+            echo "## Workflow Changes Detected"
+            echo ""
+            echo "The following workflow file(s) were modified in commit ${{ github.sha }}:"
+            echo ""
+            echo "### Changed Files:"
+            while IFS= read -r file; do
+              echo "- [\`$file\`](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/$file)"
+            done <<< "$CHANGED_FILES"
+            echo ""
+            echo "### Commit Information:"
+            echo "- **Author:** @${{ github.actor }}"
+            echo "- **Commit:** [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})"
+            echo "- **Message:** ${{ github.event.head_commit.message }}"
+            echo ""
+            echo "### Diff Summary:"
+            echo '```diff'
+            git diff HEAD~1 HEAD -- $CHANGED_FILES | head -100
+            echo '```'
+            echo ""
+            echo "---"
+            echo ""
+            echo "### Next Steps"
+            echo ""
+            echo "- [ ] Review changes for quality"
+            echo "- [ ] Update related documentation if needed"
+            echo "- [ ] Test affected functionality"
+            echo ""
+            echo "This issue was automatically created to track significant file changes."
+          } > issue_body.md
+
+          gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body-file issue_body.md \
+            --label "ci/cd,auto-generated,priority: high" \
+            --assignee "${{ github.actor }}"
+
+          echo "Issue created for workflow changes"
+
   apply-labels:
-    needs: todo-to-issue
+    needs: [todo-to-issue, workflow-changes-to-issue]
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -65,6 +148,14 @@ jobs:
               ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
               CONTENT="$title $ISSUE_BODY"
               
+              # Check if this is a workflow issue
+              IS_WORKFLOW_ISSUE=false
+              if [[ "$ISSUE_BODY" =~ "## Workflow Changes Detected" ]]; then
+                IS_WORKFLOW_ISSUE=true
+                echo "   🔧 Workflow issue detected - already has labels from creation"
+                continue
+              fi
+              
               # Check if this issue was created from TODO/FIX comment by looking for file path in body
               if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
                 echo "   ✅ Confirmed TODO/FIX issue - validating and applying labels"
@@ -97,7 +188,7 @@ jobs:
                 
                 # VALIDATION: Check for valid template
                 TEMPLATE=$(echo "$title" | grep -o '\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
-                VALID_TEMPLATES=("COMPONENT" "UI/UX" "ROUTES" "DATA" "SECURITY" "BUG" "PERF" "REFACTOR" "TEST" "DOCS" "DEPENDENCY" "ONBOARDING" "I18N" "A11Y" "FEATURE" "RESEARCH" "STATE")
+                VALID_TEMPLATES=("COMPONENT" "UI/UX" "ROUTES" "DATA" "SECURITY" "BUG" "PERF" "REFACTOR" "TEST" "DOCS" "DEPENDENCY" "ONBOARDING" "I18N" "A11Y" "FEATURE" "RESEARCH" "STATE" "CI" "CD" "WORKFLOW" "AUTOMATION" "ACTIONS" "DEPLOY" "BUILD")
                 TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
                 
                 VALID_TEMPLATE=false
@@ -112,7 +203,7 @@ jobs:
                   echo "   ❌ ERROR: Invalid template [$TEMPLATE_NAME] - not in approved list"
                   echo "   🏷️ Adding validation-failed label and comment"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Template [$TEMPLATE_NAME] is not valid. Use one of: [COMPONENT], [SECURITY], [DOCS], [BUG], [PERF], [REFACTOR], [TEST], [ROUTES], [DATA], [UI/UX], [DEPENDENCY], [ONBOARDING], [I18N], [A11Y], [FEATURE], [RESEARCH], [STATE]." 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: Template [$TEMPLATE_NAME] is not valid. Use one of: [COMPONENT], [SECURITY], [DOCS], [BUG], [PERF], [REFACTOR], [TEST], [ROUTES], [DATA], [UI/UX], [DEPENDENCY], [ONBOARDING], [I18N], [A11Y], [FEATURE], [RESEARCH], [STATE], [CI], [CD], [WORKFLOW], [AUTOMATION], [ACTIONS], [DEPLOY], [BUILD]." 2>/dev/null || true
                   echo "   ✅ Validation-failed label applied"
                   continue
                 fi
@@ -169,7 +260,17 @@ jobs:
                 gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
                 
                 # Template-based labeling (templates are now guaranteed to be valid and uppercase)
-                if [[ "$title" =~ \[COMPONENT\]|\[UI/UX\] ]]; then
+                # Check for workflow templates first
+                if [[ "$title" =~ \[CI\]|\[CD\]|\[WORKFLOW\]|\[AUTOMATION\]|\[ACTIONS\]|\[DEPLOY\]|\[BUILD\] ]]; then
+                  echo "     🔧 Workflow/CI/CD template detected: $title"
+                  gh issue edit "$number" --add-label "ci/cd" 2>/dev/null || true
+                  # Priority based on specific template
+                  if [[ "$title" =~ \[CI\]|\[CD\]|\[DEPLOY\]|\[BUILD\] ]]; then
+                    gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  else
+                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                  fi
+                elif [[ "$title" =~ \[COMPONENT\]|\[UI/UX\] ]]; then
                   echo "     🎨 Frontend template detected: $title"
                   gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
