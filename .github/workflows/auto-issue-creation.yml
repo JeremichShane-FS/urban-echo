@@ -86,11 +86,12 @@ jobs:
                   continue
                 fi
                 
-                # VALIDATION: Check for empty content
-                if [[ ${#title} -lt 10 ]]; then
-                  echo "   ❌ ERROR: TODO/FIX comment title too short (minimum 10 characters)"
+                # VALIDATION: Check for empty content (check content after template, not total length)
+                CONTENT_AFTER_TEMPLATE=$(echo "$title" | sed 's/^\[[^]]*\][[:space:]]*//')
+                if [[ ${#CONTENT_AFTER_TEMPLATE} -lt 10 ]]; then
+                  echo "   ❌ ERROR: TODO/FIX content after template too short (minimum 10 characters, got ${#CONTENT_AFTER_TEMPLATE})"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comment title must be at least 10 characters long." 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX content after template must be at least 10 characters long. Currently: '${CONTENT_AFTER_TEMPLATE}' (${#CONTENT_AFTER_TEMPLATE} characters)." 2>/dev/null || true
                   continue
                 fi
                 
