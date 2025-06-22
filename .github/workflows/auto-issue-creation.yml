@@ -62,26 +62,29 @@ jobs:
               echo ""
               echo "📝 Processing issue #$number: $title"
               
-              # Only process TODO and FIX style issues
-              if [[ "$title" =~ (TODO|FIX|Define|Develop|Implement|Create|Component) ]]; then
-                echo "   ✅ TODO/FIX issue detected - applying professional labels"
-                
-                # Get the commit author for assignment
-                COMMIT_AUTHOR="${{ github.actor }}"
-                echo "   👤 Assigning to commit author: $COMMIT_AUTHOR"
-                
-                # Get the full issue body for content analysis
-                ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
-                CONTENT="$title $ISSUE_BODY"
+              # Process ALL recent issues - don't filter by title since action strips TODO:/FIX:
+              echo "   ✅ Recent issue detected - checking for TODO/FIX origin..."
+              
+              # Get the commit author for assignment
+              COMMIT_AUTHOR="${{ github.actor }}"
+              echo "   👤 Assigning to commit author: $COMMIT_AUTHOR"
+              
+              # Get the full issue body for content analysis
+              ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
+              CONTENT="$title $ISSUE_BODY"
+              
+              # Check if this issue was created from TODO/FIX comment by looking for file path in body
+              if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
+                echo "   ✅ Confirmed TODO/FIX issue - applying professional labels"
                 
                 echo "   🏷️ Adding base labels..."
                 # Always add these labels first
                 gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
                 gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
                 
-                # For FIX comments, default to type: bug unless template overrides
-                if [[ "$title" =~ ^FIX: ]] && [[ ! "$title" =~ \[.*\] ]]; then
-                  echo "   🐛 FIX comment detected - changing to type: bug"
+                # Check if this was a FIX comment without template - add [BUG] behavior
+                if [[ ! "$title" =~ \[.*\] ]] && [[ "$ISSUE_BODY" =~ FIX: ]]; then
+                  echo "   🐛 FIX comment without template detected - applying [BUG] behavior"
                   gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
                   gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
                 fi
@@ -199,7 +202,7 @@ jobs:
                 FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
                 echo "   🏷️ Final labels: $FINAL_LABELS"
               else
-                echo "   ⚠️ Not a TODO/FIX issue - skipping"
+                echo "   ⚠️ Not a TODO/FIX issue (no file/code markers) - skipping"
               fi
             fi
           done
