@@ -97,63 +97,62 @@ jobs:
                 # Assign the issue to the person who pushed the code
                 gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
                 
-                # Add AREA labels based on content (exact labels from automation guide)
-                if [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
-                  echo "     🔌 Adding API area labels"
-                  gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
-                fi
-                
-                if [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
-                  echo "     🎨 Adding frontend area labels"
-                  gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
-                fi
-                
-                if [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
-                  echo "     🗄️ Adding database area labels"
-                  gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
-                fi
-                
-                # Add PRIORITY labels - use exact label names only
+                # Add AREA labels - ONLY ONE AREA PER ISSUE (using elif chain)
+                AREA_DETECTED=false
                 if [[ "$CONTENT" =~ (payment|stripe|checkout|billing|Purchase|Cart) ]]; then
                   echo "     💳 Adding payment area labels"
                   gh issue edit "$number" --add-label "area: payment" 2>/dev/null || true
                   gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  AREA_DETECTED=true
                 elif [[ "$CONTENT" =~ (security|auth|login|token|password|Auth0) ]]; then
                   echo "     🔒 Adding security area labels"
                   gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
                   gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
-                elif [[ "$CONTENT" =~ (critical|urgent|breaking) ]]; then
-                  echo "     ⚡ Adding critical priority"
-                  gh issue edit "$number" --add-label "priority: critical" 2>/dev/null || true
-                elif [[ "$CONTENT" =~ (API|integration|CMS|Version|Component|Dynamic) ]]; then
-                  echo "     📋 Adding medium priority"
+                  AREA_DETECTED=true
+                elif [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
+                  echo "     🗄️ Adding database area labels"
+                  gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                else
-                  echo "     📝 Adding low priority"
+                  AREA_DETECTED=true
+                elif [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
+                  echo "     🔌 Adding API area labels"
+                  gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                  AREA_DETECTED=true
+                elif [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
+                  echo "     🎨 Adding frontend area labels"
+                  gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
+                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                  AREA_DETECTED=true
+                fi
+                
+                # Add priority only if no area was detected
+                if [[ "$AREA_DETECTED" == "false" ]]; then
+                  echo "     📝 Adding low priority (no specific area detected)"
                   gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
                 fi
                 
-                # Add TECHNOLOGY labels (exact labels from automation guide)
+                # Add TECHNOLOGY labels only if specifically mentioned
                 if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
                   gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
                 fi
                 
-                # Add WORKFLOW labels (exact labels from automation guide)
-                if [[ "$CONTENT" =~ (performance|optimize|speed|slow) ]]; then
+                # Add WORKFLOW labels only if specifically mentioned
+                if [[ "$CONTENT" =~ (performance.*optimize|optimize.*speed) ]]; then
                   echo "     ⚡ Adding performance label"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (refactor|technical.*debt|hack|legacy) ]]; then
+                if [[ "$CONTENT" =~ (refactor.*code|technical.*debt) ]]; then
                   echo "     🔧 Adding tech-debt label"
                   gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (debug|console\.log|cleanup) ]]; then
+                if [[ "$CONTENT" =~ (console\.log|debug.*cleanup) ]]; then
                   echo "     🧹 Adding cleanup label"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
