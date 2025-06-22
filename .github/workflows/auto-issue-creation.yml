@@ -21,6 +21,7 @@ jobs:
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
           # Create with no labels - labels added in next job
+          # Only process valid TODO/FIX comments with proper templates
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": []},
@@ -75,33 +76,105 @@ jobs:
               
               # Check if this issue was created from TODO/FIX comment by looking for file path in body
               if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
-                echo "   ✅ Confirmed TODO/FIX issue - applying labels"
+                echo "   ✅ Confirmed TODO/FIX issue - validating and applying labels"
+                
+                # VALIDATION: Check for required template format
+                if [[ ! "$title" =~ ^\[.*\] ]] && [[ ! "$ISSUE_BODY" =~ FIX:.*[^[].*[^]] ]]; then
+                  echo "   ❌ ERROR: TODO/FIX comment must have template prefix [TEMPLATE]"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must include a template prefix like [COMPONENT], [SECURITY], [DOCS], etc." 2>/dev/null || true
+                  continue
+                fi
+                
+                # VALIDATION: Check for empty content
+                if [[ ${#title} -lt 10 ]]; then
+                  echo "   ❌ ERROR: TODO/FIX comment title too short (minimum 10 characters)"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comment title must be at least 10 characters long." 2>/dev/null || true
+                  continue
+                fi
+                
+                # VALIDATION: Check for multiple templates
+                TEMPLATE_COUNT=$(echo "$title" | grep -o '\[.*\]' | wc -l)
+                if [[ $TEMPLATE_COUNT -gt 1 ]]; then
+                  echo "   ❌ ERROR: Multiple templates detected - only one template allowed"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: Only one template prefix allowed per TODO/FIX comment. Use either [COMPONENT] OR [SECURITY], not both." 2>/dev/null || true
+                  continue
+                fi
+                
+                # VALIDATION: Check for valid template
+                TEMPLATE=$(echo "$title" | grep -o '\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
+                VALID_TEMPLATES=("COMPONENT" "UI/UX" "ROUTES" "DATA" "SECURITY" "BUG" "PERF" "REFACTOR" "TEST" "DOCS" "DEPENDENCY" "ONBOARDING" "I18N" "A11Y" "FEATURE" "RESEARCH" "STATE")
+                TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
+                
+                VALID_TEMPLATE=false
+                for valid in "${VALID_TEMPLATES[@]}"; do
+                  if [[ "$TEMPLATE_NAME" == "$valid" ]]; then
+                    VALID_TEMPLATE=true
+                    break
+                  fi
+                done
+                
+                if [[ "$VALID_TEMPLATE" == "false" ]]; then
+                  echo "   ❌ ERROR: Invalid template [$TEMPLATE_NAME] - not in approved list"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: Template [$TEMPLATE_NAME] is not valid. Use one of: [COMPONENT], [SECURITY], [DOCS], [BUG], [PERF], [REFACTOR], [TEST], [ROUTES], [DATA], [UI/UX], [DEPENDENCY], [ONBOARDING], [I18N], [A11Y], [FEATURE], [RESEARCH], [STATE]." 2>/dev/null || true
+                  continue
+                fi
+                
+                # VALIDATION: Check for non-English characters
+                if [[ "$title" =~ [^[:ascii:]] ]]; then
+                  echo "   ❌ ERROR: Non-English characters detected in title"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must use English characters only." 2>/dev/null || true
+                  continue
+                fi
+                
+                # VALIDATION: Check for special characters that might break CLI
+                if [[ "$title" =~ [\$\`\&\|\>\<\;\(\)\{\}] ]]; then
+                  echo "   ❌ ERROR: Special characters detected that may cause issues"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments cannot contain special characters: \$ \` & | > < ; ( ) { }" 2>/dev/null || true
+                  continue
+                fi
+                
+                # Truncate title if too long (GitHub limit ~80 chars for single line display)
+                if [[ ${#title} -gt 80 ]]; then
+                  ORIGINAL_TITLE="$title"
+                  title="${title:0:77}..."
+                  echo "   ✂️ Title truncated from ${#ORIGINAL_TITLE} to ${#title} characters"
+                  gh issue edit "$number" --title "$title" 2>/dev/null || true
+                fi
+                
+                # Normalize template to uppercase
+                if [[ "$title" =~ ^\[.*\] ]]; then
+                  PREFIX_PART=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
+                  REST_OF_TITLE=$(echo "$title" | sed 's/^\[[^]]*\]//')
+                  NORMALIZED_TITLE="$PREFIX_PART$REST_OF_TITLE"
+                  if [[ "$NORMALIZED_TITLE" != "$title" ]]; then
+                    echo "   📝 Normalizing template to uppercase: $PREFIX_PART"
+                    gh issue edit "$number" --title "$NORMALIZED_TITLE" 2>/dev/null || true
+                    title="$NORMALIZED_TITLE"
+                  fi
+                fi
                 
                 echo "   🏷️ Adding base labels..."
                 # Always add these labels first
                 gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
                 gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
                 
-                # Check if this was a FIX comment without template - add [BUG] behavior
+                # Check if this was a FIX comment without template - this should not happen after validation
                 if [[ ! "$title" =~ \[.*\] ]] && [[ "$ISSUE_BODY" =~ FIX: ]]; then
-                  echo "   🐛 FIX comment without template detected - applying [BUG] behavior"
-                  # Add [BUG] prefix to title
-                  NEW_TITLE="[BUG] $title"
-                  gh issue edit "$number" --title "$NEW_TITLE" 2>/dev/null || true
-                  echo "   📝 Title updated to: $NEW_TITLE"
-                  # Change type to bug
-                  gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
-                  echo "   🏷️ Changed type from enhancement to bug"
+                  echo "   ❌ ERROR: FIX comment without template should have been caught in validation"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  continue
                 fi
                 
                 # Assign the issue to the person who pushed the code
                 gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
                 
-                # Add AREA labels - Use template prefixes for better accuracy
-                AREA_DETECTED=false
-                
-                # Check template prefix first for most accurate labeling
+                # Template-based labeling (templates are now guaranteed to be valid and uppercase)
                 if [[ "$title" =~ \[COMPONENT\]|\[UI/UX\] ]]; then
                   echo "     🎨 Frontend template detected: $title"
                   gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
@@ -161,36 +234,10 @@ jobs:
                   echo "     📦 Dependency template detected: $title"
                   gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
                   AREA_DETECTED=true
-                # Fallback to content-based detection if no template prefix
-                elif [[ "$CONTENT" =~ (payment|stripe|checkout|billing|Purchase|Cart) ]]; then
-                  echo "     💳 Payment content detected"
-                  gh issue edit "$number" --add-label "area: payment" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
-                  AREA_DETECTED=true
-                elif [[ "$CONTENT" =~ (database|DB|mongo|schema|model|data) ]]; then
-                  echo "     🗄️ Database content detected"
-                  gh issue edit "$number" --add-label "area: database" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
-                elif [[ "$CONTENT" =~ (API|endpoint|route|backend|integration|Routes) ]]; then
-                  echo "     🔌 API content detected"
-                  gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
-                elif [[ "$CONTENT" =~ (Component|hero|Dynamic|CMS|frontend|UI|design|Navbar|Footer) ]]; then
-                  echo "     🎨 Frontend content detected"
-                  gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
-                  gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
-                  AREA_DETECTED=true
-                fi
-                
-                # Add priority only if no area was detected
-                if [[ "$AREA_DETECTED" == "false" ]]; then
-                  echo "     📝 Adding low priority (no specific area detected)"
-                  gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                else
+                  echo "   ❌ ERROR: No template detected - this should have been caught in validation"
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  continue
                 fi
                 
                 # Add TECHNOLOGY labels only if specifically mentioned
@@ -209,7 +256,7 @@ jobs:
                   gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (console\.log|debug.*cleanup) ]]; then
+                if [[ "$CONTENT" =~ (console\.|console |alert\(|debugger) ]]; then
                   echo "     🧹 Adding cleanup label"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
