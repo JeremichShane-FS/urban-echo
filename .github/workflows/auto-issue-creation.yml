@@ -57,8 +57,14 @@ jobs:
                 
                 echo "   🎯 Processing validated template: [$TEMPLATE_NAME]"
                 
-                # Assign to author
+                # Assign to author and project
                 gh issue edit "$number" --add-assignee "${{ github.actor }}" 2>/dev/null || true
+                
+                # Add to project board
+                echo "   📋 Adding to project board..."
+                gh issue edit "$number" --add-project "JeremichShane-FS/5" 2>/dev/null || {
+                  echo "   ⚠️ Could not add to project board - may need manual setup"
+                }
                 
                 # Template-based labeling (simplified - no validation checks needed!)
                 case "$TEMPLATE_NAME" in
