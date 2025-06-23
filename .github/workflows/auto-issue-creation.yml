@@ -33,6 +33,7 @@ jobs:
     permissions:
       issues: write
       contents: read
+      projects: write # Add this for project board access
     steps:
       - uses: actions/checkout@v4
 
@@ -60,11 +61,24 @@ jobs:
                 # Assign to author and project
                 gh issue edit "$number" --add-assignee "${{ github.actor }}" 2>/dev/null || true
                 
-                # Add to project board
+                # Add to project board using correct project ID
                 echo "   📋 Adding to project board..."
-                gh issue edit "$number" --add-project "JeremichShane-FS/5" 2>/dev/null || {
-                  echo "   ⚠️ Could not add to project board - may need manual setup"
-                }
+                
+                # Use the exact project ID from your setup
+                ISSUE_ID=$(gh issue view "$number" --json id --jq '.id')
+                
+                # Add issue to project using GraphQL API
+                gh api graphql -f query='
+                  mutation($project: ID!, $issue: ID!) {
+                    addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
+                      item {
+                        id
+                      }
+                    }
+                  }
+                ' -f project="PVT_kwHOCQfWK84AyWf1" -f issue="$ISSUE_ID" 2>/dev/null && \
+                echo "   ✅ Successfully added to project board" || \
+                echo "   ⚠️ Could not add to project board - check permissions"
                 
                 # Template-based labeling (simplified - no validation checks needed!)
                 case "$TEMPLATE_NAME" in
