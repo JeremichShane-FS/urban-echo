@@ -1,3 +1,4 @@
+# Testing workflow change detection - this should create an issue
 name: "Auto Issue Creation"
 on:
   push:
