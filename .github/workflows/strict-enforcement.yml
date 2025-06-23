@@ -25,8 +25,13 @@ jobs:
 
       - name: "Security Scanning"
         run: |
-          if git log --oneline -S "sk_" -S "pk_" -S "api_key" --since="1 hour ago"; then
-            echo "❌ SECURITY VIOLATION: Potential secrets in recent commits"
+          if grep -r "sk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
+            echo "❌ SECURITY VIOLATION: Stripe secret key found in source code"
+            exit 1
+          fi
+
+          if grep -r "pk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
+            echo "❌ SECURITY VIOLATION: API public key found in source code"
             exit 1
           fi
 
