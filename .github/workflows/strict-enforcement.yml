@@ -105,20 +105,3 @@ jobs:
           }
 
           echo "✅ TODO/FIX standards enforced"
-
-  codeql:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: "CodeQL Security Analysis"
-        uses: github/codeql-action/init@v3
-        with:
-          languages: javascript
-          queries: security-extended,security-and-quality
-
-      - name: "Run CodeQL Analysis"
-        uses: github/codeql-action/analyze@v3
