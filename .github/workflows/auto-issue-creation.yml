@@ -31,11 +31,6 @@ jobs:
 
   workflow-changes-to-issue:
     runs-on: ubuntu-latest
-    if: |
-      contains(toJSON(github.event.commits[*].modified), '.github/workflows/') ||
-      contains(toJSON(github.event.commits[*].added), '.github/workflows/') ||
-      contains(toJSON(github.event.head_commit.modified), '.github/workflows/') ||
-      contains(toJSON(github.event.head_commit.added), '.github/workflows/')
     permissions:
       issues: write
       contents: read
