@@ -3,6 +3,7 @@ import { useCallback } from "react";
 const useSearchbar = () => {
   const handleSubmit = useCallback(e => {
     e.preventDefault();
+
     // TODO: [COMPONENT] Product search functionality (Updated)
     // Implement comprehensive search logic for e-commerce product discovery.
     // Requirements:

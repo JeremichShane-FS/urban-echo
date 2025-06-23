@@ -13,13 +13,14 @@ export const useNewArrivals = (limit = 8) => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: [ROUTES] Product catalog API endpoints defined (Updated)
+        // TODO: [ROUTES] Product catalog API endpoints defined
         // Replace productService mock with backend API integration.
         // Required API endpoints:
         // - GET /api/products/new-arrivals?limit={limit}&page={page}
         // - GET /api/products/new-arrivals/count (for pagination)
         // - Include product variants, pricing, inventory status
         // - Support for filtering by category, size, price range
+
         const response = await productService.getNewArrivals({ limit });
         setNewArrivals(response);
       } catch (err) {

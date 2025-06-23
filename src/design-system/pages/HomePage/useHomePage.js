@@ -18,7 +18,7 @@ export const useHomePage = () => {
       try {
         setIsLoading(true);
 
-        // TODO: [ROUTES] Homepage configuration API with CMS backend (Version for 2 post-MVP) (Updated)
+        // TODO: [ROUTES] Homepage configuration API with CMS backend
         // Replace mock with CMS API endpoint: GET /api/pages/homepage
         // Version 2 Backend requirements:
         // - Integration with headless CMS (Strapi, Contentful, or Sanity)

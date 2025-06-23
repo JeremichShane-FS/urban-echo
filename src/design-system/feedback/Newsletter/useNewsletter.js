@@ -36,7 +36,7 @@ export const useNewsletter = () => {
     setMessageType("");
 
     try {
-      // TODO: [ROUTES] Newsletter subscription API with email marketing integration (Version 2 for post-MVP) (Updated)
+      // TODO: [ROUTES] Newsletter subscription API with email marketing integration
       // Replace mock with backend API endpoint: POST /api/newsletter/subscribe
       // Version 2 Backend requirements:
       // - Email validation and duplicate prevention

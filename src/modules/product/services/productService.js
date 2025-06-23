@@ -1,13 +1,14 @@
 export const productService = {
   async getFeaturedProducts() {
     try {
-      // TODO: [ROUTES] Featured products API with database integration (Version 2 for post-MVP) (Updated)
+      // TODO: [ROUTES] Featured products API with database integration
       // Replace mock implementation with actual backend API call.
       // Version 2 CMS integration requirements:
       // - MongoDB query for products with featured flag
       // - CMS admin interface to mark/unmark products as featured
       // - Caching layer for improved performance
       // - A/B testing support for different featured product sets
+
       await new Promise(resolve => setTimeout(resolve, 500));
 
       return [
@@ -70,7 +71,7 @@ export const productService = {
    */
   async getNewArrivals({ limit = 8 } = {}) {
     try {
-      // TODO: [ROUTES] New arrivals API with sorting and filtering (Version 2 for post-MVP) (Updated)
+      // TODO: [ROUTES] New arrivals API with sorting and filtering
       // Replace mock with API endpoint: GET /api/products/new-arrivals
       // Version 2 Query parameters needed:
       // - limit: number of products to return

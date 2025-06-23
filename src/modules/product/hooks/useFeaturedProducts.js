@@ -13,12 +13,13 @@ export const useFeaturedProducts = () => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: [ROUTES] Featured products API w/ admin controls (Updated)
+        // TODO: [ROUTES] Featured products API w/ admin controls
         // Replace productService mock with backend API integration.
         // Required API endpoints:
         // - GET /api/products/featured (fetch current featured products)
         // - POST /api/admin/products/:id/feature (admin: mark product as featured)
         // - DELETE /api/admin/products/:id/feature (admin: remove product)
+
         const response = await productService.getFeaturedProducts();
         if (!response || response.length === 0) {
           throw new Error("No featured products found");
