@@ -20,90 +20,12 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          # Create with no labels - labels added in next job
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": []},
               {"name": "FIX:", "labels": []}
             ]
           ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
-
-  workflow-changes-to-issue:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Create Issue for Workflow Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          #!/bin/bash
-          set -e
-
-          echo "Detecting workflow file changes..."
-
-          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '^\.github/workflows/.*\.(yml|yaml)$' || true)
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No workflow files changed"
-            exit 0
-          fi
-
-          echo "Found workflow changes:"
-          echo "$CHANGED_FILES"
-
-          FIRST_FILE=$(echo "$CHANGED_FILES" | head -n1)
-          FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
-
-          if [ "$FILE_COUNT" -gt 1 ]; then
-            ISSUE_TITLE="[WORKFLOW] Updates to $FILE_COUNT workflow files"
-          else
-            ISSUE_TITLE="[WORKFLOW] Update to $(basename "$FIRST_FILE" | sed 's/\.[^.]*$//')"
-          fi
-
-          {
-            echo "## Workflow Changes Detected"
-            echo ""
-            echo "The following workflow file(s) were modified in commit ${{ github.sha }}:"
-            echo ""
-            echo "### Changed Files:"
-            while IFS= read -r file; do
-              echo "- [\`$file\`](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/$file)"
-            done <<< "$CHANGED_FILES"
-            echo ""
-            echo "### Commit Information:"
-            echo "- **Author:** @${{ github.actor }}"
-            echo "- **Commit:** [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})"
-            echo "- **Message:** ${{ github.event.head_commit.message }}"
-            echo ""
-            echo "### Diff Summary:"
-            echo '```diff'
-            git diff HEAD~1 HEAD -- $CHANGED_FILES | head -100
-            echo '```'
-            echo ""
-            echo "---"
-            echo ""
-            echo "### Next Steps"
-            echo ""
-            echo "- [ ] Review changes for quality"
-            echo "- [ ] Update related documentation if needed"
-            echo "- [ ] Test affected functionality"
-            echo ""
-            echo "This issue was automatically created to track significant file changes."
-          } > issue_body.md
-
-          gh issue create \
-            --title "$ISSUE_TITLE" \
-            --body-file issue_body.md \
-            --label "ci/cd,auto-generated,priority: high" \
-            --assignee "${{ github.actor }}"
-
-          echo "Issue created for workflow changes"
 
   apply-labels:
     needs: [todo-to-issue]
@@ -137,21 +59,14 @@ jobs:
               
               # Get the full issue body for content analysis
               ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
-              CONTENT="$title $ISSUE_BODY"
-              
-              # Check if this is a workflow issue (skip - already labeled)
-              if [[ "$ISSUE_BODY" =~ "## Workflow Changes Detected" ]]; then
-                echo "   🔧 Workflow issue detected - already has labels from creation"
-                continue
-              fi
               
               # Check if this issue was created from TODO/FIX comment
               if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
                 echo "   ✅ Confirmed TODO/FIX issue - validating and applying labels"
                 
-                # VALIDATION: Check for required template format
+                # VALIDATION 1: Check for required template format
                 if [[ ! "$title" =~ ^\[.*\] ]]; then
-                  echo "   ❌ ERROR: TODO/FIX comment must have template prefix [TEMPLATE]"
+                  echo "   ❌ VALIDATION FAILED: Missing template prefix"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must include a template prefix like [COMPONENT], [SECURITY], [DOCS], etc." 2>/dev/null || true
                   continue
@@ -161,25 +76,25 @@ jobs:
                 TEMPLATE=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
                 TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
                 
-                # VALIDATION: Check content length after template
+                # VALIDATION 2: Check content length after template
                 CONTENT_AFTER_TEMPLATE=$(echo "$title" | sed 's/^\[[^]]*\][[:space:]]*//')
                 if [[ ${#CONTENT_AFTER_TEMPLATE} -lt 10 ]]; then
-                  echo "   ❌ ERROR: Content too short (${#CONTENT_AFTER_TEMPLATE} chars, need 10+)"
+                  echo "   ❌ VALIDATION FAILED: Content too short (${#CONTENT_AFTER_TEMPLATE} chars, need 10+)"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   gh issue comment "$number" --body "🚫 **Validation Failed**: Content after template must be at least 10 characters. Got: '${CONTENT_AFTER_TEMPLATE}' (${#CONTENT_AFTER_TEMPLATE} chars)" 2>/dev/null || true
                   continue
                 fi
                 
-                # VALIDATION: Check for multiple templates
+                # VALIDATION 3: Check for multiple templates
                 TEMPLATE_COUNT=$(echo "$title" | grep -o '\[.*\]' | wc -l)
                 if [[ $TEMPLATE_COUNT -gt 1 ]]; then
-                  echo "   ❌ ERROR: Multiple templates detected"
+                  echo "   ❌ VALIDATION FAILED: Multiple templates detected ($TEMPLATE_COUNT templates)"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Only one template allowed per comment." 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: Multiple templates detected ($TEMPLATE_COUNT). Only one template allowed per comment." 2>/dev/null || true
                   continue
                 fi
                 
-                # VALIDATION: Check for valid template (FIXED LIST)
+                # VALIDATION 4: Check for valid template
                 VALID_TEMPLATES=(
                   "COMPONENT" "UI/UX" "ROUTES" "DATA" "SECURITY" "BUG" "PERF" 
                   "REFACTOR" "TEST" "DOCS" "DEPENDENCY" "ONBOARDING" "I18N" 
@@ -196,7 +111,7 @@ jobs:
                 done
                 
                 if [[ "$VALID_TEMPLATE" == "false" ]]; then
-                  echo "   ❌ ERROR: Invalid template [$TEMPLATE_NAME]"
+                  echo "   ❌ VALIDATION FAILED: Invalid template [$TEMPLATE_NAME]"
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
                   VALID_LIST=$(printf ", [%s]" "${VALID_TEMPLATES[@]}")
                   VALID_LIST=${VALID_LIST:2}  # Remove leading ", "
@@ -204,15 +119,25 @@ jobs:
                   continue
                 fi
                 
-                # VALIDATION: Check for special characters
-                if [[ "$title" =~ [\$\`\&\|\>\<\;] ]]; then
-                  echo "   ❌ ERROR: Special characters detected"
+                # VALIDATION 5: Check for non-English characters
+                if echo "$title" | grep -qP '[^\x00-\x7F]'; then
+                  echo "   ❌ VALIDATION FAILED: Non-English characters detected"
+                  INVALID_CHARS=$(echo "$title" | grep -oP '[^\x00-\x7F]' | tr '\n' ' ')
                   gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Cannot contain special characters: \$ \` & | > < ;" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must use English characters only. Found: $INVALID_CHARS" 2>/dev/null || true
                   continue
                 fi
                 
-                echo "   ✅ Validation passed - applying labels"
+                # VALIDATION 6: Check for special characters
+                if [[ "$title" =~ [\$\`\&\|\>\<\;] ]]; then
+                  echo "   ❌ VALIDATION FAILED: Special characters detected"
+                  FOUND_CHARS=$(echo "$title" | grep -o '[\$`&|><;]' | tr '\n' ' ')
+                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
+                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments cannot contain special characters: $FOUND_CHARS" 2>/dev/null || true
+                  continue
+                fi
+                
+                echo "   ✅ ALL VALIDATIONS PASSED - applying labels"
                 
                 # Normalize template to uppercase and update title if needed
                 PREFIX_PART=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
@@ -240,6 +165,14 @@ jobs:
                 # Assign to commit author
                 gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
                 
+                # Extract TODO comment content for analysis (NOT entire file)
+                TODO_COMMENT_LINES=""
+                if [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
+                  # Extract only the TODO/FIX comment lines from the code snippet
+                  TODO_COMMENT_LINES=$(echo "$ISSUE_BODY" | sed -n '/```/,/```/p' | grep -E '^\s*//\s*(TODO|FIX):' | head -3)
+                fi
+                COMMENT_ANALYSIS_TEXT="$title $TODO_COMMENT_LINES"
+                
                 # Template-based labeling
                 echo "   🎯 Processing template: [$TEMPLATE_NAME]"
                 
@@ -247,7 +180,6 @@ jobs:
                   "CI"|"CD"|"WORKFLOW"|"AUTOMATION"|"ACTIONS"|"DEPLOY"|"BUILD")
                     echo "     🔧 CI/CD template detected"
                     gh issue edit "$number" --add-label "ci/cd" 2>/dev/null || true
-                    # CI/CD issues should keep type: enhancement (they're infrastructure improvements)
                     if [[ "$TEMPLATE_NAME" =~ ^(CI|CD|DEPLOY|BUILD)$ ]]; then
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
                     else
@@ -320,19 +252,21 @@ jobs:
                     ;;
                 esac
                 
-                # Technology detection
-                if [[ "$CONTENT" =~ (Next\.js|NextJS|Next) ]]; then
+                # Technology detection (only from comment text)
+                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (Next\.js|NextJS|Next) ]]; then
+                  echo "     ⚛️ Next.js mentioned - adding nextjs label"
                   gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
                 fi
                 
-                # Content-based labeling
-                if [[ "$CONTENT" =~ (console\.|alert\(|debugger) ]]; then
-                  echo "     🧹 Debug code detected - adding cleanup label"
+                # Content-based labeling (ONLY from TODO comment, not entire file)
+                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (console\.log|console\s+log|alert\(|debugger) ]]; then
+                  echo "     🧹 Debug code mentioned in comment - adding cleanup label"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
                 
-                if [[ "$CONTENT" =~ (performance|optimize|speed) ]] && [[ ! "$TEMPLATE_NAME" == "PERF" ]]; then
-                  echo "     ⚡ Performance keywords detected"
+                # Only add performance label if specifically mentioned AND not already a PERF template
+                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (performance|optimize|optimization|speed|slow|bottleneck) ]] && [[ ! "$TEMPLATE_NAME" == "PERF" ]]; then
+                  echo "     ⚡ Performance keywords in comment - adding performance label"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                 fi
                 
@@ -348,6 +282,6 @@ jobs:
           done
 
           echo ""
-          echo "🎉 Issue labeling complete"
+          echo "🎉 Issue labeling complete!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
