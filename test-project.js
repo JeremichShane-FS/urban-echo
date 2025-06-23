@@ -1,1 +1,1 @@
-// TODO: [TEST] Test project board integration with correct project ID
+// TODO: [TEST] Test official project board integration with proper token
