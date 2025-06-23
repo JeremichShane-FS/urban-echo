@@ -3,7 +3,7 @@ import { useCallback } from "react";
 const useSearchbar = () => {
   const handleSubmit = useCallback(e => {
     e.preventDefault();
-    // TODO: Develop Component - Product search functionality (Updated)
+    // TODO: [COMPONENT] Product search functionality (Updated)
     // Implement comprehensive search logic for e-commerce product discovery.
     // Requirements:
     // - Full-text search across product names, descriptions, categories

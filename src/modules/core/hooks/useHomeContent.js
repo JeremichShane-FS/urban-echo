@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getHeroImageUrl } from "../utils/imageUtils";
 
-// TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v5)
+// TODO: [ROUTES] Dynamic hero content API integration
 // Implement API call to fetch hero content from CMS backend.
 // Version 2 Requirements:
 // - Error handling with retry logic
@@ -32,7 +32,7 @@ export const useHeroContent = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
 
-        // TODO: Develop Component - Dynamic hero content API integration (Version 2 for post-MVP) (Updated v5)
+        // TODO: [ROUTES] Dynamic hero content API integration
         // Implement API call to fetch hero content from CMS backend.
         // Version 2 Requirements:
         // - Error handling with retry logic
@@ -90,7 +90,7 @@ export const useAboutContent = () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         setIsLoading(true);
 
-        // TODO: Define Routes - About content in management API (Updated v5)
+        // TODO: [ROUTES] About content in management API
         // Create a API endpoint for dynamic about section content.
         // Backend requirements:
         // - GET /api/content/about (fetch about content)
