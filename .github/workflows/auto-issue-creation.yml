@@ -252,6 +252,7 @@ jobs:
                   "CI"|"CD"|"WORKFLOW"|"AUTOMATION"|"ACTIONS"|"DEPLOY"|"BUILD")
                     echo "     🔧 CI/CD template detected"
                     gh issue edit "$number" --add-label "ci/cd" 2>/dev/null || true
+                    # CI/CD issues should keep type: enhancement (they're infrastructure improvements)
                     if [[ "$TEMPLATE_NAME" =~ ^(CI|CD|DEPLOY|BUILD)$ ]]; then
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
                     else
@@ -352,6 +353,6 @@ jobs:
           done
 
           echo ""
-          echo "🎉 Issue labeling complete!"
+          echo "🎉 Issue labeling complete"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
