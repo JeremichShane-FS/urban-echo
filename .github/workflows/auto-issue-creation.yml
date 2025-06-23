@@ -20,7 +20,8 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          PROJECT: "PVT_kwHOCQfWK84AyWf1"
+          PROJECT: "user/JeremichShane-FS/2506-WDV359-JeremichShane"
+          PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}"
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": ["auto-generated", "type: enhancement"]},
@@ -58,7 +59,7 @@ jobs:
                 
                 echo "   🎯 Processing validated template: [$TEMPLATE_NAME]"
                 
-                # Assign to author (project assignment handled by todo-to-issue action)
+                # Assign to author (project assignment handled by todo-to-issue action with PROJECTS_SECRET)
                 gh issue edit "$number" --add-assignee "${{ github.actor }}" 2>/dev/null || true
                 
                 # Template-based labeling (simplified - no validation checks needed!)
