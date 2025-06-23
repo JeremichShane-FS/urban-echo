@@ -22,101 +22,13 @@ jobs:
           AUTO_P: "false"
           IDENTIFIERS: >
             [
-              {"name": "TODO:", "labels": []},
-              {"name": "FIX:", "labels": []}
+              {"name": "TODO:", "labels": ["auto-generated", "type: enhancement"]},
+              {"name": "FIX:", "labels": ["auto-generated", "type: bug"]}
             ]
           ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
 
-  workflow-changes-to-issue:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: "Create Issue for Workflow Changes"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          #!/bin/bash
-          set -e
-
-          echo "🔍 Detecting workflow file changes..."
-
-          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '^\.github/workflows/.*\.(yml|yaml)$' || true)
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "ℹ️ No workflow files changed in this commit"
-            echo "Changed files in this commit:"
-            git diff --name-only HEAD~1 HEAD || echo "No files changed"
-            exit 0
-          fi
-
-          echo "✅ Found workflow changes:"
-          echo "$CHANGED_FILES"
-
-          FIRST_FILE=$(echo "$CHANGED_FILES" | head -n1)
-          FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
-
-          if [ "$FILE_COUNT" -gt 1 ]; then
-            ISSUE_TITLE="[WORKFLOW] Updates to $FILE_COUNT workflow files"
-          else
-            ISSUE_TITLE="[WORKFLOW] Update to $(basename "$FIRST_FILE" | sed 's/\.[^.]*$//')"
-          fi
-
-          cat > issue_body.md << 'EOF'
-          ## Workflow Changes Detected
-
-          The following workflow file(s) were modified in commit ${{ github.sha }}:
-
-          ### Changed Files:
-          EOF
-
-          while IFS= read -r file; do
-            echo "- [\`$file\`](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/$file)" >> issue_body.md
-          done <<< "$CHANGED_FILES"
-
-          cat >> issue_body.md << 'EOF'
-
-          ### Commit Information:
-          - **Author:** @${{ github.actor }}
-          - **Commit:** [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-          - **Message:** ${{ github.event.head_commit.message }}
-
-          ### Diff Summary:
-          ```diff
-          EOF
-
-          git diff HEAD~1 HEAD -- $CHANGED_FILES | head -100 >> issue_body.md
-
-          cat >> issue_body.md << 'EOF'
-          ```
-
-          ---
-
-          ### Next Steps
-
-          - [ ] Review changes for quality
-          - [ ] Update related documentation if needed
-          - [ ] Test affected functionality
-
-          This issue was automatically created to track significant file changes.
-          EOF
-
-          gh issue create \
-            --title "$ISSUE_TITLE" \
-            --body-file issue_body.md \
-            --label "ci/cd,auto-generated,priority: high" \
-            --assignee "${{ github.actor }}"
-
-          echo "Issue created for workflow changes"
-
-  apply-labels:
+  apply-smart-labels:
     needs: [todo-to-issue]
-    if: always() && needs.todo-to-issue.result != 'failure'
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -124,135 +36,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Apply Labels to TODO Issues"
+      - name: "Apply Smart Labels (No Validation Needed)"
         run: |
-          echo "🏷️ Applying labels to recent TODO/FIX issues..."
-
+          echo "🏷️ Applying smart labels to recent TODO/FIX issues..."
+          echo "ℹ️ Validation already handled by pre-commit hook"
           sleep 30
 
           CUTOFF_TIME=$(date -d '5 minutes ago' --iso-8601=seconds)
-          echo "🔍 Looking for TODO/FIX issues created after: $CUTOFF_TIME"
 
           gh issue list --limit 20 --json number,title,body,createdAt | jq -r --arg cutoff "$CUTOFF_TIME" '.[] | select(.createdAt > $cutoff) | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
             if [[ -n "$number" && -n "$title" ]]; then
-              echo ""
-              echo "📝 Processing issue #$number: $title"
-              
-              COMMIT_AUTHOR="${{ github.actor }}"
-              echo "   👤 Assigning to commit author: $COMMIT_AUTHOR"
+              echo "📝 Processing validated issue #$number: $title"
               
               ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
               
-              if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]] || [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
-                echo "   ✅ Confirmed TODO/FIX issue - validating and applying labels"
-                
-                # VALIDATION 1: Check for required template format
-                if [[ ! "$title" =~ ^\[.*\] ]]; then
-                  echo "   ❌ VALIDATION FAILED: Missing template prefix"
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must include a template prefix like [COMPONENT], [SECURITY], [DOCS], etc." 2>/dev/null || true
-                  continue
-                fi
-                
+              if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]]; then
+                # Extract template (guaranteed valid from pre-commit validation)
                 TEMPLATE=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
                 TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
                 
-                # VALIDATION 2: Check content length after template
-                CONTENT_AFTER_TEMPLATE=$(echo "$title" | sed 's/^\[[^]]*\][[:space:]]*//')
-                if [[ ${#CONTENT_AFTER_TEMPLATE} -lt 10 ]]; then
-                  echo "   ❌ VALIDATION FAILED: Content too short (${#CONTENT_AFTER_TEMPLATE} chars, need 10+)"
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Content after template must be at least 10 characters. Got: '${CONTENT_AFTER_TEMPLATE}' (${#CONTENT_AFTER_TEMPLATE} chars)" 2>/dev/null || true
-                  continue
-                fi
+                echo "   🎯 Processing validated template: [$TEMPLATE_NAME]"
                 
-                # VALIDATION 3: Check for multiple templates
-                TEMPLATE_COUNT=$(echo "$title" | grep -o '\[.*\]' | wc -l)
-                if [[ $TEMPLATE_COUNT -gt 1 ]]; then
-                  echo "   ❌ VALIDATION FAILED: Multiple templates detected ($TEMPLATE_COUNT templates)"
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Multiple templates detected ($TEMPLATE_COUNT). Only one template allowed per comment." 2>/dev/null || true
-                  continue
-                fi
+                # Assign to author
+                gh issue edit "$number" --add-assignee "${{ github.actor }}" 2>/dev/null || true
                 
-                # VALIDATION 4: Check for valid template
-                VALID_TEMPLATES=("COMPONENT" "UI/UX" "ROUTES" "DATA" "SECURITY" "BUG" "PERF" "REFACTOR" "TEST" "DOCS" "DEPENDENCY" "ONBOARDING" "I18N" "A11Y" "FEATURE" "RESEARCH" "STATE" "CI" "CD" "WORKFLOW" "AUTOMATION" "ACTIONS" "DEPLOY" "BUILD")
-                
-                VALID_TEMPLATE=false
-                for valid in "${VALID_TEMPLATES[@]}"; do
-                  if [[ "$TEMPLATE_NAME" == "$valid" ]]; then
-                    VALID_TEMPLATE=true
-                    break
-                  fi
-                done
-                
-                if [[ "$VALID_TEMPLATE" == "false" ]]; then
-                  echo "   ❌ VALIDATION FAILED: Invalid template [$TEMPLATE_NAME]"
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  VALID_LIST=$(printf ", [%s]" "${VALID_TEMPLATES[@]}")
-                  VALID_LIST=${VALID_LIST:2}
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: Template [$TEMPLATE_NAME] is not valid. Use one of: $VALID_LIST" 2>/dev/null || true
-                  continue
-                fi
-                
-                # VALIDATION 5: Check for non-English characters
-                if echo "$title" | grep -qP '[^\x00-\x7F]'; then
-                  echo "   ❌ VALIDATION FAILED: Non-English characters detected"
-                  INVALID_CHARS=$(echo "$title" | grep -oP '[^\x00-\x7F]' | tr '\n' ' ')
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments must use English characters only. Found: $INVALID_CHARS" 2>/dev/null || true
-                  continue
-                fi
-                
-                # VALIDATION 6: Check for special characters
-                if [[ "$title" =~ [\$\`\&\|\>\<\;] ]]; then
-                  echo "   ❌ VALIDATION FAILED: Special characters detected"
-                  FOUND_CHARS=$(echo "$title" | grep -o '[\$`&|><;]' | tr '\n' ' ')
-                  gh issue edit "$number" --add-label "validation-failed" 2>/dev/null || true
-                  gh issue comment "$number" --body "🚫 **Validation Failed**: TODO/FIX comments cannot contain special characters: $FOUND_CHARS" 2>/dev/null || true
-                  continue
-                fi
-                
-                echo "   ✅ ALL VALIDATIONS PASSED - applying labels"
-                
-                # Normalize template to uppercase and update title if needed
-                PREFIX_PART=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
-                REST_OF_TITLE=$(echo "$title" | sed 's/^\[[^]]*\]//')
-                NORMALIZED_TITLE="$PREFIX_PART$REST_OF_TITLE"
-                
-                if [[ "$NORMALIZED_TITLE" != "$title" ]]; then
-                  echo "   📝 Normalizing template: $PREFIX_PART"
-                  gh issue edit "$number" --title "$NORMALIZED_TITLE" 2>/dev/null || true
-                  title="$NORMALIZED_TITLE"
-                  TEMPLATE="$PREFIX_PART"
-                  TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
-                fi
-                
-                # Truncate if too long
-                if [[ ${#title} -gt 80 ]]; then
-                  title="${title:0:77}..."
-                  gh issue edit "$number" --title "$title" 2>/dev/null || true
-                fi
-                
-                echo "   🏷️ Adding base labels..."
-                gh issue edit "$number" --add-label "auto-generated" 2>/dev/null || true
-                gh issue edit "$number" --add-label "type: enhancement" 2>/dev/null || true
-                
-                gh issue edit "$number" --add-assignee "$COMMIT_AUTHOR" 2>/dev/null || true
-                
-                # Extract TODO comment content for analysis
-                TODO_COMMENT_LINES=""
-                if [[ "$ISSUE_BODY" =~ \*\*Code:\*\* ]]; then
-                  TODO_COMMENT_LINES=$(echo "$ISSUE_BODY" | sed -n '/```/,/```/p' | grep -E '^\s*//\s*(TODO|FIX):' | head -3)
-                fi
-                COMMENT_ANALYSIS_TEXT="$title $TODO_COMMENT_LINES"
-                
-                # Template-based labeling
-                echo "   🎯 Processing template: [$TEMPLATE_NAME]"
-                
+                # Template-based labeling (simplified - no validation checks needed!)
                 case "$TEMPLATE_NAME" in
                   "CI"|"CD"|"WORKFLOW"|"AUTOMATION"|"ACTIONS"|"DEPLOY"|"BUILD")
-                    echo "     🔧 CI/CD template detected"
+                    echo "     🔧 CI/CD template"
                     gh issue edit "$number" --add-label "ci/cd" 2>/dev/null || true
                     if [[ "$TEMPLATE_NAME" =~ ^(CI|CD|DEPLOY|BUILD)$ ]]; then
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
@@ -261,62 +72,62 @@ jobs:
                     fi
                     ;;
                   "COMPONENT"|"UI/UX")
-                    echo "     🎨 Frontend template detected"
-                    gh issue edit "$number" --add-label "area: frontend" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                    echo "     🎨 Frontend template"
+                    gh issue edit "$number" --add-label "area: frontend,priority: medium" 2>/dev/null || true
                     ;;
                   "ROUTES"|"DATA")
-                    echo "     🔌 API/Backend template detected"
-                    gh issue edit "$number" --add-label "area: api" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "area: backend" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                    echo "     🔌 API/Backend template"
+                    gh issue edit "$number" --add-label "area: api,area: backend,priority: medium" 2>/dev/null || true
                     ;;
                   "SECURITY")
-                    echo "     🔒 Security template detected"
-                    gh issue edit "$number" --add-label "area: security" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                    echo "     🔒 Security template"
+                    gh issue edit "$number" --add-label "area: security,priority: high" 2>/dev/null || true
+                    # FIX vs TODO type logic
                     if [[ "$ISSUE_BODY" =~ FIX: ]]; then
-                      echo "     🐛 Security FIX - changing to bug type"
-                      gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
-                      gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
+                      echo "     🐛 Security FIX = vulnerability = bug type"
+                      gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug" 2>/dev/null || true
                     fi
                     ;;
                   "BUG")
-                    echo "     🐛 Bug template detected"
-                    gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "type: bug" 2>/dev/null || true
+                    echo "     🐛 Bug template"
+                    gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug" 2>/dev/null || true
+                    # FIX vs TODO priority logic
                     if [[ "$ISSUE_BODY" =~ FIX: ]]; then
+                      echo "     🚨 FIX + [BUG] = HIGH priority"
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
                     else
+                      echo "     📋 TODO + [BUG] = MEDIUM priority"
                       gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     fi
                     ;;
                   "PERF")
-                    echo "     ⚡ Performance template detected"
-                    gh issue edit "$number" --add-label "performance" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                    echo "     ⚡ Performance template"
+                    gh issue edit "$number" --add-label "performance,priority: medium" 2>/dev/null || true
                     ;;
                   "REFACTOR")
-                    echo "     🔧 Refactor template detected"
-                    gh issue edit "$number" --add-label "tech-debt" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                    echo "     🔧 Refactor template"
+                    gh issue edit "$number" --add-label "tech-debt,priority: medium" 2>/dev/null || true
                     ;;
                   "TEST")
-                    echo "     🧪 Test template detected"
+                    echo "     🧪 Test template"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     ;;
                   "DOCS")
-                    echo "     📚 Documentation template detected"
-                    gh issue edit "$number" --remove-label "type: enhancement" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "type: documentation" 2>/dev/null || true
-                    gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                    echo "     📚 Documentation template"
+                    gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: documentation,priority: low" 2>/dev/null || true
                     ;;
-                  "DEPENDENCY")
-                    echo "     📦 Dependency template detected"
-                    gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                  "I18N"|"A11Y"|"ONBOARDING"|"RESEARCH"|"STATE"|"DEPENDENCY")
+                    echo "     📋 Special template: $TEMPLATE_NAME"
+                    LABEL_NAME=$(echo "$TEMPLATE_NAME" | tr '[:upper:]' '[:lower:]')
+                    gh issue edit "$number" --add-label "$LABEL_NAME" 2>/dev/null || true
+                    if [[ "$TEMPLATE_NAME" == "DEPENDENCY" ]]; then
+                      gh issue edit "$number" --add-label "priority: low" 2>/dev/null || true
+                    else
+                      gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                    fi
                     ;;
                   "FEATURE")
-                    echo "     ✨ Feature template detected"
+                    echo "     ✨ Feature template"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     ;;
                   *)
@@ -325,34 +136,43 @@ jobs:
                     ;;
                 esac
                 
+                # Smart content detection (only analyze comment text)
+                TODO_COMMENT_LINES=$(echo "$ISSUE_BODY" | sed -n '/```/,/```/p' | grep -E '^\s*//\s*(TODO|FIX):' | head -3)
+                ANALYSIS_TEXT="$title $TODO_COMMENT_LINES"
+                
                 # Technology detection
-                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (Next\.js|NextJS|Next) ]]; then
-                  echo "     ⚛️ Next.js mentioned - adding nextjs label"
+                if [[ "$ANALYSIS_TEXT" =~ (Next\.js|NextJS|Next) ]]; then
                   gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
                 fi
                 
+                if [[ "$ANALYSIS_TEXT" =~ (MongoDB|mongo) ]]; then
+                  gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
+                fi
+                
+                if [[ "$ANALYSIS_TEXT" =~ (Stripe|stripe) ]]; then
+                  gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
+                fi
+                
+                if [[ "$ANALYSIS_TEXT" =~ (Auth0|auth0) ]]; then
+                  gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
+                fi
+                
                 # Content-based labeling
-                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (console\.log|console[[:space:]]+log|alert\(|debugger) ]]; then
-                  echo "     🧹 Debug code mentioned in comment - adding cleanup label"
+                if [[ "$ANALYSIS_TEXT" =~ (console\.log|console\s+log|alert\(|debugger) ]]; then
+                  echo "     🧹 Debug code mentioned - adding cleanup"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
                 
-                if [[ "$COMMENT_ANALYSIS_TEXT" =~ (performance|optimize|optimization|speed|slow|bottleneck) ]] && [[ ! "$TEMPLATE_NAME" == "PERF" ]]; then
-                  echo "     ⚡ Performance keywords in comment - adding performance label"
+                if [[ "$ANALYSIS_TEXT" =~ (performance|optimize|optimization|speed|slow|bottleneck) ]] && [[ ! "$TEMPLATE_NAME" == "PERF" ]]; then
+                  echo "     ⚡ Performance keywords - adding performance"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                 fi
                 
-                echo "   ✅ Labels applied successfully"
-                
-                FINAL_LABELS=$(gh issue view "$number" --json labels --jq '.labels | map(.name) | join(", ")' 2>/dev/null || echo "Failed to get labels")
-                echo "   🏷️ Final labels: $FINAL_LABELS"
-              else
-                echo "   ⚠️ Not a TODO/FIX issue - skipping"
+                echo "   ✅ Smart labels applied to #$number"
               fi
             fi
           done
 
-          echo ""
-          echo "🎉 Issue labeling complete!"
+          echo "🎉 Smart labeling complete!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

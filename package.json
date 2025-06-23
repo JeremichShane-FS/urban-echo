@@ -2,12 +2,25 @@
   "name": "urban-echo",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "lint:todo": "node scripts/check-todos.js",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "node scripts/check-todos.js",
+      "eslint --fix",
+      "prettier --config .prettier.temp.json --write"
+    ],
+    "*.{json,css}": [
+      "prettier --config .prettier.temp.json --write"
+    ]
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.8",
@@ -30,6 +43,9 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-sort-destructure-keys": "^2.0.0",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.0",
     "sass": "^1.85.1"
   }
 }
