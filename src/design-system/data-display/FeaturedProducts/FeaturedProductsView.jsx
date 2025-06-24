@@ -2,7 +2,7 @@
 
 import PropTypes from "prop-types";
 
-import ProductCard from "@design-system/data-display/ProductCard/ProductCardView";
+import ProductCard from "@design-system/data-display/ProductCard";
 
 import styles from "./FeaturedProducts.module.scss";
 
