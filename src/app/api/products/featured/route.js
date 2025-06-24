@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@config/constants";
 import { productService as data } from "@modules/product/services/product-service";
 
 export async function GET(request) {
@@ -13,7 +14,7 @@ export async function GET(request) {
       meta: {
         total: products.length,
         limit: limit,
-        endpoint: "/api/products/featured",
+        endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
       },
     });
   } catch (error) {

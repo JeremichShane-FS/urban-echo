@@ -6,7 +6,7 @@ export const productService = {
     console.log("API END_POINTS", API_ENDPOINTS);
     try {
       // TODO: [DATA] Replace mock data with API call when ready (featured products)
-      // const response = await fetch(`/api${API_ENDPOINTS.featuredProducts}?limit=${limit}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.featuredProducts}?limit=${limit}`);
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const featuredProducts = productList.filter(product => product.featured);
@@ -22,7 +22,7 @@ export const productService = {
       const { category = null, limit = 8, page = 1 } = params;
 
       // TODO: [DATA] Replace mock data with API call when ready (new arrivals)
-      // const response = await fetch(`/api${API_ENDPOINTS.newArrivals}?limit=${limit}&page=${page}&category=${category}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.newArrivals}?limit=${limit}&page=${page}&category=${category}`);
       await new Promise(resolve => setTimeout(resolve, 500));
 
       let filteredProducts = [...newArrivals];
@@ -59,7 +59,7 @@ export const productService = {
   async getBestSellers(limit = 8) {
     try {
       // TODO: [DATA] Replace mock data with API call when ready (best-sellers)
-      // const response = await fetch(`/api${API_ENDPOINTS.bestSellers}?limit=${limit}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.bestSellers}?limit=${limit}`);
       await new Promise(resolve => setTimeout(resolve, 400));
 
       return bestSellers.sort((a, b) => b.salesCount - a.salesCount).slice(0, limit);
@@ -83,7 +83,7 @@ export const productService = {
 
       // TODO: [DATA] Replace mock data with API call when ready (products)
       // const searchParams = new URLSearchParams({ page, limit, category, sort, search, minPrice, maxPrice });
-      // const response = await fetch(`/api${API_ENDPOINTS.products}?${searchParams}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.products}?${searchParams}`);
       await new Promise(resolve => setTimeout(resolve, 600));
 
       const allProducts = [...productList, ...newArrivals];
@@ -158,7 +158,7 @@ export const productService = {
   async getProduct(slug) {
     try {
       // TODO: [DATA] Replace mock data with API call when ready (product-details)
-      // const response = await fetch(`/api${API_ENDPOINTS.products}/${slug}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.products}/${slug}`);
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const allProducts = [...productList, ...newArrivals];
@@ -181,7 +181,7 @@ export const productService = {
 
       // TODO: [DATA] Replace mock data with API call when ready (search)
       // const searchParams = new URLSearchParams({ query, page, limit, category, sort });
-      // const response = await fetch(`/api${API_ENDPOINTS.productSearch}?${searchParams}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.productSearch}?${searchParams}`);
       await new Promise(resolve => setTimeout(resolve, 400));
 
       return this.getProducts({
@@ -200,7 +200,7 @@ export const productService = {
   async getCategories() {
     try {
       // TODO: [DATA] Replace mock data with API call when ready (categories)
-      // const response = await fetch(`/api${API_ENDPOINTS.categories}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.categories}`);
       await new Promise(resolve => setTimeout(resolve, 200));
 
       return categories;
@@ -213,7 +213,7 @@ export const productService = {
   async getRelatedProducts(productId, limit = 4) {
     try {
       // TODO: [DATA] Replace mock data with API call when ready (related products)
-      // const response = await fetch(`/api${API_ENDPOINTS.relatedProducts}/${productId}?limit=${limit}`);
+      // const response = await fetch(`/api/${API_ENDPOINTS.relatedProducts}/${productId}?limit=${limit}`);
       await new Promise(resolve => setTimeout(resolve, 350));
 
       const allProducts = [...productList, ...newArrivals];

@@ -35,7 +35,7 @@ export const useNewsletter = () => {
     setMessageType("");
 
     try {
-      const response = await fetch(`/api${API_ENDPOINTS.newsletter}`, {
+      const response = await fetch(`/api/${API_ENDPOINTS.newsletter}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
