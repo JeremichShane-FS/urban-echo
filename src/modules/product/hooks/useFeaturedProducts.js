@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { productService } from "@modules/product/services/productService";
+import { productService } from "@modules/product/services/product-service";
 
 export const useFeaturedProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
