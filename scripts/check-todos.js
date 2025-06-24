@@ -43,14 +43,14 @@ function validateTodoComment(line, _lineNumber, _fileName) {
   const errors = [];
 
   // Check for template
-  const templateMatch = comment.match(/^\[([^\]]+)\]/);
+  const templateMatch = comment.match(/^\[([^\]]+)]/);
   if (!templateMatch) {
     errors.push("Missing template prefix like [COMPONENT], [SECURITY], etc.");
     return errors;
   }
 
   const template = templateMatch[1].toUpperCase();
-  const content = comment.replace(/^\[[^\]]+\]\s*/, "");
+  const content = comment.replace(/^\[[^\]]+]\s*/, "");
 
   // Validate template
   if (!VALID_TEMPLATES.includes(template)) {
@@ -65,7 +65,7 @@ function validateTodoComment(line, _lineNumber, _fileName) {
   }
 
   // Check for multiple templates
-  if ((comment.match(/\[[^\]]*\]/g) || []).length > 1) {
+  if ((comment.match(/\[[^\]]*]/g) || []).length > 1) {
     errors.push("Multiple templates not allowed");
   }
 
@@ -77,7 +77,7 @@ function validateTodoComment(line, _lineNumber, _fileName) {
   }
 
   // Check for non-English characters (safe regex)
-  const nonEnglishPattern = /[^\u0020-\u007E\s]/;
+  const nonEnglishPattern = /[^\s\u0020-\u007E]/;
   if (nonEnglishPattern.test(comment)) {
     errors.push("Use English characters only");
   }

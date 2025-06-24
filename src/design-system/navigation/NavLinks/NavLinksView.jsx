@@ -1,8 +1,8 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 
-import Button from "@/design-system/buttons/Button";
-
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/config/constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
+import Button from "@design-system/buttons/Button";
 
 import styles from "./NavLinks.module.scss";
 
@@ -16,7 +16,7 @@ const NavLinksView = ({ isMobile = false, navItems }) => {
 
         if (highlight) {
           return (
-            <Link key={id} href={path} passHref legacyBehavior>
+            <Link key={id} passHref legacyBehavior href={path}>
               <Button
                 variant={BUTTON_VARIANTS.accent}
                 size={BUTTON_SIZES.sm}
@@ -38,3 +38,14 @@ const NavLinksView = ({ isMobile = false, navItems }) => {
 };
 
 export default NavLinksView;
+
+NavLinksView.displayName = "NavLinksView";
+NavLinksView.propTypes = {
+  isMobile: PropTypes.bool,
+  navItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

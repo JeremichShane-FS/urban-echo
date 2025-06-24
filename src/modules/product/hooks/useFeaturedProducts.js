@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { productService } from "../services/productService";
+import { productService } from "@modules/product/services/productService";
 
 export const useFeaturedProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,9 +25,9 @@ export const useFeaturedProducts = () => {
           throw new Error("No featured products found");
         }
         setFeaturedProducts(response);
-      } catch (err) {
+      } catch (error_) {
         setError("Failed to load featured products");
-        console.error("Error fetching featured products:", err);
+        console.error("Error fetching featured products:", error_);
       } finally {
         setIsLoading(false);
       }

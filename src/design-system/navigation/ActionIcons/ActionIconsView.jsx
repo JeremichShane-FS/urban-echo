@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Search, ShoppingBag, User } from "lucide-react";
-
-import { getNavItemsByIds } from "@modules/core/utils/getNavItems";
+import PropTypes from "prop-types";
 
 import { ACCOUNT_NAV_ITEMS } from "@config/constants";
+import { getNavItemsByIds } from "@modules/core/utils/getNavItems";
 
 import styles from "./ActionIcons.module.scss";
 
@@ -15,10 +15,10 @@ const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
       <button
         type="button"
         className={`${styles.button} ${styles["button--search"]}`}
-        onClick={toggleSearch}
         aria-expanded={isSearchOpen}
         aria-controls="search-panel"
-        aria-label="Search">
+        aria-label="Search"
+        onClick={toggleSearch}>
         <Search className="h-6 w-6" aria-hidden="true" />
       </button>
 
@@ -38,3 +38,10 @@ const ActionIconsView = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
 };
 
 export default ActionIconsView;
+
+ActionIconsView.displayName = "ActionIconsView";
+ActionIconsView.propTypes = {
+  cartCount: PropTypes.number,
+  isSearchOpen: PropTypes.bool.isRequired,
+  toggleSearch: PropTypes.func.isRequired,
+};

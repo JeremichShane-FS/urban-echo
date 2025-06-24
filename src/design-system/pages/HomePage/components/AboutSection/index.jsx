@@ -1,6 +1,6 @@
 "use client";
 
-import { useAboutContent } from "@/modules/core/hooks/useHomeContent";
+import { useAboutContent } from "@modules/core/hooks/useHomeContent";
 
 import AboutSectionView from "./AboutSectionView";
 
@@ -11,3 +11,7 @@ const AboutSection = () => {
 };
 
 export default AboutSection;
+
+AboutSection.displayName = "AboutSection";
+AboutSection.View = AboutSectionView;
+AboutSection.useAboutContent = useAboutContent;

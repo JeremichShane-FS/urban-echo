@@ -1,4 +1,6 @@
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/config/constants/ui-constants";
+import PropTypes from "prop-types";
+
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
 
 import styles from "./Button.module.scss";
 
@@ -21,8 +23,8 @@ const Button = ({
       className={`${styles["button"]} ${styles[`button-${variant}`]} ${
         styles[`button-${size}`]
       } ${className}`}
-      onClick={onClick}
       disabled={disabled}
+      onClick={onClick}
       {...props}>
       {children}
     </Component>
@@ -30,3 +32,15 @@ const Button = ({
 };
 
 export default Button;
+
+Button.displayName = "Button";
+Button.propTypes = {
+  as: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  size: PropTypes.oneOf(Object.values(BUTTON_SIZES)),
+  type: PropTypes.string,
+  variant: PropTypes.oneOf(Object.values(BUTTON_VARIANTS)),
+};

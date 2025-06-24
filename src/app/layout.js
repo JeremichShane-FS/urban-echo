@@ -1,11 +1,12 @@
+import PropTypes from "prop-types";
+
+import { montserrat, openSans } from "@config/fonts";
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";
 
-import { montserrat, openSans } from "@config/fonts";
-
-import "@assets/styles/globals.css";
-import "@assets/styles/main.scss";
+import "@styles/globals.css";
+import "@styles/main.scss";
 
 export const viewport = {
   width: "device-width",
@@ -83,3 +84,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

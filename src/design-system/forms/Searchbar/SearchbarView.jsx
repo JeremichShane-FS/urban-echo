@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import PropTypes from "prop-types";
 
 import styles from "./Searchbar.module.scss";
 
@@ -26,3 +27,9 @@ const SearchbarView = ({ isOpen, onSubmit }) => {
 };
 
 export default SearchbarView;
+
+SearchbarView.displayName = "SearchbarView";
+SearchbarView.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};

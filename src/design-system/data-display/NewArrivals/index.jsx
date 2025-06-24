@@ -1,6 +1,6 @@
 "use client";
 
-import { useNewArrivals } from "@/modules/product/hooks/useNewArrivals";
+import { useNewArrivals } from "@modules/product/hooks/useNewArrivals";
 
 import NewArrivalsView from "./NewArrivalsView";
 
@@ -11,3 +11,7 @@ const NewArrivals = () => {
 };
 
 export default NewArrivals;
+
+NewArrivals.displayName = "NewArrivals";
+NewArrivals.View = NewArrivalsView;
+NewArrivals.useNewArrivals = useNewArrivals;

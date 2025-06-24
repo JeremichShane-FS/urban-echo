@@ -35,7 +35,7 @@ export const validatePassword = password => {
     return { isValid: false, errorMessage: "Password must contain at least one lowercase letter" };
   }
 
-  if (!/[0-9]/.test(password)) {
+  if (!/\d/.test(password)) {
     return { isValid: false, errorMessage: "Password must contain at least one number" };
   }
 
@@ -50,7 +50,7 @@ export const validatePassword = password => {
 export const isValidPhone = phone => {
   if (!phone) return false;
   // Basic validation to remove spaces, dashes, parentheses, etc.
-  const cleanedPhone = phone.replace(/\D/g, "");
+  const cleanedPhone = phone.replaceAll(/\D/g, "");
   return cleanedPhone.length >= 10;
 };
 
@@ -86,7 +86,7 @@ export const isValidCreditCard = cardNumber => {
   if (!cardNumber) return false;
 
   // Remove all non-digit characters
-  const digits = cardNumber.replace(/\D/g, "");
+  const digits = cardNumber.replaceAll(/\D/g, "");
 
   if (digits.length < 13 || digits.length > 19) return false;
 
@@ -135,8 +135,8 @@ export const isValidURL = url => {
   try {
     new URL(url);
     return true;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return false;
   }
 };

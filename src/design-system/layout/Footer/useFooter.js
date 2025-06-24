@@ -1,11 +1,9 @@
 /**
- * Clean useFooter Hook
- * src/design-system/layout/Footer/useFooter.js
+ * @fileoverview Custom hook for managing footer data and interactions.
+ * @module useFooter
  */
 
 import { useEffect, useState } from "react";
-
-import { setCopyright } from "@/modules/core/utils/setCopyright";
 
 import {
   FOOTER_COMPANY,
@@ -15,6 +13,7 @@ import {
   FOOTER_UTILITY_LINKS,
 } from "@config/constants/footer-constants";
 import { SITE_NAME } from "@config/constants/site-constants";
+import { setCopyright } from "@modules/core/utils/setCopyright";
 
 export const useFooter = () => {
   const [copyrightText, setCopyrightText] = useState(`© ${SITE_NAME}. All rights reserved`);
