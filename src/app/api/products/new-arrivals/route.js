@@ -1,0 +1,48 @@
+import { productService as data } from "@modules/product/services/product-service";
+
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get("limit")) || 8;
+    const page = parseInt(searchParams.get("page")) || 1;
+    const category = searchParams.get("category");
+
+    const result = await data.getNewArrivals({
+      limit,
+      page,
+      category,
+    });
+
+    return Response.json({
+      success: true,
+      data: result.products,
+      pagination: result.pagination,
+      filters: result.filters,
+      meta: {
+        endpoint: "/api/products/new-arrivals",
+      },
+    });
+  } catch (error) {
+    console.error("New arrivals API error:", error);
+
+    return Response.json(
+      {
+        success: false,
+        error: "Failed to fetch new arrivals",
+        message: error.message,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}

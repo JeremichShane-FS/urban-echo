@@ -16,81 +16,84 @@ export const LEGACY_API_VERSION = "v0";
 // API endpoints
 export const API_ENDPOINTS = {
   // Auth
-  login: "/auth/login",
-  register: "/auth/register",
-  logout: "/auth/logout",
-  refreshToken: "/auth/refresh",
-  forgotPassword: "/auth/forgot-password",
-  resetPassword: "/auth/reset-password",
-  verifyEmail: "/auth/verify-email",
+  login: "auth/login",
+  register: "auth/register",
+  logout: "auth/logout",
+  refreshToken: "auth/refresh",
+  forgotPassword: "auth/forgot-password",
+  resetPassword: "auth/reset-password",
+  verifyEmail: "auth/verify-email",
 
   // User
-  me: "/users/me",
-  profile: "/users/profile",
-  addresses: "/users/addresses",
+  me: "users/me",
+  profile: "users/profile",
+  addresses: "users/addresses",
 
   // Products
-  products: "/products",
-  productsByCategory: "/products/category",
-  productsByCollection: "/products/collection",
-  productSearch: "/products/search",
-  featuredProducts: "/products/featured",
-  relatedProducts: "/products/related",
-  newArrivals: "/products/new-arrivals",
-  bestSellers: "/products/best-sellers",
+  products: "products",
+  productsByCategory: "products/category",
+  productsByCollection: "products/collection",
+  productSearch: "products/search",
+  featuredProducts: "products/featured",
+  relatedProducts: "products/related",
+  newArrivals: "products/new-arrivals",
+  bestSellers: "products/best-sellers",
 
   // Categories
-  categories: "/categories",
-  subCategories: "/subcategories",
+  categories: "categories",
+  subCategories: "subcategories",
 
   // Collections
-  collections: "/collections",
+  collections: "collections",
 
   // Cart
-  cart: "/cart",
-  cartItems: "/cart/items",
-  cartShipping: "/cart/shipping",
-  cartTaxes: "/cart/taxes",
-  cartPromo: "/cart/promo",
+  cart: "cart",
+  cartItems: "cart/items",
+  cartShipping: "cart/shipping",
+  cartTaxes: "cart/taxes",
+  cartPromo: "cart/promo",
 
   // Checkout
-  checkout: "/checkout",
-  payment: "/checkout/payment",
-  paymentMethods: "/checkout/payment-methods",
-  shippingMethods: "/checkout/shipping-methods",
+  checkout: "checkout",
+  payment: "checkout/payment",
+  paymentMethods: "checkout/payment-methods",
+  shippingMethods: "checkout/shipping-methods",
 
   // Orders
-  orders: "/orders",
-  orderStatus: "/orders/status",
-  orderTracking: "/orders/tracking",
+  orders: "orders",
+  orderStatus: "orders/status",
+  orderTracking: "orders/tracking",
 
   // Reviews
-  reviews: "/reviews",
-  productReviews: "/reviews/product",
+  reviews: "reviews",
+  productReviews: "reviews/product",
 
   // Wishlist
-  wishlist: "/wishlist",
+  wishlist: "wishlist",
 
-  // Content
-  blog: "/content/blog",
-  pages: "/content/pages",
-  faq: "/content/faq",
+  // Content management
+  content: "content",
+  aboutContent: "content/about",
+  heroContent: "content/hero",
+  blog: "content/blog",
+  pages: "content/pages",
+  faq: "content/faq",
 
   // Store
-  stores: "/stores",
-  storeLocator: "/stores/locator",
+  stores: "stores",
+  storeLocator: "stores/locator",
 
   // Newsletter
-  newsletter: "/newsletter/subscribe",
+  newsletter: "newsletter/subscribe",
 
   // Contact
-  contact: "/contact",
+  contact: "contact",
 
   // Inventory
-  inventory: "/inventory",
+  inventory: "inventory",
 
   // Search
-  search: "/search",
+  search: "search",
 };
 
 // Request timeout (ms)

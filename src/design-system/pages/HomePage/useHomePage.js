@@ -5,7 +5,7 @@ export const useHomePage = () => {
   const [pageData, setPageData] = useState({});
 
   // TODO: [DATA] CMS integration for homepage configuration
-  // Implement headless CMS integration (Strapi, Contentful, or Sanity) to manage homepage content.
+  // Implement headless CMS integration (Strapi) to manage homepage content.
   // Version 2 Requirements:
   // - Content management system for non-technical users
   // - A/B testing capabilities for different homepage layouts
@@ -21,7 +21,7 @@ export const useHomePage = () => {
         // TODO: [ROUTES] Homepage configuration API with CMS backend
         // Replace mock with CMS API endpoint: GET /api/pages/homepage
         // Version 2 Backend requirements:
-        // - Integration with headless CMS (Strapi, Contentful, or Sanity)
+        // - Integration with headless CMS (Strapi)
         // - Caching layer for improved page load performance
         // - Version control for homepage configurations
         // - A/B testing framework for conversion optimization
