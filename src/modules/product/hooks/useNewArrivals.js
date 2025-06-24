@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { productService } from "../services/productService";
+import { productService } from "@modules/product/services/productService";
 
 export const useNewArrivals = (limit = 8) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,9 +23,9 @@ export const useNewArrivals = (limit = 8) => {
 
         const response = await productService.getNewArrivals({ limit });
         setNewArrivals(response);
-      } catch (err) {
+      } catch (error_) {
         setError("Failed to load new arrivals");
-        console.error("Error fetching new arrivals:", err);
+        console.error("Error fetching new arrivals:", error_);
 
         // Fallback to mock data
         setNewArrivals([

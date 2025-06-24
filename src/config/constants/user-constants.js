@@ -21,7 +21,7 @@ export const PASSWORD_REQUIREMENTS = {
 };
 
 export const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,128}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!$%&*?@])[\d!$%&*?@A-Za-z]{8,128}$/;
 
 // User roles and permissions
 export const USER_ROLES = {

@@ -98,7 +98,7 @@ export const CREDIT_CARD_TYPES = {
   },
   DISCOVER: {
     name: "Discover",
-    pattern: /^6(?:011|5[0-9]{2})/,
+    pattern: /^6(?:011|5\d{2})/,
     format: /(\d{1,4})/g,
     maxLength: 19,
   },

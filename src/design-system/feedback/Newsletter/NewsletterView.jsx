@@ -1,6 +1,7 @@
-import Button from "@/design-system/buttons/Button";
+import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@/config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants/ui-constants";
+import Button from "@design-system/buttons/Button";
 
 import styles from "./Newsletter.module.scss";
 
@@ -26,16 +27,16 @@ const NewsletterView = ({
           </div>
 
           <div className={styles.form}>
-            <form onSubmit={onSubmit} className={styles.wrapper}>
+            <form className={styles.wrapper} onSubmit={onSubmit}>
               <div className={styles.group}>
                 <input
                   type="email"
                   value={email}
-                  onChange={onEmailChange}
                   placeholder="Email address"
                   className={styles.input}
                   disabled={isSubmitting}
                   aria-label="Email address for newsletter subscription"
+                  onChange={onEmailChange}
                 />
 
                 <Button
@@ -55,10 +56,10 @@ const NewsletterView = ({
                     messageType === TOAST_TYPES.SUCCESS
                       ? styles["message--success"]
                       : messageType === TOAST_TYPES.ERROR
-                      ? styles["message--error"]
-                      : messageType === TOAST_TYPES.WARNING
-                      ? styles["message--warning"]
-                      : styles["message--info"]
+                        ? styles["message--error"]
+                        : messageType === TOAST_TYPES.WARNING
+                          ? styles["message--warning"]
+                          : styles["message--info"]
                   }`}
                   role={messageType === TOAST_TYPES.ERROR ? "alert" : "status"}
                   aria-live="polite">
@@ -74,3 +75,14 @@ const NewsletterView = ({
 };
 
 export default NewsletterView;
+
+NewsletterView.displayName = "NewsletterView";
+NewsletterView.propTypes = {
+  email: PropTypes.string.isRequired,
+  isFormValid: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  messageType: PropTypes.oneOf(Object.values(TOAST_TYPES)),
+  onEmailChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};

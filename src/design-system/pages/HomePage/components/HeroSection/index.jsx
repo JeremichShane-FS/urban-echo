@@ -1,6 +1,6 @@
 "use client";
 
-import { useHeroContent } from "@/modules/core/hooks/useHomeContent";
+import { useHeroContent } from "@modules/core/hooks/useHomeContent";
 
 import HeroSectionView from "./HeroSectionView";
 
@@ -11,3 +11,7 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
+HeroSection.displayName = "HeroSection";
+HeroSection.View = HeroSectionView;
+HeroSection.useHeroContent = useHeroContent;

@@ -67,8 +67,8 @@ export const useNewsletter = () => {
         setMessage("");
         setMessageType("");
       }, 5000);
-    } catch (err) {
-      console.error("Newsletter subscription error:", err);
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
       setMessage("Sorry, there was an error. Please try again.");
       setMessageType("error");
     } finally {

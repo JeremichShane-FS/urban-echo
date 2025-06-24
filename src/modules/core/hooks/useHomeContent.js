@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getHeroImageUrl } from "../utils/imageUtils";
+import { getHeroImageUrl } from "@modules/core/utils/imageUtils";
 
 // TODO: [ROUTES] Dynamic hero content API integration
 // Implement API call to fetch hero content from CMS backend.
@@ -47,8 +47,8 @@ export const useHeroContent = () => {
           ctaLink: "/shop",
           backgroundImage: getHeroImageUrl(data.backgroundImage, 1200, 600),
         });
-      } catch (err) {
-        console.error("Error fetching hero content:", err);
+      } catch (error) {
+        console.error("Error fetching hero content:", error);
       } finally {
         setIsLoading(false);
       }
@@ -106,8 +106,8 @@ export const useAboutContent = () => {
           ctaText: "Learn More About Us",
           ctaLink: "/about",
         });
-      } catch (err) {
-        console.error("Error fetching about content:", err);
+      } catch (error) {
+        console.error("Error fetching about content:", error);
       } finally {
         setIsLoading(false);
       }

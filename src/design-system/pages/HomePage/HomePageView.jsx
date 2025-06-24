@@ -1,6 +1,8 @@
-import FeaturedProducts from "@/design-system/data-display/FeaturedProducts";
-import NewArrivals from "@/design-system/data-display/NewArrivals";
-import Newsletter from "@/design-system/feedback/Newsletter";
+import PropTypes from "prop-types";
+
+import FeaturedProducts from "@design-system/data-display/FeaturedProducts";
+import NewArrivals from "@design-system/data-display/NewArrivals";
+import Newsletter from "@design-system/feedback/Newsletter";
 
 import AboutSection from "./components/AboutSection";
 import HeroSection from "./components/HeroSection";
@@ -33,3 +35,15 @@ const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
 };
 
 export default HomePageView;
+
+HomePageView.displayName = "HomePageView";
+HomePageView.propTypes = {
+  _onSectionView: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  pageData: PropTypes.shape({
+    showFeaturedProducts: PropTypes.bool,
+    showNewsletter: PropTypes.bool,
+    showNewArrivals: PropTypes.bool,
+    showAboutSection: PropTypes.bool,
+  }).isRequired,
+};

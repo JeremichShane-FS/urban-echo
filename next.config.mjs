@@ -43,8 +43,7 @@ const nextConfig = {
   experimental: {
     turbo: {
       resolveAlias: {
-        "@": join(__dirname, "src"),
-        "@/components": join(__dirname, "src/design-system"),
+        "@*": join(__dirname, "src"),
       },
     },
   },

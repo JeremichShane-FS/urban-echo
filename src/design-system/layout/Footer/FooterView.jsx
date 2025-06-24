@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import PropTypes from "prop-types";
 
 import styles from "./Footer.module.scss";
 
@@ -20,8 +21,8 @@ const FooterView = ({
         <div className={styles.backtop}>
           <button
             className={styles.backtop__button}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            aria-label="Back to top">
+            aria-label="Back to top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <svg
               className={styles.backtop__arrow}
               fill="none"
@@ -44,9 +45,9 @@ const FooterView = ({
           <div className={`md:row-span-2 ${styles.company}`}>
             <Link href="/" className={styles.logo}>
               <Image
+                fill
                 src={companyInfo.logo}
                 alt={`${companyInfo.name} Logo`}
-                fill
                 className={styles.logo__image}
                 sizes="(max-width: 640px) 128px, 128px"
               />
@@ -136,3 +137,22 @@ const FooterView = ({
 };
 
 export default FooterView;
+
+FooterView.displayName = "FooterView";
+FooterView.propTypes = {
+  companyInfo: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    logo: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+  }).isRequired,
+  copyrightText: PropTypes.string.isRequired,
+  getNavigationSection: PropTypes.func.isRequired,
+  onLinkClick: PropTypes.func.isRequired,
+  socialLinks: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      href: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

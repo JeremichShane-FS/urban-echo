@@ -40,8 +40,8 @@ export const useHomePage = () => {
 
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (err) {
-        console.error("Error fetching homepage config:", err);
+      } catch (error) {
+        console.error("Error fetching homepage config:", error);
       } finally {
         setIsLoading(false);
       }

@@ -30,7 +30,7 @@ try {
   }
 
   console.log("âœ… All files match the project's formatting standards.");
-} catch (error) {
+} catch {
   console.error("âŒ Some files do not match the project's formatting standards.");
   console.error('   Run "npm run format" to fix formatting issues.');
   process.exit(1);
