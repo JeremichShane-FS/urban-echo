@@ -234,6 +234,7 @@ const eslintConfig = [
       "unicorn/error-message": "error",
       "unicorn/new-for-builtins": "error",
       "unicorn/no-array-push-push": "error",
+      "unicorn/no-empty-file": "error",
       "unicorn/no-instanceof-array": "error",
       "unicorn/prefer-array-find": "error",
       "unicorn/prefer-array-flat": "error",
