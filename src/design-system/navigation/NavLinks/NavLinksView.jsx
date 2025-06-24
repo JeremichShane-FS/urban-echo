@@ -16,7 +16,7 @@ const NavLinksView = ({ isMobile = false, navItems }) => {
 
         if (highlight) {
           return (
-            <Link key={id} passHref legacyBehavior href={path}>
+            <Link key={id} href={path}>
               <Button
                 variant={BUTTON_VARIANTS.accent}
                 size={BUTTON_SIZES.sm}

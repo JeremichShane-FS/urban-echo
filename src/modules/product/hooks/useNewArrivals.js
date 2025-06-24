@@ -1,134 +1,53 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { productService } from "@modules/product/services/product-service";
 
-export const useNewArrivals = (limit = 8) => {
-  const [isLoading, setIsLoading] = useState(true);
+export const useNewArrivals = (options = {}) => {
+  const { category, limit = 8, page = 1 } = options;
+
+  const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState(null);
+  const [filters, setFilters] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [newArrivals, setNewArrivals] = useState([]);
+
+  const fetchNewArrivals = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // TODO: [ROUTES] Product catalog API endpoints defined
+      // Replace productService mock with backend API integration.
+      // Required API endpoints:
+      // - GET /api/products/new-arrivals?limit={limit}&page={page}
+      // - GET /api/products/new-arrivals/count (for pagination)
+      // - Include product variants, pricing, inventory status
+      // - Support for filtering by category, size, price range
+
+      const response = await productService.getNewArrivals({ limit, page, category });
+      setProducts(response.products);
+      setPagination(response.pagination);
+      setFilters(response.filters);
+    } catch (error) {
+      setError("Failed to fetch new arrivals");
+      console.error("Error fetching new arrivals:", error);
+      setError(error.message || "An unexpected error occurred");
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [limit, page, category]);
 
   useEffect(() => {
-    const fetchNewArrivals = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        // TODO: [ROUTES] Product catalog API endpoints defined
-        // Replace productService mock with backend API integration.
-        // Required API endpoints:
-        // - GET /api/products/new-arrivals?limit={limit}&page={page}
-        // - GET /api/products/new-arrivals/count (for pagination)
-        // - Include product variants, pricing, inventory status
-        // - Support for filtering by category, size, price range
-
-        const response = await productService.getNewArrivals({ limit });
-        setNewArrivals(response);
-      } catch (error_) {
-        setError("Failed to load new arrivals");
-        console.error("Error fetching new arrivals:", error_);
-
-        // Fallback to mock data
-        setNewArrivals([
-          {
-            id: 1,
-            name: "Trendy Graphic Tee",
-            price: 300,
-            image: null,
-            slug: "trendy-graphic-tee",
-            isNew: true,
-          },
-          {
-            id: 2,
-            name: "Modern Blazer",
-            price: 300,
-            image: null,
-            slug: "modern-blazer",
-            isNew: true,
-          },
-          {
-            id: 3,
-            name: "Casual Sneakers",
-            price: 300,
-            image: null,
-            slug: "casual-sneakers",
-            isNew: true,
-          },
-          {
-            id: 4,
-            name: "Vintage Leather Jacket",
-            price: 300,
-            image: null,
-            slug: "vintage-leather-jacket",
-            isNew: true,
-          },
-          {
-            id: 5,
-            name: "Slim Fit Chinos",
-            price: 300,
-            image: null,
-            slug: "slim-fit-chinos",
-            isNew: true,
-          },
-          {
-            id: 6,
-            name: "Designer Hoodie",
-            price: 300,
-            image: null,
-            slug: "designer-hoodie",
-            isNew: true,
-          },
-          {
-            id: 7,
-            name: "Classic White Shirt",
-            price: 300,
-            image: null,
-            slug: "classic-white-shirt",
-            isNew: true,
-          },
-          {
-            id: 8,
-            name: "Stylish Backpack",
-            price: 300,
-            image: null,
-            slug: "stylish-backpack",
-            isNew: true,
-          },
-        ]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchNewArrivals();
-  }, [limit]);
-
-  const handleProductClick = (productId, productName) => {
-    // Track analytics event for product click
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "select_content", {
-        content_type: "product",
-        content_id: productId,
-        item_name: productName,
-        source: "new_arrivals",
-      });
-    }
-  };
-
-  const handleViewAllClick = () => {
-    // Track analytics event for view all click
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "click", {
-        event_category: "New Arrivals",
-        event_label: "View All Products",
-      });
-    }
-  };
+  }, [fetchNewArrivals]);
 
   return {
-    isLoading,
+    products,
+    pagination,
+    filters,
+    loading,
     error,
-    newArrivals,
-    onProductClick: handleProductClick,
-    onViewAllClick: handleViewAllClick,
+    refetch: fetchNewArrivals,
   };
 };

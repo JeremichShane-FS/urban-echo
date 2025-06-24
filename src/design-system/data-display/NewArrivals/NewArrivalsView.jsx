@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 
 import styles from "./NewArrivals.module.scss";
 
-const NewArrivalsView = ({ error, isLoading, newArrivals, onProductClick, onViewAllClick }) => {
-  if (isLoading) {
+const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAllClick }) => {
+  if (loading) {
     return (
       <section className={styles.section}>
         <div className={styles.container}>
@@ -83,7 +83,7 @@ export default NewArrivalsView;
 NewArrivalsView.displayName = "NewArrivalsView";
 NewArrivalsView.propTypes = {
   error: PropTypes.string,
-  isLoading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
   newArrivals: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

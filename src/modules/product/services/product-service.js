@@ -1,181 +1,234 @@
-export const productService = {
-  async getFeaturedProducts() {
-    try {
-      // TODO: [ROUTES] Featured products API with database integration
-      // Replace mock implementation with actual backend API call.
-      // Version 2 CMS integration requirements:
-      // - MongoDB query for products with featured flag
-      // - CMS admin interface to mark/unmark products as featured
-      // - Caching layer for improved performance
-      // - A/B testing support for different featured product sets
+import { API_ENDPOINTS } from "@config/constants/api-constants";
+import { bestSellers, categories, newArrivals, productList } from "@modules/product/data/mock-data";
 
+export const productService = {
+  async getFeaturedProducts(limit = 4) {
+    console.log("API END_POINTS", API_ENDPOINTS);
+    try {
+      // TODO: [DATA] Replace mock data with API call when ready (featured products)
+      // const response = await fetch(`/api${API_ENDPOINTS.featuredProducts}?limit=${limit}`);
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      return [
-        {
-          id: 1,
-          name: "Urban Casual Jacket",
-          price: 300,
-          image:
-            "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-          slug: "urban-casual-jacket",
-          featured: true,
-          category: "jackets",
-          inStock: true,
-        },
-        {
-          id: 2,
-          name: "Classic Denim Jeans",
-          price: 300,
-          image:
-            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-          slug: "classic-denim-jeans",
-          featured: true,
-          category: "jeans",
-          inStock: true,
-        },
-        {
-          id: 3,
-          name: "Classic Denim Jeans",
-          price: 300,
-          image:
-            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-          slug: "classic-denim-jeans",
-          featured: true,
-          category: "jeans",
-          inStock: true,
-        },
-        {
-          id: 4,
-          name: "Classic Denim Jeans",
-          price: 300,
-          image:
-            "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-          slug: "classic-denim-jeans",
-          featured: true,
-          category: "jeans",
-          inStock: true,
-        },
-      ];
+      const featuredProducts = productList.filter(product => product.featured);
+      return featuredProducts.slice(0, limit);
     } catch (error) {
       console.error("Error fetching featured products:", error);
       throw new Error("Failed to fetch featured products");
     }
   },
 
-  /**
-   * Fetch new arrivals for homepage
-   * @param {Object} options - Query options
-   * @param {number} options.limit - Number of products to fetch
-   * @returns {Promise<Array>} New arrival products
-   */
-  async getNewArrivals({ limit = 8 } = {}) {
+  async getNewArrivals(params = {}) {
     try {
-      // TODO: [ROUTES] New arrivals API with sorting and filtering
-      // Replace mock with API endpoint: GET /api/products/new-arrivals
-      // Version 2 Query parameters needed:
-      // - limit: number of products to return
-      // - page: for pagination support
-      // - category: filter by product category
-      // - sort: by createdAt desc, price, popularity
-      // Backend should sort by createdAt descending with MongoDB aggregation
+      const { category = null, limit = 8, page = 1 } = params;
 
-      // Mock implementation for now
+      // TODO: [DATA] Replace mock data with API call when ready (new arrivals)
+      // const response = await fetch(`/api${API_ENDPOINTS.newArrivals}?limit=${limit}&page=${page}&category=${category}`);
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      return [
-        {
-          id: 1,
-          name: "Trendy Graphic Tee",
-          price: 300,
-          image: null,
-          slug: "trendy-graphic-tee",
-          isNew: true,
-          category: "t-shirts",
-          inStock: true,
-          createdAt: new Date(Date.now() - 86400000), // 1 day ago
+      let filteredProducts = [...newArrivals];
+
+      if (category) {
+        filteredProducts = filteredProducts.filter(product => product.category === category);
+      }
+
+      filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+      return {
+        products: paginatedProducts,
+        pagination: {
+          page,
+          limit,
+          total: filteredProducts.length,
+          hasMore: endIndex < filteredProducts.length,
+          totalPages: Math.ceil(filteredProducts.length / limit),
         },
-        {
-          id: 2,
-          name: "Modern Blazer",
-          price: 300,
-          image: null,
-          slug: "modern-blazer",
-          isNew: true,
-          category: "blazers",
-          inStock: true,
-          createdAt: new Date(Date.now() - 172800000), // 2 days ago
+        filters: {
+          category: category || "all",
         },
-        {
-          id: 3,
-          name: "Casual Sneakers",
-          price: 300,
-          image: null,
-          slug: "casual-sneakers",
-          isNew: true,
-          category: "shoes",
-          inStock: true,
-          createdAt: new Date(Date.now() - 259200000), // 3 days ago
-        },
-        {
-          id: 4,
-          name: "Vintage Leather Jacket",
-          price: 300,
-          image: null,
-          slug: "vintage-leather-jacket",
-          isNew: true,
-          category: "jackets",
-          inStock: true,
-          createdAt: new Date(Date.now() - 345600000), // 4 days ago
-        },
-        {
-          id: 5,
-          name: "Slim Fit Chinos",
-          price: 300,
-          image: null,
-          slug: "slim-fit-chinos",
-          isNew: true,
-          category: "pants",
-          inStock: true,
-          createdAt: new Date(Date.now() - 432000000), // 5 days ago
-        },
-        {
-          id: 6,
-          name: "Designer Hoodie",
-          price: 300,
-          image: null,
-          slug: "designer-hoodie",
-          isNew: true,
-          category: "hoodies",
-          inStock: true,
-          createdAt: new Date(Date.now() - 518400000), // 6 days ago
-        },
-        {
-          id: 7,
-          name: "Classic White Shirt",
-          price: 300,
-          image: null,
-          slug: "classic-white-shirt",
-          isNew: true,
-          category: "shirts",
-          inStock: true,
-          createdAt: new Date(Date.now() - 604800000), // 7 days ago
-        },
-        {
-          id: 8,
-          name: "Stylish Backpack",
-          price: 300,
-          image: null,
-          slug: "stylish-backpack",
-          isNew: true,
-          category: "accessories",
-          inStock: true,
-          createdAt: new Date(Date.now() - 691200000), // 8 days ago
-        },
-      ].slice(0, limit);
+      };
     } catch (error) {
       console.error("Error fetching new arrivals:", error);
       throw new Error("Failed to fetch new arrivals");
+    }
+  },
+
+  async getBestSellers(limit = 8) {
+    try {
+      // TODO: [DATA] Replace mock data with API call when ready (best-sellers)
+      // const response = await fetch(`/api${API_ENDPOINTS.bestSellers}?limit=${limit}`);
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      return bestSellers.sort((a, b) => b.salesCount - a.salesCount).slice(0, limit);
+    } catch (error) {
+      console.error("Error fetching best sellers:", error);
+      throw new Error("Failed to fetch best sellers");
+    }
+  },
+
+  async getProducts(params = {}) {
+    try {
+      const {
+        category,
+        limit = 20,
+        maxPrice,
+        minPrice,
+        page = 1,
+        search,
+        sort = "newest",
+      } = params;
+
+      // TODO: [DATA] Replace mock data with API call when ready (products)
+      // const searchParams = new URLSearchParams({ page, limit, category, sort, search, minPrice, maxPrice });
+      // const response = await fetch(`/api${API_ENDPOINTS.products}?${searchParams}`);
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      const allProducts = [...productList, ...newArrivals];
+
+      const uniqueProducts = allProducts.filter(
+        (product, index, self) => index === self.findIndex(p => p.id === product.id)
+      );
+
+      let filteredProducts = uniqueProducts;
+
+      if (category) {
+        filteredProducts = filteredProducts.filter(p => p.category === category);
+      }
+
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredProducts = filteredProducts.filter(
+          p =>
+            p.name.toLowerCase().includes(searchLower) ||
+            p.description?.toLowerCase().includes(searchLower) ||
+            p.category.toLowerCase().includes(searchLower)
+        );
+      }
+
+      if (minPrice) {
+        filteredProducts = filteredProducts.filter(p => p.price >= minPrice);
+      }
+
+      if (maxPrice) {
+        filteredProducts = filteredProducts.filter(p => p.price <= maxPrice);
+      }
+
+      switch (sort) {
+        case "price-low":
+          filteredProducts.sort((a, b) => a.price - b.price);
+          break;
+        case "price-high":
+          filteredProducts.sort((a, b) => b.price - a.price);
+          break;
+        case "rating":
+          filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          break;
+        case "newest":
+        default:
+          filteredProducts.sort(
+            (a, b) => new Date(b.createdAt || Date.now()) - new Date(a.createdAt || Date.now())
+          );
+          break;
+      }
+
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+      return {
+        products: paginatedProducts,
+        pagination: {
+          page,
+          limit,
+          total: filteredProducts.length,
+          hasMore: endIndex < filteredProducts.length,
+          totalPages: Math.ceil(filteredProducts.length / limit),
+        },
+        filters: { category, sort, search, minPrice, maxPrice },
+      };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw new Error("Failed to fetch products");
+    }
+  },
+
+  async getProduct(slug) {
+    try {
+      // TODO: [DATA] Replace mock data with API call when ready (product-details)
+      // const response = await fetch(`/api${API_ENDPOINTS.products}/${slug}`);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const allProducts = [...productList, ...newArrivals];
+      const product = allProducts.find(p => p.slug === slug);
+
+      if (!product) {
+        throw new Error(`Product with slug "${slug}" not found`);
+      }
+
+      return product;
+    } catch (error) {
+      console.error(`Error fetching product ${slug}:`, error);
+      throw error;
+    }
+  },
+
+  async searchProducts(query, params = {}) {
+    try {
+      const { category, limit = 20, page = 1, sort = "relevance" } = params;
+
+      // TODO: [DATA] Replace mock data with API call when ready (search)
+      // const searchParams = new URLSearchParams({ query, page, limit, category, sort });
+      // const response = await fetch(`/api${API_ENDPOINTS.productSearch}?${searchParams}`);
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      return this.getProducts({
+        search: query,
+        page,
+        limit,
+        category,
+        sort: sort === "relevance" ? "newest" : sort,
+      });
+    } catch (error) {
+      console.error(`Error searching products for "${query}":`, error);
+      throw new Error("Failed to search products");
+    }
+  },
+
+  async getCategories() {
+    try {
+      // TODO: [DATA] Replace mock data with API call when ready (categories)
+      // const response = await fetch(`/api${API_ENDPOINTS.categories}`);
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      return categories;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw new Error("Failed to fetch categories");
+    }
+  },
+
+  async getRelatedProducts(productId, limit = 4) {
+    try {
+      // TODO: [DATA] Replace mock data with API call when ready (related products)
+      // const response = await fetch(`/api${API_ENDPOINTS.relatedProducts}/${productId}?limit=${limit}`);
+      await new Promise(resolve => setTimeout(resolve, 350));
+
+      const allProducts = [...productList, ...newArrivals];
+      const currentProduct = allProducts.find(p => p.id === productId);
+
+      if (!currentProduct) {
+        return [];
+      }
+
+      return allProducts
+        .filter(p => p.category === currentProduct.category && p.id !== productId)
+        .slice(0, limit);
+    } catch (error) {
+      console.error(`Error fetching related products for ${productId}:`, error);
+      throw new Error("Failed to fetch related products");
     }
   },
 };
