@@ -1,10 +1,10 @@
 ---
-name: "\U0001F41B Report Bug"
-about: Report a bug or unexpected behavior
+name: "🐛 Report Bug"
+about: Report a bug or issue
 title: "[BUG] "
-labels: bug
-assignees: ''
-
+labels: ["type: bug", "priority: high"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🐛 Bug Description

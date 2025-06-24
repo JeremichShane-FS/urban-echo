@@ -1,6 +1,8 @@
 "use client";
 
-import ProductCard from "@/design-system/data-display/ProductCard/ProductCardView";
+import PropTypes from "prop-types";
+
+import ProductCard from "@design-system/data-display/ProductCard";
 
 import styles from "./FeaturedProducts.module.scss";
 
@@ -36,8 +38,8 @@ const FeaturedProductsView = ({ error, featuredProducts, isLoading, onProductCli
             <ProductCard
               key={product.id}
               product={product}
-              onClick={onProductClick}
               className={styles.card}
+              onClick={onProductClick}
             />
           ))}
         </div>
@@ -47,3 +49,22 @@ const FeaturedProductsView = ({ error, featuredProducts, isLoading, onProductCli
 };
 
 export default FeaturedProductsView;
+
+FeaturedProductsView.displayName = "FeaturedProductsView";
+FeaturedProductsView.propTypes = {
+  error: PropTypes.string,
+  featuredProducts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      slug: PropTypes.string.isRequired,
+      image: PropTypes.string,
+      category: PropTypes.string,
+      isNew: PropTypes.bool,
+      inStock: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  onProductClick: PropTypes.func.isRequired,
+};

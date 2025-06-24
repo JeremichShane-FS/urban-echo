@@ -1,10 +1,10 @@
 ---
-name: "✨ Feature Request"
+name: "✨ Request Feature"
 about: Suggest a new feature or enhancement
 title: "[FEATURE] "
-labels: enhancement
-assignees: ''
-
+labels: ["type: enhancement", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ✨ Feature Description

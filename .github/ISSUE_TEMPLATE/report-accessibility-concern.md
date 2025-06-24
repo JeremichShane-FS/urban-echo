@@ -1,10 +1,10 @@
 ---
 name: "♿ Report Accessibility Concern"
-about: Report issues related to accessibility standards
+about: Report accessibility issues and suggest improvements
 title: "[A11Y] "
-labels: ''
-assignees: ''
-
+labels: ["area: frontend", "area: ui-ux", "type: bug", "priority: high"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## ♿ Accessibility Concern

@@ -1,5 +1,6 @@
 /**
- * Media-related constants
+ * @fileoverview This file contains constants related to media handling, including supported formats, sizes, quality settings, and default images.
+ * It serves as a centralized location for managing all media-related constants used in the application.
  */
 
 // Supported image formats

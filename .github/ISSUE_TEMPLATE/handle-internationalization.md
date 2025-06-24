@@ -1,10 +1,10 @@
 ---
-name: "\U0001F310 Handle Internationalization"
-about: Issues related to language support and translations
+name: "🌐 Handle Internationalization"
+about: Add or improve multi-language support
 title: "[I18N] "
-labels: ''
-assignees: ''
-
+labels: ["area: frontend", "type: enhancement", "priority: low"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🌐 Internationalization/Localization

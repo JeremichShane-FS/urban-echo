@@ -8,11 +8,9 @@ const __dirname = dirname(__filename);
 const nextConfig = {
   reactStrictMode: true,
   sassOptions: {
-    includePaths: [join(__dirname, "src/assets/styles/")],
-    prependData: `@use "sass:math"; @use "@assets/styles/utilities" as *;`,
-    additionalData: `
-      @use "styles/abstracts" as *;
-    `,
+    includePaths: [join(__dirname, "src/assets/styles/"), join(__dirname, "src")],
+    // Remove the problematic prependData that's causing the import error
+    additionalData: `@use "sass:math";`,
   },
   images: {
     remotePatterns: [
@@ -40,12 +38,13 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        "@": join(__dirname, "src"),
-        "@/components": join(__dirname, "src/design-system"),
-      },
+  turbopack: {
+    resolveAlias: {
+      "@": join(__dirname, "src"),
+      "@/*": join(__dirname, "src/*"),
+      "@/assets": join(__dirname, "src/assets"),
+      "@/components": join(__dirname, "src/components"),
+      "@/styles": join(__dirname, "src/assets/styles"),
     },
   },
 };

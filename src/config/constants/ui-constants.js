@@ -1,5 +1,6 @@
 /**
- * UI-related constants
+ * @fileoverview This file contains constants related to UI elements, including themes, toast notifications, modal sizes, form input states, and button styles.
+ * It serves as a centralized location for managing all UI-related constants used in the application.
  */
 
 // Theme related

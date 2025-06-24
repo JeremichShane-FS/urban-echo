@@ -1,4 +1,4 @@
-import { useFeaturedProducts } from "@/modules/product/hooks/useFeaturedProducts";
+import { useFeaturedProducts } from "@modules/product/hooks/useFeaturedProducts";
 
 import FeaturedProductsView from "./FeaturedProductsView";
 
@@ -9,3 +9,5 @@ const FeaturedProducts = () => {
 };
 
 export default FeaturedProducts;
+
+FeaturedProducts.displayName = "FeaturedProducts";

@@ -4,14 +4,30 @@ export const useHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState({});
 
-  // TODO: Future: fetch page configuration
+  // TODO: [DATA] CMS integration for homepage configuration
+  // Implement headless CMS integration (Strapi) to manage homepage content.
+  // Version 2 Requirements:
+  // - Content management system for non-technical users
+  // - A/B testing capabilities for different homepage layouts
+  // - Seasonal campaign management and scheduling
+  // - SEO optimization with dynamic meta tags
+  // - Performance tracking for different homepage configurations
+
   useEffect(() => {
     const fetchPageConfig = async () => {
       try {
         setIsLoading(true);
 
-        // TODO: Replace with API call for page configuration
+        // TODO: [ROUTES] Homepage configuration API with CMS backend
+        // Replace mock with CMS API endpoint: GET /api/pages/homepage
+        // Version 2 Backend requirements:
+        // - Integration with headless CMS (Strapi)
+        // - Caching layer for improved page load performance
+        // - Version control for homepage configurations
+        // - A/B testing framework for conversion optimization
+        // - Analytics integration for homepage performance tracking
         // setPageData(response.data);
+
         setPageData({
           seoTitle: "Urban Echo | Modern Fashion E-Commerce",
           seoDescription:
@@ -24,8 +40,8 @@ export const useHomePage = () => {
 
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (err) {
-        console.error("Error fetching homepage config:", err);
+      } catch (error) {
+        console.error("Error fetching homepage config:", error);
       } finally {
         setIsLoading(false);
       }

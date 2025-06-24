@@ -1,10 +1,10 @@
 ---
-name: "\U0001F9E9 Develop Component"
-about: Track development of UI/functional components
-title: 'Component: [Component Name]'
-labels: ''
-assignees: ''
-
+name: "🧩 Develop Component"
+about: Create new UI components or enhance existing ones
+title: "[COMPONENT] "
+labels: ["area: frontend", "type: enhancement", "nextjs", "priority: medium"]
+assignees: ["JeremichShane-FS"]
+projects: ["JeremichShane-FS/5"]
 ---
 
 ## 🧩 Component: [Component Name]
