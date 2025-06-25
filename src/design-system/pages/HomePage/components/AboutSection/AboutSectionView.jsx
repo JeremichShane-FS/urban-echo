@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
 import Button from "@design-system/buttons/Button";
 
 import styles from "./AboutSection.module.scss";

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { productService } from "@modules/product/services/product-service";
+import { productService as data } from "@modules/product/services/product-service";
 
 export const useNewArrivals = (options = {}) => {
   const { category, limit = 8, page = 1 } = options;
@@ -24,12 +24,11 @@ export const useNewArrivals = (options = {}) => {
       // - Include product variants, pricing, inventory status
       // - Support for filtering by category, size, price range
 
-      const response = await productService.getNewArrivals({ limit, page, category });
+      const response = await data.getNewArrivals({ limit, page, category });
       setProducts(response.products);
       setPagination(response.pagination);
       setFilters(response.filters);
     } catch (error) {
-      setError("Failed to fetch new arrivals");
       console.error("Error fetching new arrivals:", error);
       setError(error.message || "An unexpected error occurred");
       setProducts([]);

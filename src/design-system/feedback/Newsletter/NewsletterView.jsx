@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants";
 import Button from "@design-system/buttons/Button";
 
 import styles from "./Newsletter.module.scss";
@@ -17,8 +17,8 @@ const NewsletterView = ({
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.text}>
+        <div className={`${styles.content} grid grid-col-1 lg:grid-cols-2 gap-10 lg:gap-30`}>
+          <div className={`${styles.text} col-span-1`}>
             <h2 className={styles.title}>Newsletter</h2>
             <p className={styles.description}>
               Stay updated with our latest fashion trends, exclusive offers, and new arrivals. Join
@@ -26,7 +26,7 @@ const NewsletterView = ({
             </p>
           </div>
 
-          <div className={styles.form}>
+          <div className={`${styles.form} col-span-1`}>
             <form className={styles.wrapper} onSubmit={onSubmit}>
               <div className={styles.group}>
                 <input
