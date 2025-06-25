@@ -63,6 +63,7 @@ export const BUTTON_VARIANTS = {
   accent: "accent",
   outline: "outline",
   "outline-secondary": "outline-secondary",
+  "outline-accent": "outline-accent",
   ghost: "ghost",
   link: "link",
   danger: "danger",

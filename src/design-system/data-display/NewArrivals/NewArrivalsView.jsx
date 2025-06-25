@@ -1,6 +1,10 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 
+import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
+import { Button } from "@design-system/buttons";
+import ProductCard from "@design-system/data-display/ProductCard";
+
 import styles from "./NewArrivals.module.scss";
 
 const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAllClick }) => {
@@ -46,32 +50,30 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
           </p>
         </div>
 
-        <div className={styles.grid}>
-          {newArrivals.map(product => (
-            <div key={product.id} className={styles.card}>
-              <Link
-                href={`/shop/product/${product.slug}`}
-                className={styles.link}
-                onClick={() => onProductClick(product.id, product.name)}>
-                <div className={styles.image}>
-                  <div className={styles.placeholder}>
-                    <span>Image Placeholder</span>
-                  </div>
-                  {product.isNew && <div className={styles.badge}>New</div>}
-                </div>
-                <div className={styles.info}>
-                  <h3 className={styles.name}>{product.name}</h3>
-                  <p className={styles.price}>${product.price}</p>
-                </div>
-              </Link>
+        <div className="grid grid-cols-5 auto-rows-max gap-4 md:gap-6 lg:gap-8 mt-8">
+          {newArrivals.slice(0, 7).map((product, index) => (
+            <div
+              key={product.id}
+              className={index === 0 ? "col-span-2 row-span-2 h- [&_.info]:py-2" : ""}>
+              <ProductCard
+                product={product}
+                showDescription={index === 0}
+                showNewBadge={true}
+                onClick={onProductClick}
+              />
             </div>
           ))}
         </div>
 
         <div className={styles.cta}>
-          <Link href="/shop" className={styles.button} onClick={onViewAllClick}>
+          <Button
+            variant={BUTTON_VARIANTS["outline-accent"]}
+            size={BUTTON_SIZES.lg}
+            as={Link}
+            href={ROUTES.SHOP}
+            onClick={onViewAllClick}>
             View All Products
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
-import Button from "@design-system/buttons/Button";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
+import { Button } from "@design-system/buttons";
 
 import styles from "./HeroSection.module.scss";
 

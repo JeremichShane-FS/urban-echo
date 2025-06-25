@@ -8,7 +8,6 @@
 
 .container {
   width: 100%;
-  max-width: 800px;
   margin: 0 auto;
   padding: 0 var(--container-padding);
 }
@@ -53,6 +52,7 @@
 
 .form {
   width: 100%;
+  align-self: center;
 }
 
 .wrapper {
@@ -61,15 +61,11 @@
 
 .group {
   display: flex;
+  flex-direction: column;
   gap: var(--spacing-sm);
   align-items: stretch;
   max-width: 500px;
   margin: 0 auto;
-
-  @include breakpoint(sm) {
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
 }
 
 .input {
@@ -98,11 +94,8 @@
 
 .button {
   white-space: nowrap;
-  min-width: 120px;
-
-  @include breakpoint(sm) {
-    width: 100%;
-  }
+  min-width: 7.5rem;
+  width: 100%;
 }
 
 .message {
