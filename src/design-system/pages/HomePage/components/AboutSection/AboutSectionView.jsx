@@ -1,8 +1,8 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 
-import Button from "@/design-system/buttons/Button";
-
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@/config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
+import Button from "@design-system/buttons/Button";
 
 import styles from "./AboutSection.module.scss";
 
@@ -32,7 +32,7 @@ const AboutSectionView = ({ aboutContent, isLoading, onLearnMoreClick }) => {
           ))}
 
           <div className={styles.cta}>
-            <Link href={aboutContent.ctaLink} onClick={onLearnMoreClick} className={styles.link}>
+            <Link href={aboutContent.ctaLink} className={styles.link} onClick={onLearnMoreClick}>
               <Button
                 variant={BUTTON_VARIANTS["outline-secondary"]}
                 size={BUTTON_SIZES.md}
@@ -48,3 +48,15 @@ const AboutSectionView = ({ aboutContent, isLoading, onLearnMoreClick }) => {
 };
 
 export default AboutSectionView;
+
+AboutSectionView.displayName = "AboutSectionView";
+AboutSectionView.propTypes = {
+  aboutContent: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    paragraphs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    ctaText: PropTypes.string.isRequired,
+    ctaLink: PropTypes.string.isRequired,
+  }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  onLearnMoreClick: PropTypes.func.isRequired,
+};

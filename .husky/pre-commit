@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Create a temporary Prettier configuration file using the project config
+node --input-type=module -e "
+import fs from 'fs';
+import { prettierConfig } from './scripts/prettier-config.js';
+fs.writeFileSync('.prettier.temp.json', JSON.stringify(prettierConfig, null, 2));
+" || { echo 'Failed to create temporary Prettier config'; exit 1; }
+
+# Run lint-staged
+npx lint-staged --allow-empty
+
+# Remove the temporary configuration file
+rm .prettier.temp.json

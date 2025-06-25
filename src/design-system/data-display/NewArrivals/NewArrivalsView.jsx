@@ -1,9 +1,10 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 
 import styles from "./NewArrivals.module.scss";
 
-const NewArrivalsView = ({ error, isLoading, newArrivals, onProductClick, onViewAllClick }) => {
-  if (isLoading) {
+const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAllClick }) => {
+  if (loading) {
     return (
       <section className={styles.section}>
         <div className={styles.container}>
@@ -78,3 +79,20 @@ const NewArrivalsView = ({ error, isLoading, newArrivals, onProductClick, onView
 };
 
 export default NewArrivalsView;
+
+NewArrivalsView.displayName = "NewArrivalsView";
+NewArrivalsView.propTypes = {
+  error: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  newArrivals: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      slug: PropTypes.string.isRequired,
+      isNew: PropTypes.bool,
+    })
+  ).isRequired,
+  onProductClick: PropTypes.func.isRequired,
+  onViewAllClick: PropTypes.func.isRequired,
+};

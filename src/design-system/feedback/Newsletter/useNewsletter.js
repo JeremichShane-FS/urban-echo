@@ -1,10 +1,12 @@
 import { useState } from "react";
 
+import { API_ENDPOINTS } from "@config/constants";
+
 export const useNewsletter = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+  const [messageType, setMessageType] = useState("");
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -14,21 +16,18 @@ export const useNewsletter = () => {
     }
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-
+  const submitNewsletter = async () => {
     if (!email) {
       setMessage("Please enter your email address");
       setMessageType("error");
-      return;
+      return { success: false, error: "Email is required" };
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setMessage("Please enter a valid email address");
       setMessageType("error");
-      return;
+      return { success: false, error: "Invalid email format" };
     }
 
     setIsSubmitting(true);
@@ -36,18 +35,18 @@ export const useNewsletter = () => {
     setMessageType("");
 
     try {
-      // TODO: Replace with actual API call
-      // await newsletterService.subscribe(email);
+      const response = await fetch(`/api/${API_ENDPOINTS.newsletter}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const data = await response.json();
 
-      // Track analytics event
-      if (typeof window !== "undefined" && window.gtag) {
-        window.gtag("event", "newsletter_signup", {
-          event_category: "Newsletter",
-          event_label: "Email Subscription",
-        });
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to subscribe");
       }
 
       setMessage("Thank you for subscribing to our newsletter!");
@@ -59,10 +58,12 @@ export const useNewsletter = () => {
         setMessage("");
         setMessageType("");
       }, 5000);
-    } catch (err) {
-      console.error("Newsletter subscription error:", err);
-      setMessage("Sorry, there was an error. Please try again.");
+      return { success: true, data };
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      setMessage(error.message || "Sorry, there was an error. Please try again.");
       setMessageType("error");
+      return { success: false, error: error.message || "Subscription failed" };
     } finally {
       setIsSubmitting(false);
     }
@@ -77,6 +78,6 @@ export const useNewsletter = () => {
     messageType,
     isFormValid,
     onEmailChange: handleEmailChange,
-    onSubmit: handleSubmit,
+    submitNewsletter,
   };
 };

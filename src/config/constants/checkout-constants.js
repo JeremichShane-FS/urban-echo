@@ -1,5 +1,6 @@
 /**
- * Checkout and shopping cart related constants
+ * @fileoverview This file contains constants related to the checkout process, including cart limits, shipping methods, payment methods, and order statuses.
+ * It serves as a centralized location for managing all checkout-related constants used in the application.
  */
 
 // Cart
@@ -97,7 +98,7 @@ export const CREDIT_CARD_TYPES = {
   },
   DISCOVER: {
     name: "Discover",
-    pattern: /^6(?:011|5[0-9]{2})/,
+    pattern: /^6(?:011|5\d{2})/,
     format: /(\d{1,4})/g,
     maxLength: 19,
   },

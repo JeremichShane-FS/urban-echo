@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import PropTypes from "prop-types";
 
 import styles from "./ProductCard.module.scss";
 
@@ -37,9 +38,9 @@ const ProductCardView = ({ className = "", onClick, product, showNewBadge = fals
       <Link href={`/shop/product/${product.slug}`} className={styles.link} onClick={handleClick}>
         <div className={styles.image}>
           <Image
+            fill
             src={product.image}
             alt={product.name}
-            fill
             className={styles.img}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             placeholder="blur"
@@ -62,3 +63,20 @@ const ProductCardView = ({ className = "", onClick, product, showNewBadge = fals
 };
 
 export default ProductCardView;
+
+ProductCardView.displayName = "ProductCardView";
+ProductCardView.propTypes = {
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  product: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    price: PropTypes.number.isRequired,
+    category: PropTypes.string,
+    isNew: PropTypes.bool,
+    inStock: PropTypes.bool.isRequired,
+  }).isRequired,
+  showNewBadge: PropTypes.bool,
+};

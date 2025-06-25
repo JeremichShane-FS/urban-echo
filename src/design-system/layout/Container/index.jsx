@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import styles from "./Container.module.scss";
 
 export default function Container({ children, className = "", fluid, size }) {
@@ -11,3 +13,11 @@ export default function Container({ children, className = "", fluid, size }) {
     </div>
   );
 }
+
+Container.displayName = "Container";
+Container.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  fluid: PropTypes.bool,
+  size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
+};

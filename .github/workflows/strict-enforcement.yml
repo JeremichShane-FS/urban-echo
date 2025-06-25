@@ -1,0 +1,107 @@
+name: "Infrastructure-Level Enforcement"
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  security-events: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: "Security Scanning"
+        run: |
+          if grep -r "sk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
+            echo "❌ SECURITY VIOLATION: Stripe secret key found in source code"
+            exit 1
+          fi
+
+          if grep -r "pk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
+            echo "❌ SECURITY VIOLATION: API public key found in source code"
+            exit 1
+          fi
+
+          if grep -r "eval\|innerHTML\|document.write" src/ 2>/dev/null; then
+            echo "❌ SECURITY VIOLATION: Dangerous code patterns detected"
+            exit 1
+          fi
+
+          echo "✅ Security scanning passed"
+
+      - name: "Install Dependencies"
+        run: npm ci
+
+      - name: "Code Quality Gate"
+        run: |
+          npm run lint || {
+            echo "❌ CODE QUALITY GATE FAILED"
+            exit 1
+          }
+
+          echo "✅ Code quality checks passed"
+
+      - name: "Build Verification"
+        run: |
+          npm run build || {
+            echo "❌ BUILD GATE FAILED - Code cannot be deployed"
+            exit 1
+          }
+
+          echo "✅ Build verification passed"
+
+      - name: "Dependency Vulnerability Check"
+        run: |
+          npm audit --audit-level=high || {
+            echo "❌ SECURITY GATE FAILED: High-severity vulnerabilities found"
+            exit 1
+          }
+
+          echo "✅ Dependency security check passed"
+
+  enforce-standards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: "Install Dependencies"
+        run: npm ci
+
+      - name: "Enforce ESLint Standards"
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint || {
+            echo "❌ ESLint validation failed"
+            exit 1
+          }
+
+      - name: "Enforce TODO Standards"
+        run: |
+          echo "🔍 Validating TODO/FIX comments..."
+          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
+          grep -v node_modules | \
+          xargs node scripts/check-todos.js || {
+            echo "❌ TODO validation failed"
+            exit 1
+          }
+
+          echo "✅ TODO/FIX standards enforced"

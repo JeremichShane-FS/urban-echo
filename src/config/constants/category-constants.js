@@ -1,55 +1,58 @@
 /**
  * Product category and taxonomy constants
+ * src/config/constants/category-constants.js
  */
 
-// Main product categories
+import ROUTES from "@config/routes";
+
+// Main product categories - USING ROUTES
 export const PRODUCT_CATEGORIES = [
-  { id: "men", name: "Men", path: "/shop/men" },
-  { id: "women", name: "Women", path: "/shop/women" },
-  { id: "accessories", name: "Accessories", path: "/shop/accessories" },
-  { id: "sale", name: "Sale", path: "/shop/sale", highlight: true },
+  { id: "men", name: "Men", path: ROUTES.MEN },
+  { id: "women", name: "Women", path: ROUTES.WOMEN },
+  { id: "accessories", name: "Accessories", path: ROUTES.ACCESSORIES },
+  { id: "sale", name: "Sale", path: ROUTES.SALE, highlight: true },
 ];
 
-// Subcategories
+// Subcategories - USING ROUTES as BASE
 export const MEN_SUBCATEGORIES = [
-  { id: "tshirts", name: "T-Shirts", path: "/shop/men/tshirts" },
-  { id: "shirts", name: "Shirts", path: "/shop/men/shirts" },
-  { id: "jeans", name: "Jeans", path: "/shop/men/jeans" },
-  { id: "pants", name: "Pants", path: "/shop/men/pants" },
-  { id: "shorts", name: "Shorts", path: "/shop/men/shorts" },
-  { id: "jackets", name: "Jackets & Coats", path: "/shop/men/jackets" },
-  { id: "hoodies", name: "Hoodies & Sweatshirts", path: "/shop/men/hoodies" },
-  { id: "sneakers", name: "Sneakers", path: "/shop/men/sneakers" },
-  { id: "footwear", name: "Footwear", path: "/shop/men/footwear" },
+  { id: "tshirts", name: "T-Shirts", path: `${ROUTES.MEN}/tshirts` },
+  { id: "shirts", name: "Shirts", path: `${ROUTES.MEN}/shirts` },
+  { id: "jeans", name: "Jeans", path: `${ROUTES.MEN}/jeans` },
+  { id: "pants", name: "Pants", path: `${ROUTES.MEN}/pants` },
+  { id: "shorts", name: "Shorts", path: `${ROUTES.MEN}/shorts` },
+  { id: "jackets", name: "Jackets & Coats", path: `${ROUTES.MEN}/jackets` },
+  { id: "hoodies", name: "Hoodies & Sweatshirts", path: `${ROUTES.MEN}/hoodies` },
+  { id: "sneakers", name: "Sneakers", path: `${ROUTES.MEN}/sneakers` },
+  { id: "footwear", name: "Footwear", path: `${ROUTES.MEN}/footwear` },
 ];
 
 export const WOMEN_SUBCATEGORIES = [
-  { id: "tops", name: "Tops", path: "/shop/women/tops" },
-  { id: "tshirts", name: "T-Shirts", path: "/shop/women/tshirts" },
-  { id: "blouses", name: "Blouses & Shirts", path: "/shop/women/blouses" },
-  { id: "dresses", name: "Dresses", path: "/shop/women/dresses" },
-  { id: "jeans", name: "Jeans", path: "/shop/women/jeans" },
-  { id: "pants", name: "Pants", path: "/shop/women/pants" },
-  { id: "skirts", name: "Skirts", path: "/shop/women/skirts" },
-  { id: "jackets", name: "Jackets & Coats", path: "/shop/women/jackets" },
-  { id: "hoodies", name: "Hoodies & Sweatshirts", path: "/shop/women/hoodies" },
-  { id: "shoes", name: "Shoes", path: "/shop/women/shoes" },
+  { id: "tops", name: "Tops", path: `${ROUTES.WOMEN}/tops` },
+  { id: "tshirts", name: "T-Shirts", path: `${ROUTES.WOMEN}/tshirts` },
+  { id: "blouses", name: "Blouses & Shirts", path: `${ROUTES.WOMEN}/blouses` },
+  { id: "dresses", name: "Dresses", path: `${ROUTES.WOMEN}/dresses` },
+  { id: "jeans", name: "Jeans", path: `${ROUTES.WOMEN}/jeans` },
+  { id: "pants", name: "Pants", path: `${ROUTES.WOMEN}/pants` },
+  { id: "skirts", name: "Skirts", path: `${ROUTES.WOMEN}/skirts` },
+  { id: "jackets", name: "Jackets & Coats", path: `${ROUTES.WOMEN}/jackets` },
+  { id: "hoodies", name: "Hoodies & Sweatshirts", path: `${ROUTES.WOMEN}/hoodies` },
+  { id: "shoes", name: "Shoes", path: `${ROUTES.WOMEN}/shoes` },
 ];
 
 export const ACCESSORIES_SUBCATEGORIES = [
-  { id: "bags", name: "Bags", path: "/shop/accessories/bags" },
-  { id: "hats", name: "Hats & Caps", path: "/shop/accessories/hats" },
-  { id: "belts", name: "Belts", path: "/shop/accessories/belts" },
-  { id: "jewelry", name: "Jewelry", path: "/shop/accessories/jewelry" },
-  { id: "sunglasses", name: "Sunglasses", path: "/shop/accessories/sunglasses" },
-  { id: "watches", name: "Watches", path: "/shop/accessories/watches" },
-  { id: "scarves", name: "Scarves", path: "/shop/accessories/scarves" },
-  { id: "socks", name: "Socks", path: "/shop/accessories/socks" },
+  { id: "bags", name: "Bags", path: `${ROUTES.ACCESSORIES}/bags` },
+  { id: "hats", name: "Hats & Caps", path: `${ROUTES.ACCESSORIES}/hats` },
+  { id: "belts", name: "Belts", path: `${ROUTES.ACCESSORIES}/belts` },
+  { id: "jewelry", name: "Jewelry", path: `${ROUTES.ACCESSORIES}/jewelry` },
+  { id: "sunglasses", name: "Sunglasses", path: `${ROUTES.ACCESSORIES}/sunglasses` },
+  { id: "watches", name: "Watches", path: `${ROUTES.ACCESSORIES}/watches` },
+  { id: "scarves", name: "Scarves", path: `${ROUTES.ACCESSORIES}/scarves` },
+  { id: "socks", name: "Socks", path: `${ROUTES.ACCESSORIES}/socks` },
 ];
 
 // Collection types
 export const COLLECTION_TYPES = [
-  { id: "new-arrivals", name: "New Arrivals", path: "/shop/new" },
+  { id: "new-arrivals", name: "New Arrivals", path: ROUTES.NEW_ARRIVALS },
   { id: "best-sellers", name: "Best Sellers", path: "/shop/best-sellers" },
   { id: "trending", name: "Trending Now", path: "/shop/trending" },
   { id: "limited-edition", name: "Limited Edition", path: "/shop/limited-edition" },

@@ -25,39 +25,36 @@
 //  * // Mixed usage
  * classNames('foo', { 'bar': true }, condition && 'baz'); // 'foo bar baz'
  */
+function handleObject(arg, classes) {
+  for (const key in arg) {
+    if (Object.prototype.hasOwnProperty.call(arg, key) && arg[key]) {
+      classes.push(key);
+    }
+  }
+}
+
+function handleArray(arg, classes) {
+  const inner = classNames(...arg);
+  if (inner) {
+    classes.push(inner);
+  }
+}
+
 export function classNames(...args) {
   const classes = [];
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-
-    // Skip falsy values
     if (!arg) continue;
 
     const argType = typeof arg;
-
-    // Handle strings and numbers
     if (argType === "string" || argType === "number") {
       classes.push(arg);
-    }
-    // Handle objects
-    else if (argType === "object") {
-      // Handle arrays
+    } else if (argType === "object") {
       if (Array.isArray(arg)) {
-        // Recursively handle array items
-        const inner = classNames(...arg);
-        if (inner) {
-          classes.push(inner);
-        }
-      }
-      // Handle plain objects
-      else {
-        for (const key in arg) {
-          // Only add class if the value is truthy and key exists
-          if (Object.prototype.hasOwnProperty.call(arg, key) && arg[key]) {
-            classes.push(key);
-          }
-        }
+        handleArray(arg, classes);
+      } else {
+        handleObject(arg, classes);
       }
     }
   }
