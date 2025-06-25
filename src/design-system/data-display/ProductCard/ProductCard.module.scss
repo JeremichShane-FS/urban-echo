@@ -99,4 +99,8 @@
   color: var(--color-text-secondary);
   margin: var(--spacing-xs) 0 0 0;
   line-height: var(--line-height-base);
+
+  @include breakpoint(lg, "max") {
+    display: none;
+  }
 }

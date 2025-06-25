@@ -50,19 +50,37 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
           </p>
         </div>
 
-        <div className="grid grid-cols-5 auto-rows-max gap-4 md:gap-6 lg:gap-8 mt-8">
-          {newArrivals.slice(0, 7).map((product, index) => (
-            <div
-              key={product.id}
-              className={index === 0 ? "col-span-2 row-span-2 h- [&_.info]:py-2" : ""}>
-              <ProductCard
-                product={product}
-                showDescription={index === 0}
-                showNewBadge={true}
-                onClick={onProductClick}
-              />
-            </div>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 auto-rows-max gap-4 md:gap-6 lg:gap-8 mt-8">
+          {newArrivals.slice(0, 8).map((product, index) => {
+            if (!product || !product.id || !product.name || !product.price || !product.slug) {
+              console.warn("Invalid product data:", product);
+              return null;
+            }
+
+            if (index === 7) {
+              return (
+                <div key={product.id} className="lg:hidden">
+                  <ProductCard
+                    product={product}
+                    showDescription={false}
+                    showNewBadge={true}
+                    onClick={onProductClick}
+                  />
+                </div>
+              );
+            }
+
+            return (
+              <div key={product.id} className={index === 0 ? "lg:col-span-2 lg:row-span-2" : ""}>
+                <ProductCard
+                  product={product}
+                  showDescription={index === 0}
+                  showNewBadge={true}
+                  onClick={onProductClick}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className={styles.cta}>
