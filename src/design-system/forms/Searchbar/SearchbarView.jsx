@@ -9,10 +9,12 @@ const SearchbarView = ({ isOpen, onSubmit }) => {
       id="searchbar"
       className={isOpen ? styles.searchbar : `${styles.searchbar} ${styles["searchbar--hidden"]}`}
       aria-hidden={!isOpen}>
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form id="search-form" className={styles.form} onSubmit={onSubmit}>
         <div className={styles.container}>
           <input
+            id="search-input"
             type="search"
+            name="search"
             className={styles.input}
             placeholder="Search for products..."
             aria-label="Search for products"

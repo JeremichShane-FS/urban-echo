@@ -19,8 +19,8 @@ export const useNewArrivals = (options = {}) => {
       // TODO: [ROUTES] Product catalog API endpoints defined
       // Replace productService mock with backend API integration.
       // Required API endpoints:
-      // - GET /api/products/new-arrivals?limit={limit}&page={page}
-      // - GET /api/products/new-arrivals/count (for pagination)
+      // - GET /api/${API_ENDPOINTS.newArrivals}?limit={limit}&page={page}
+      // - GET /api/${API_ENDPOINTS.newArrivals}/count (for pagination)
       // - Include product variants, pricing, inventory status
       // - Support for filtering by category, size, price range
 

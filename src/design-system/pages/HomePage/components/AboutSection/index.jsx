@@ -1,11 +1,11 @@
 "use client";
 
-import { useAboutContent } from "@modules/content/hooks/useAboutContent";
+import { useAboutContent } from "@lib/hooks/use-content";
 
 import AboutSectionView from "./AboutSectionView";
 
 const AboutSection = () => {
-  const { aboutContent, error, loading } = useAboutContent("homepage");
+  const { data: aboutContent, error, isLoading: loading } = useAboutContent();
 
   if (loading) {
     return <div>Loading about content...</div>;

@@ -1,9 +1,8 @@
-import { API_ENDPOINTS } from "@config/constants/api-constants";
+// import { API_ENDPOINTS } from "@config/constants/api-constants";
 import { bestSellers, categories, newArrivals, productList } from "@modules/product/data/mock-data";
 
 export const productService = {
   async getFeaturedProducts(limit = 4) {
-    console.log("API END_POINTS", API_ENDPOINTS);
     try {
       // TODO: [DATA] Replace mock data with API call when ready (featured products)
       // const response = await fetch(`/api/${API_ENDPOINTS.featuredProducts}?limit=${limit}`);

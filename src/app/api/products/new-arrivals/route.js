@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@config/constants";
 import { productService as data } from "@modules/product/services/product-service";
 
 export async function GET(request) {
@@ -19,7 +20,7 @@ export async function GET(request) {
       pagination: result.pagination,
       filters: result.filters,
       meta: {
-        endpoint: "/api/products/new-arrivals",
+        endpoint: `/api/${API_ENDPOINTS.newArrivals}`,
       },
     });
   } catch (error) {
