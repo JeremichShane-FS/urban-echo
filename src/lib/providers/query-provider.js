@@ -13,7 +13,6 @@ import {
   CACHE_DURATION,
   ERROR_TYPES,
   HTTP_STATUS,
-  RATE_LIMIT,
 } from "@config/constants/api-constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -24,7 +23,7 @@ const createQueryClient = () =>
     defaultOptions: {
       queries: {
         staleTime: CACHE_DURATION.short, // 5 minutes
-        cacheTime: CACHE_DURATION.medium, // 30 minutes
+        gcTime: CACHE_DURATION.medium, // 30 minutes (updated from cacheTime)
         // Retry failed requests 3 times
         retry: (failureCount, error) => {
           // Don't retry on 4xx errors
@@ -99,48 +98,6 @@ const getErrorType = error => {
   }
 };
 
-const createRateLimitedFetch = () => {
-  const requests = [];
-
-  return async (url, options = {}) => {
-    const now = Date.now();
-
-    while (requests.length > 0 && now - requests[0] > RATE_LIMIT.timeWindow) {
-      requests.shift();
-    }
-
-    if (requests.length >= RATE_LIMIT.maxRequests) {
-      const error = new Error("Rate limit exceeded");
-      error.status = HTTP_STATUS.TOO_MANY_REQUESTS;
-      throw error;
-    }
-
-    requests.push(now);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      return response;
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (error.name === "AbortError") {
-        const timeoutError = new Error("Request timeout");
-        timeoutError.name = "TimeoutError";
-        throw timeoutError;
-      }
-      throw error;
-    }
-  };
-};
-
-const rateLimitedFetch = createRateLimitedFetch();
-
 export function QueryProvider({ children }) {
   const [queryClient] = useState(() => createQueryClient());
 
@@ -158,7 +115,17 @@ QueryProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+// Updated query keys to match your current structure
 export const queryKeys = {
+  // Content queries (using your api-service)
+  content: {
+    all: ["content"],
+    hero: () => [...queryKeys.content.all, "hero"],
+    about: () => [...queryKeys.content.all, "about"],
+    pageConfig: pageName => [...queryKeys.content.all, "page-config", pageName],
+  },
+
+  // Product queries (for future implementation)
   products: {
     all: ["products"],
     lists: () => [...queryKeys.products.all, "list"],
@@ -173,15 +140,21 @@ export const queryKeys = {
     category: category => [...queryKeys.products.all, "category", category],
   },
 
-  content: {
-    all: ["content"],
-    hero: () => [...queryKeys.content.all, "hero"],
-    about: () => [...queryKeys.content.all, "about"],
-    footer: () => [...queryKeys.content.all, "footer"],
-    page: slug => [...queryKeys.content.all, "page", slug],
-    config: pageName => [...queryKeys.content.all, "config", pageName],
+  // Categories
+  categories: {
+    all: ["categories"],
+    list: () => [...queryKeys.categories.all, "list"],
+    detail: slug => [...queryKeys.categories.all, "detail", slug],
   },
 
+  // Collections
+  collections: {
+    all: ["collections"],
+    list: () => [...queryKeys.collections.all, "list"],
+    detail: slug => [...queryKeys.collections.all, "detail", slug],
+  },
+
+  // User data (for future auth implementation)
   user: {
     all: ["user"],
     profile: () => [...queryKeys.user.all, "profile"],
@@ -191,6 +164,7 @@ export const queryKeys = {
     preferences: () => [...queryKeys.user.all, "preferences"],
   },
 
+  // Cart (though you're using Zustand for this)
   cart: {
     all: ["cart"],
     items: () => [...queryKeys.cart.all, "items"],
@@ -199,54 +173,58 @@ export const queryKeys = {
     promo: () => [...queryKeys.cart.all, "promo"],
   },
 
-  categories: {
-    all: ["categories"],
-    list: () => [...queryKeys.categories.all, "list"],
-    detail: slug => [...queryKeys.categories.all, "detail", slug],
-  },
-
-  collections: {
-    all: ["collections"],
-    list: () => [...queryKeys.collections.all, "list"],
-    detail: slug => [...queryKeys.collections.all, "detail", slug],
-  },
-
+  // Reviews (for future implementation)
   reviews: {
     all: ["reviews"],
     product: productId => [...queryKeys.reviews.all, "product", productId],
     user: userId => [...queryKeys.reviews.all, "user", userId],
   },
 
+  // Newsletter
   newsletter: {
     all: ["newsletter"],
     subscription: () => [...queryKeys.newsletter.all, "subscription"],
   },
 };
 
-// Prefetch Utilities
+// Prefetch Utilities (updated to use your api-service)
 export const prefetchUtils = {
   /**
-   * Prefetch product data for improved UX
+   * Prefetch content data
    * @param {QueryClient} queryClient - React Query client
-   * @param {string} productId - Product ID to prefetch
+   * @param {string} contentType - Content type to prefetch
    */
-  prefetchProduct: (queryClient, productId) => {
+  prefetchContent: (queryClient, contentType) => {
     return queryClient.prefetchQuery({
-      queryKey: queryKeys.products.detail(productId),
-      queryFn: () => rateLimitedFetch(`/api/products/${productId}`).then(res => res.json()),
+      queryKey: queryKeys.content[contentType](),
+      queryFn: () => {
+        // This will use your api-service automatically
+        const apiService = require("@lib/services/api-service").default;
+        switch (contentType) {
+          case "hero":
+            return apiService.getHeroContent();
+          case "about":
+            return apiService.getAboutContent();
+          default:
+            throw new Error(`Unknown content type: ${contentType}`);
+        }
+      },
       staleTime: CACHE_DURATION.medium,
     });
   },
 
   /**
-   * Prefetch category products
+   * Prefetch page config
    * @param {QueryClient} queryClient - React Query client
-   * @param {string} category - Category to prefetch
+   * @param {string} pageName - Page name to prefetch
    */
-  prefetchCategory: (queryClient, category) => {
+  prefetchPageConfig: (queryClient, pageName) => {
     return queryClient.prefetchQuery({
-      queryKey: queryKeys.products.category(category),
-      queryFn: () => rateLimitedFetch(`/api/products/category/${category}`).then(res => res.json()),
+      queryKey: queryKeys.content.pageConfig(pageName),
+      queryFn: () => {
+        const apiService = require("@lib/services/api-service").default;
+        return apiService.getPageConfig(pageName);
+      },
       staleTime: CACHE_DURATION.long,
     });
   },
@@ -271,8 +249,14 @@ export const errorRecovery = {
   invalidatePattern: (queryClient, queryKey) => {
     queryClient.invalidateQueries({ queryKey });
   },
-};
 
-export { rateLimitedFetch };
+  /**
+   * Invalidate content queries (useful after CMS updates)
+   * @param {QueryClient} queryClient - React Query client
+   */
+  invalidateContent: queryClient => {
+    queryClient.invalidateQueries({ queryKey: queryKeys.content.all });
+  },
+};
 
 export default QueryProvider;

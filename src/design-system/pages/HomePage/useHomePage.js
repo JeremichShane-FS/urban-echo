@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { usePageConfig } from "@lib/hooks/use-content";
+import { usePageConfig } from "@lib/hooks/useContent";
 
 export const useHomePage = () => {
   const { data: pageData = {}, error, isLoading, refetch } = usePageConfig("homepage");

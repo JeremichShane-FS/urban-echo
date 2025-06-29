@@ -24,7 +24,7 @@ export async function GET(request) {
       },
     });
   } catch (error) {
-    console.error("New arrivals API error:", error);
+    console.error("New arrivals API error:", error.message);
 
     return Response.json(
       {

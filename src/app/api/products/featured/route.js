@@ -18,7 +18,7 @@ export async function GET(request) {
       },
     });
   } catch (error) {
-    console.error("Featured products API error:", error);
+    console.error("Featured products API error:", error.message);
 
     return Response.json(
       {

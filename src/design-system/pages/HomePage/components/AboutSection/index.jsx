@@ -1,6 +1,6 @@
 "use client";
 
-import { useAboutContent } from "@lib/hooks/use-content";
+import { useAboutContent } from "@lib/hooks/useContent";
 
 import AboutSectionView from "./AboutSectionView";
 

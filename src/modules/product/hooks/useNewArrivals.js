@@ -29,7 +29,7 @@ export const useNewArrivals = (options = {}) => {
       setPagination(response.pagination);
       setFilters(response.filters);
     } catch (error) {
-      console.error("Error fetching new arrivals:", error);
+      console.error("Error fetching new arrivals:", error.message);
       setError(error.message || "An unexpected error occurred");
       setProducts([]);
     } finally {
