@@ -157,13 +157,11 @@ Modern consumers face significant challenges with traditional clothing shopping,
 ## Pain Points
 
 1. Time Management:
-
    - Limited shopping hours at physical stores
    - Long checkout queues
    - Travel time to stores
 
 2. User Experience:
-
    - Slow-loading websites
    - Complicated navigation
    - Unclear product information
@@ -189,7 +187,6 @@ Our e-commerce platform addresses these challenges by providing:
 Direct Competitors:
 
 1. ASOS
-
    - Larger inventory but slower website
    - More complex navigation
 
@@ -207,21 +204,18 @@ Indirect Competitors:
 ## Features & Functionality
 
 1. Product Browsing:
-
    - Advanced filtering options
    - Quick view functionality
    - Size and color variants
    - Related items suggestions
 
 2. User Authentication:
-
    - Secure login via Auth0
    - Social media integration
    - Password recovery
    - Account management
 
 3. Shopping Cart:
-
    - Real-time updates
    - Save for later option
    - Quick checkout
@@ -236,13 +230,11 @@ Indirect Competitors:
 ## Integrations
 
 1. Auth0 API
-
    - User authentication
    - Social login integration
    - Documentation: https://auth0.com/docs/api
 
 2. Stripe API
-
    - Payment processing
    - Subscription management
    - Documentation: https://stripe.com/docs/api

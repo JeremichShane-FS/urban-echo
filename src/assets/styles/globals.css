@@ -32,7 +32,7 @@
   --color-accent-hover: var(--color-orange-600);
 
   /* Status Colors */
-  --color-error: #e74c3c;
+  --color-error: #dc3545;
   --color-error-dark: #c0392b;
   --color-error-light: #fef2f2;
   --color-error-border: #fecaca;
@@ -185,27 +185,17 @@ main {
   outline-offset: 2px;
 }
 
-/* Print styles  */
-@media print {
-  body {
-    background-color: var(--color-background);
-  }
-
-  .no-print {
-    display: none !important;
-  }
+.error-notification {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  background: var(--color-error);
+  color: var(--color-white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: 4px;
+  box-shadow: 0 4px var(--spacing-md) rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  max-width: 25rem;
+  animation: slideIn 0.3s ease-out;
+  text-align: center;
 }
-
-/* Dark mode styles */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--color-gray-900);
-    --color-background-primary: var(--color-gray-800);
-    --color-background-secondary: var(--color-gray-700);
-    --color-text-primary: var(--color-gray-100);
-    --color-text-secondary: var(--color-gray-300);
-
-    --color-button-ghost-hover-bg: var(--color-gray-700);
-    --color-border: var(--color-gray-600);
-  }
-} */

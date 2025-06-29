@@ -27,15 +27,18 @@ const NewsletterView = ({
           </div>
 
           <div className={`${styles.form} col-span-1`}>
-            <form className={styles.wrapper} onSubmit={onSubmit}>
+            <form id="newsletter" className={styles.wrapper} onSubmit={onSubmit}>
               <div className={styles.group}>
                 <input
+                  id="newsletter-email"
+                  name="email"
                   type="email"
                   value={email}
                   placeholder="Email address"
                   className={styles.input}
                   disabled={isSubmitting}
                   aria-label="Email address for newsletter subscription"
+                  autoComplete="email"
                   onChange={onEmailChange}
                 />
 

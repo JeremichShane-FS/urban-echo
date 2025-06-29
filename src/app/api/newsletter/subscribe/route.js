@@ -50,7 +50,7 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    console.error("Newsletter subscription error:", error);
+    console.error("Newsletter subscription error:", error.message);
 
     return Response.json(
       {
