@@ -6,10 +6,10 @@
 import {
   API_ENDPOINTS,
   API_TIMEOUT,
+  AUTH_TOKEN_KEY,
   ERROR_TYPES,
   HTTP_STATUS,
-} from "@config/constants/api-constants";
-import { AUTH_TOKEN_KEY } from "@config/constants/user-constants";
+} from "@config/constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 
 /**

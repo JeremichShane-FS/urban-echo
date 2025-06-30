@@ -1,4 +1,4 @@
-import { MAIN_NAV_ITEMS } from "@config/constants/navigation-constants";
+import { MAIN_NAV_ITEMS } from "@config/constants";
 
 const useNavLinks = () => {
   const navItems = MAIN_NAV_ITEMS;

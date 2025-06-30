@@ -1,4 +1,4 @@
-import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants/api-constants";
+import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { isValidEmail } from "@modules/core/utils/validators";
 

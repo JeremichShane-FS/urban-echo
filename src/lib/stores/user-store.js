@@ -6,9 +6,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from "@config/constants/localization-constants";
-import { MAX_WISHLIST_ITEMS } from "@config/constants/product-constants";
-import { AUTH_TOKEN_KEY, ROLE_PERMISSIONS, USER_ROLES } from "@config/constants/user-constants";
+import {
+  AUTH_TOKEN_KEY,
+  DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
+  MAX_WISHLIST_ITEMS,
+  ROLE_PERMISSIONS,
+  USER_ROLES,
+} from "@config/constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { formatDate } from "@modules/core/utils/formatters";
 import { isValidEmail } from "@modules/core/utils/validators";

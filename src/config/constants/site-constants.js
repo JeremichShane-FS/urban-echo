@@ -4,6 +4,9 @@
  */
 
 export const SITE_NAME = "Urban Echo";
+export const COMPANY_NAME = "Urban Echo";
+export const SITE_WEBSITE = "https://www.shopurbanecho.com";
+export const SITE_TITLE = "Urban Echo - Premium Streetwear & Urban Fashion";
 export const SITE_DESCRIPTION = "Premium streetwear and urban fashion";
 export const COPYRIGHT_YEAR = new Date().getFullYear();
 export const SUPPORT_EMAIL = "support@urbanecho.com";
