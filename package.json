@@ -13,7 +13,11 @@
   "homepage": "https://shopurbanecho.com",
   "repository": {
     "type": "git",
+<<<<<<< HEAD
     "url": "https://github.com/JeremichShane-FS/urban-echo.git"
+=======
+    "url": "https://github.com/yourusername/urban-echo.git"
+>>>>>>> staging
   },
   "keywords": [
     "urban-echo",
