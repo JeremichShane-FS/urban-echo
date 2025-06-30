@@ -88,7 +88,7 @@ ProductCardView.propTypes = {
     category: PropTypes.string,
     isNew: PropTypes.bool,
     inStock: PropTypes.bool.isRequired,
-    description: PropTypes.string, // Add this to PropTypes
+    description: PropTypes.string,
   }).isRequired,
   showDescription: PropTypes.bool,
   showNewBadge: PropTypes.bool,

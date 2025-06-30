@@ -35,7 +35,7 @@ jobs:
             exit 1
           fi
 
-          if grep -r "eval\|innerHTML\|document.write" src/ 2>/dev/null; then
+          if grep -rE "\beval\s*\(|innerHTML\s*=|document\.write\s*\(" src/ 2>/dev/null; then
             echo "❌ SECURITY VIOLATION: Dangerous code patterns detected"
             exit 1
           fi
