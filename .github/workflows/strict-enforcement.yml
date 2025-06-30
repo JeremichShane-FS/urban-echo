@@ -62,6 +62,8 @@ jobs:
           }
 
           echo "✅ Build verification passed"
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
       - name: "Dependency Vulnerability Check"
         run: |
