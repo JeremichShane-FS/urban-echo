@@ -40,63 +40,6 @@
   margin: 0 auto;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xxl);
-
-  @include breakpoint(lg) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include breakpoint(md) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md);
-  }
-
-  @include breakpoint(sm) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-.image {
-  position: relative;
-  margin-bottom: var(--spacing-sm);
-}
-
-.placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-background-secondary);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-xl);
-  color: var(--color-text-secondary);
-}
-
-.badge {
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-}
-
-.info {
-  text-align: center;
-}
-
 .name {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
@@ -104,15 +47,9 @@
   margin: 0 0 var(--spacing-xs) 0;
 }
 
-.price {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-accent);
-  margin: 0;
-}
-
 .cta {
   text-align: center;
+  margin-top: var(--spacing-xl);
 }
 
 .button {

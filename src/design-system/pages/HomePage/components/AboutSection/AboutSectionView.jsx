@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
 import Button from "@design-system/buttons/Button";
 
 import styles from "./AboutSection.module.scss";
@@ -24,20 +24,18 @@ const AboutSectionView = ({ aboutContent, isLoading, onLearnMoreClick }) => {
       <div className={styles.container}>
         <div className={styles.content}>
           <h2 className={styles.title}>{aboutContent.title}</h2>
-
-          {aboutContent.paragraphs.map((paragraph, index) => (
-            <p key={index} className={styles.description}>
-              {paragraph}
-            </p>
-          ))}
-
+          <div className={styles.description}>
+            {aboutContent.description.split("\n\n").map((paragraph, index) => (
+              <p key={index}>{paragraph.trim()}</p>
+            ))}
+          </div>
           <div className={styles.cta}>
-            <Link href={aboutContent.ctaLink} className={styles.link} onClick={onLearnMoreClick}>
+            <Link href={ROUTES.ABOUT} className={styles.link} onClick={onLearnMoreClick}>
               <Button
                 variant={BUTTON_VARIANTS["outline-secondary"]}
                 size={BUTTON_SIZES.md}
                 as="span">
-                {aboutContent.ctaText}
+                Learn More About Us
               </Button>
             </Link>
           </div>
@@ -53,9 +51,10 @@ AboutSectionView.displayName = "AboutSectionView";
 AboutSectionView.propTypes = {
   aboutContent: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    paragraphs: PropTypes.arrayOf(PropTypes.string).isRequired,
-    ctaText: PropTypes.string.isRequired,
-    ctaLink: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    mission: PropTypes.string.isRequired,
+    vision: PropTypes.string.isRequired,
+    values: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onLearnMoreClick: PropTypes.func.isRequired,

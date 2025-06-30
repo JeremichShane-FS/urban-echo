@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
-import Button from "@design-system/buttons/Button";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
+import { Button } from "@design-system/buttons";
 
 import styles from "./HeroSection.module.scss";
 
 const HeroSectionView = ({ heroData, isLoading, onCtaClick }) => {
-  if (isLoading) {
+  if (isLoading || !heroData) {
     return (
       <section className={styles.section}>
         <div className={styles.container}>
@@ -62,7 +62,7 @@ HeroSectionView.propTypes = {
     ctaText: PropTypes.string.isRequired,
     ctaLink: PropTypes.string.isRequired,
     backgroundImage: PropTypes.string,
-  }).isRequired,
+  }),
   isLoading: PropTypes.bool.isRequired,
   onCtaClick: PropTypes.func.isRequired,
 };

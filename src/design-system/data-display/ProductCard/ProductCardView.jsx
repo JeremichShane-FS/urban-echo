@@ -4,7 +4,13 @@ import PropTypes from "prop-types";
 
 import styles from "./ProductCard.module.scss";
 
-const ProductCardView = ({ className = "", onClick, product, showNewBadge = false }) => {
+const ProductCardView = ({
+  className = "",
+  onClick,
+  product,
+  showDescription,
+  showNewBadge = false,
+}) => {
   const handleClick = () => {
     if (onClick) {
       onClick(product.id, product.name);
@@ -27,12 +33,14 @@ const ProductCardView = ({ className = "", onClick, product, showNewBadge = fals
             <h3 className={styles.name}>{product.name}</h3>
             <p className={styles.price}>${product.price}</p>
             {product.category && <p className={styles.category}>{product.category}</p>}
+            {showDescription && product.description && (
+              <p className={styles.description}>{product.description}</p>
+            )}
           </div>
         </Link>
       </div>
     );
   }
-
   return (
     <div className={`${styles.card} ${className}`}>
       <Link href={`/shop/product/${product.slug}`} className={styles.link} onClick={handleClick}>
@@ -56,6 +64,9 @@ const ProductCardView = ({ className = "", onClick, product, showNewBadge = fals
           <h3 className={styles.name}>{product.name}</h3>
           <p className={styles.price}>${product.price}</p>
           {product.category && <p className={styles.category}>{product.category}</p>}
+          {showDescription && product.description && (
+            <p className={styles.description}>{product.description}</p>
+          )}
         </div>
       </Link>
     </div>
@@ -77,6 +88,8 @@ ProductCardView.propTypes = {
     category: PropTypes.string,
     isNew: PropTypes.bool,
     inStock: PropTypes.bool.isRequired,
+    description: PropTypes.string,
   }).isRequired,
+  showDescription: PropTypes.bool,
   showNewBadge: PropTypes.bool,
 };

@@ -60,7 +60,7 @@ export const useNewsletter = () => {
       }, 5000);
       return { success: true, data };
     } catch (error) {
-      console.error("Newsletter subscription error:", error);
+      console.error("Newsletter subscription error:", error.message);
       setMessage(error.message || "Sorry, there was an error. Please try again.");
       setMessageType("error");
       return { success: false, error: error.message || "Subscription failed" };

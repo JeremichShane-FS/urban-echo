@@ -108,6 +108,24 @@
   }
 }
 
+.button-outline-accent {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+
+  &:hover {
+    background-color: var(--color-accent);
+    color: var(--color-button-accent-text);
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px color-alpha(var(--color-accent), 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 .button-ghost {
   background-color: transparent;
   color: var(--color-text-primary);

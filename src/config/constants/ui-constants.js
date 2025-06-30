@@ -12,6 +12,19 @@ export const THEMES = {
 
 export const DEFAULT_THEME = THEMES.LIGHT;
 
+// Theme colors
+export const THEME_COLORS = {
+  primary: "#1a73e8", // Blue
+  secondary: "#fbbc05", // Yellow
+  accent: "#34a853", // Green
+  background: "#ffffff", // White
+  text: "#333333", // Dark Gray
+  border: "#e0e0e0", // Light Gray
+  error: "#ea4335", // Red
+  warning: "#fbbc05", // Yellow
+  info: "#4285f4", // Blue
+};
+
 // Toast notifications
 export const TOAST_TYPES = {
   SUCCESS: "success",
@@ -63,6 +76,7 @@ export const BUTTON_VARIANTS = {
   accent: "accent",
   outline: "outline",
   "outline-secondary": "outline-secondary",
+  "outline-accent": "outline-accent",
   ghost: "ghost",
   link: "link",
   danger: "danger",

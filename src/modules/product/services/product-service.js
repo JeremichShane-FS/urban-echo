@@ -1,9 +1,8 @@
-import { API_ENDPOINTS } from "@config/constants/api-constants";
+// import { API_ENDPOINTS } from "@config/constants";
 import { bestSellers, categories, newArrivals, productList } from "@modules/product/data/mock-data";
 
 export const productService = {
   async getFeaturedProducts(limit = 4) {
-    console.log("API END_POINTS", API_ENDPOINTS);
     try {
       // TODO: [DATA] Replace mock data with API call when ready (featured products)
       // const response = await fetch(`/api/${API_ENDPOINTS.featuredProducts}?limit=${limit}`);
@@ -12,7 +11,7 @@ export const productService = {
       const featuredProducts = productList.filter(product => product.featured);
       return featuredProducts.slice(0, limit);
     } catch (error) {
-      console.error("Error fetching featured products:", error);
+      console.error("Error fetching featured products:", error.message);
       throw new Error("Failed to fetch featured products");
     }
   },
@@ -51,7 +50,7 @@ export const productService = {
         },
       };
     } catch (error) {
-      console.error("Error fetching new arrivals:", error);
+      console.error("Error fetching new arrivals:", error.message);
       throw new Error("Failed to fetch new arrivals");
     }
   },
@@ -64,7 +63,7 @@ export const productService = {
 
       return bestSellers.sort((a, b) => b.salesCount - a.salesCount).slice(0, limit);
     } catch (error) {
-      console.error("Error fetching best sellers:", error);
+      console.error("Error fetching best sellers:", error.message);
       throw new Error("Failed to fetch best sellers");
     }
   },
@@ -150,7 +149,7 @@ export const productService = {
         filters: { category, sort, search, minPrice, maxPrice },
       };
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching products:", error.message);
       throw new Error("Failed to fetch products");
     }
   },
@@ -205,7 +204,7 @@ export const productService = {
 
       return categories;
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories:", error.message);
       throw new Error("Failed to fetch categories");
     }
   },

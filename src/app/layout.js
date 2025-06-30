@@ -1,9 +1,37 @@
+/**
+ * @fileoverview Urban Echo - E-commerce Clothing Platform
+ * @copyright Copyright (c) 2025 Shane Jeremich / Urban Echo. All rights reserved.
+ * @license Portfolio Display Only
+ *
+ * This file is part of the Urban Echo portfolio demonstration project.
+ *
+ * Permitted Use:
+ * - View for educational and learning purposes
+ * - Review for employment evaluation
+ * - Study architecture and implementation patterns
+ *
+ * Prohibited Use:
+ * - Commercial use or deployment
+ * - Distribution or redistribution
+ * - Incorporation into other projects
+ * - Modification for redistribution
+ *
+ * Urban Echo demonstrates professional full-stack development capabilities
+ * including modern React/Next.js architecture, e-commerce implementation,
+ * and integration with enterprise services (Auth0, Stripe, MongoDB).
+ *
+ * For licensing inquiries: hello@shanejeremich.com
+ * Portfolio: shanejeremich.com
+ */
+
 import PropTypes from "prop-types";
 
 import { montserrat, openSans } from "@config/fonts";
+import { defaultMetadata } from "@config/seo";
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";
+import QueryProvider from "@lib/providers/query-provider";
 
 import "@styles/globals.css";
 import "@styles/main.scss";
@@ -14,72 +42,21 @@ export const viewport = {
   themeColor: "#333333",
 };
 
-export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://shopurbanecho.com"),
-  title: "Urban Echo | Modern Fashion E-Commerce",
-  description:
-    "Discover trendy, high-quality clothing at Urban Echo. Shop our curated collection of contemporary fashion for the modern, fashion-conscious consumer. Secure checkout, fast shipping, and exceptional customer service.",
-  keywords: "fashion, clothing, urban style, modern apparel, online shopping, e-commerce",
-  authors: [{ name: "Shane Jeremich", url: "https://shanejeremich.com" }],
-  creator: "Shane Jeremich",
-  publisher: "Urban Echo",
-  robots: "index, follow",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-  manifest: "/site.webmanifest",
-  appleWebApp: {
-    title: "Urban Echo",
-  },
-  openGraph: {
-    type: "website",
-    url: "https://shopurbanecho.com",
-    title: "Urban Echo | Modern Fashion E-Commerce",
-    description:
-      "Discover trendy, high-quality clothing at Urban Echo. Shop our curated collection of contemporary fashion.",
-    siteName: "Urban Echo",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Urban Echo - Modern Fashion E-Commerce",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@shopurbanecho",
-    creator: "@shanejeremich",
-    title: "Urban Echo | Modern Fashion E-Commerce",
-    description: "Discover trendy, high-quality clothing at Urban Echo.",
-    images: ["/og-image.jpg"],
-  },
-  alternates: {
-    canonical: "https://shopurbanecho.com",
-    languages: {
-      "en-US": "https://shopurbanecho.com",
-    },
-  },
-};
+export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
-      <body className="min-h-screen grid grid-rows-[auto_1fr_auto]">
-        <header>
-          <Navbar />
-        </header>
-        <main>
-          <Container>{children}</Container>
-        </main>
-        <Footer />
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto]" suppressHydrationWarning={true}>
+        <QueryProvider>
+          <header>
+            <Navbar />
+          </header>
+          <main>
+            <Container>{children}</Container>
+          </main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );

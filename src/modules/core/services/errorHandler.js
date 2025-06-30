@@ -7,7 +7,7 @@
  * errorHandler.handleError(new Error("Something went wrong"), 'NETWORK_ERROR');
  */
 
-import { ERROR_TYPES, HTTP_STATUS_CODES } from "@config/constants/api-constants";
+import { ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 
 export const errorHandler = {
   /**
@@ -116,29 +116,16 @@ export const errorHandler = {
 
   /**
    * Shows modern user notifications (toast, banner, etc.)
-   * Should be replaced app's notification system
+   * Should replace app's notification system
    * @param {string} message - User-friendly message
    * @param {string} errorType - Error type for styling
    * @returns {void}
    */
   showNotification: (message, errorType) => {
-    // For development - replace notification system
+    // For development - replaces notification system
     if (typeof window !== "undefined") {
       const notification = document.createElement("div");
       notification.className = `error-notification error-${errorType.toLowerCase()}`;
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #dc3545;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 4px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        max-width: 400px;
-        animation: slideIn 0.3s ease-out;
-      `;
       notification.textContent = message;
 
       document.body.appendChild(notification);
@@ -207,27 +194,27 @@ export const errorHandler = {
 
     // Map HTTP status codes to error types
     switch (response.status) {
-      case HTTP_STATUS_CODES.UNAUTHORIZED:
+      case HTTP_STATUS.UNAUTHORIZED:
         errorType = ERROR_TYPES.AUTHENTICATION_ERROR;
         message = "Authentication required";
         break;
-      case HTTP_STATUS_CODES.FORBIDDEN:
+      case HTTP_STATUS.FORBIDDEN:
         errorType = ERROR_TYPES.AUTHORIZATION_ERROR;
         message = "Access forbidden";
         break;
-      case HTTP_STATUS_CODES.NOT_FOUND:
+      case HTTP_STATUS.NOT_FOUND:
         errorType = ERROR_TYPES.NOT_FOUND_ERROR;
         message = "Resource not found";
         break;
-      case HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY:
+      case HTTP_STATUS.UNPROCESSABLE_ENTITY:
         errorType = ERROR_TYPES.VALIDATION_ERROR;
         message = "Invalid data provided";
         break;
-      case HTTP_STATUS_CODES.TOO_MANY_REQUESTS:
+      case HTTP_STATUS.TOO_MANY_REQUESTS:
         errorType = ERROR_TYPES.RATE_LIMIT_ERROR;
         message = "Rate limit exceeded";
         break;
-      case HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR:
+      case HTTP_STATUS.INTERNAL_SERVER_ERROR:
         errorType = ERROR_TYPES.SERVER_ERROR;
         message = "Server error occurred";
         break;

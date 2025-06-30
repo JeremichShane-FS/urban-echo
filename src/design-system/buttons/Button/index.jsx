@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants/ui-constants";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
 
 import styles from "./Button.module.scss";
 
