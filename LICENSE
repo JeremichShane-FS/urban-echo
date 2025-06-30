@@ -1,0 +1,71 @@
+PROPRIETARY LICENSE
+
+Copyright (c) 2025 Shane Jeremich / Urban Echo
+All rights reserved.
+
+URBAN ECHO E-COMMERCE PLATFORM LICENSE
+
+This software and associated documentation files (the "Urban Echo Platform") are made
+available publicly for portfolio demonstration and educational purposes only.
+
+PERMITTED USES:
+✓ View and examine source code for learning purposes
+✓ Review code for employment evaluation and hiring decisions
+✓ Fork repository for personal learning and study
+✓ Analyze architecture and implementation patterns
+✓ Submit issues, bug reports, and constructive feedback
+
+PROHIBITED USES:
+✗ Commercial use, sale, or monetization of any kind
+✗ Distribution, redistribution, or sharing of source code
+✗ Modification and redistribution of the codebase
+✗ Use in production systems or live applications
+✗ Incorporation into other projects or products
+✗ Claiming ownership or authorship of the work
+✗ Removal or modification of copyright notices
+
+PORTFOLIO CONTEXT:
+Urban Echo is specifically designed and shared as a portfolio demonstration
+to showcase professional full-stack development capabilities including:
+
+- Modern React/Next.js e-commerce architecture
+- Clothing retail platform development
+- Database integration and API design
+- Authentication and payment processing
+- Professional code organization and documentation
+
+EDUCATIONAL USE:
+Students, developers, and technology professionals are welcome to study
+this codebase for learning purposes. This includes understanding patterns,
+architecture decisions, and implementation approaches.
+
+EMPLOYMENT EVALUATION:
+Hiring managers, recruiters, and potential employers are explicitly granted
+permission to review, analyze, and evaluate this code for employment purposes.
+
+CONTRIBUTION POLICY:
+Urban Echo is a solo portfolio project. While feedback and suggestions are welcome
+through GitHub issues, code contributions are not accepted as this represents
+individual work for portfolio evaluation.
+
+WARRANTY DISCLAIMER:
+THE URBAN ECHO PLATFORM IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE URBAN ECHO PLATFORM OR THE USE OR OTHER DEALINGS IN THE
+PLATFORM.
+
+CONTACT:
+For licensing inquiries, employment discussions, or other business matters:
+Email: shane.jeremich@example.com
+LinkedIn: linkedin.com/in/shanejeremich
+Portfolio: shanejeremich.dev
+
+ENFORCEMENT:
+Unauthorized use of the Urban Echo platform will be pursued to the full extent of the law.
+All repository access and usage is logged and monitored.
+
+This license is effective immediately and shall remain in effect until explicitly
+revoked or superseded by the copyright holder.

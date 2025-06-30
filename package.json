@@ -1,7 +1,34 @@
 {
   "name": "urban-echo",
   "version": "1.0.0",
+  "description": "Urban Echo - Modern e-commerce platform for clothing retail - Portfolio Project",
   "private": true,
+  "author": {
+    "name": "Shane Jeremich",
+    "email": "hello@shanejeremich.com",
+    "url": "https://shanejeremich.com"
+  },
+  "copyright": "Copyright (c) 2025 Shane Jeremich / Urban Echo. All rights reserved.",
+  "license": "PROPRIETARY",
+  "homepage": "https://shopurbanecho.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/urban-echo.git"
+  },
+  "keywords": [
+    "urban-echo",
+    "portfolio",
+    "ecommerce",
+    "clothing",
+    "fashion",
+    "nextjs",
+    "react",
+    "mongodb",
+    "stripe",
+    "auth0",
+    "sass",
+    "fullstack"
+  ],
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
@@ -63,5 +90,9 @@
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.0",
     "sass": "^1.85.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

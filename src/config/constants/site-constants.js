@@ -53,11 +53,3 @@ export const DEFAULT_SEO = {
     cardType: "summary_large_image",
   },
 };
-
-// Legal
-export const LEGAL_PAGES = [
-  { title: "Terms of Service", path: "/legal/terms" },
-  { title: "Privacy Policy", path: "/legal/privacy" },
-  { title: "Return Policy", path: "/legal/returns" },
-  { title: "Shipping Policy", path: "/legal/shipping" },
-];
