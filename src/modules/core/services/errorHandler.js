@@ -7,7 +7,7 @@
  * errorHandler.handleError(new Error("Something went wrong"), 'NETWORK_ERROR');
  */
 
-import { ERROR_TYPES, HTTP_STATUS } from "@config/constants/api-constants";
+import { ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 
 export const errorHandler = {
   /**

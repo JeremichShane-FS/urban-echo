@@ -11,6 +11,10 @@
     "lint": "next lint",
     "lint:fix": "eslint . --fix",
     "lint:todo": "node scripts/check-todos.js",
+    "db:categories": "node --env-file=.env.local src/lib/mongodb/scripts/seed-categories.js",
+    "db:demo": "node --env-file=.env.local src/lib/mongodb/scripts/seed-beta-demo.js",
+    "db:full": "npm run db:categories && npm run db:demo",
+    "db:test": "node --env-file=.env.local src/lib/mongodb/scripts/test-integration.js",
     "prepare": "husky"
   },
   "lint-staged": {

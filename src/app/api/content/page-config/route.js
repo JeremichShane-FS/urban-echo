@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "@config/constants/api-constants";
+import { API_ENDPOINTS } from "@config/constants";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);

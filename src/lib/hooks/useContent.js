@@ -1,6 +1,10 @@
-import { ROUTES } from "@config/constants";
-import { API_ENDPOINTS, CACHE_DURATION } from "@config/constants/api-constants";
-import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from "@config/constants/localization-constants";
+import {
+  API_ENDPOINTS,
+  CACHE_DURATION,
+  DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
+  ROUTES,
+} from "@config/constants";
 import { queryKeys } from "@lib/providers/query-provider";
 import {
   getAboutContent as apiGetAboutContent,

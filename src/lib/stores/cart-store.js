@@ -8,7 +8,7 @@ import {
   MAX_CART_ITEMS,
   MAX_QUANTITY_PER_ITEM,
   STANDARD_SHIPPING_COST,
-} from "@config/constants/checkout-constants";
+} from "@config/constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { formatCurrency } from "@modules/core/utils/formatters";
 

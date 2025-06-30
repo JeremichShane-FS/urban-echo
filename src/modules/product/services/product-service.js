@@ -1,4 +1,4 @@
-// import { API_ENDPOINTS } from "@config/constants/api-constants";
+// import { API_ENDPOINTS } from "@config/constants";
 import { bestSellers, categories, newArrivals, productList } from "@modules/product/data/mock-data";
 
 export const productService = {
