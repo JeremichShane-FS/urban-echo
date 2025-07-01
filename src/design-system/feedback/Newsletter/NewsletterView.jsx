@@ -1,6 +1,10 @@
 import PropTypes from "prop-types";
 
+<<<<<<< HEAD
 import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants";
+=======
+import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants/ui-constants";
+>>>>>>> origin/main
 import Button from "@design-system/buttons/Button";
 
 import styles from "./Newsletter.module.scss";
@@ -26,8 +30,13 @@ const NewsletterView = ({
             </p>
           </div>
 
+<<<<<<< HEAD
           <div className={`${styles.form} col-span-1`}>
             <form id="newsletter" className={styles.wrapper} onSubmit={onSubmit}>
+=======
+          <div className={styles.form}>
+            <form className={styles.wrapper} onSubmit={onSubmit}>
+>>>>>>> origin/main
               <div className={styles.group}>
                 <input
                   id="newsletter-email"
@@ -38,7 +47,10 @@ const NewsletterView = ({
                   className={styles.input}
                   disabled={isSubmitting}
                   aria-label="Email address for newsletter subscription"
+<<<<<<< HEAD
                   autoComplete="email"
+=======
+>>>>>>> origin/main
                   onChange={onEmailChange}
                 />
 

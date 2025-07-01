@@ -88,8 +88,12 @@ ProductCardView.propTypes = {
     category: PropTypes.string,
     isNew: PropTypes.bool,
     inStock: PropTypes.bool.isRequired,
+<<<<<<< HEAD
     description: PropTypes.string,
   }).isRequired,
   showDescription: PropTypes.bool,
+=======
+  }).isRequired,
+>>>>>>> origin/main
   showNewBadge: PropTypes.bool,
 };

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Urban Echo - Modern e-commerce platform for clothing retail - Portfolio Project",
   "private": true,
+<<<<<<< HEAD
   "author": {
     "name": "Shane Jeremich",
     "email": "hello@shanejeremich.com",
@@ -29,6 +30,8 @@
     "sass",
     "fullstack"
   ],
+=======
+>>>>>>> origin/main
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
@@ -38,10 +41,13 @@
     "lint": "next lint",
     "lint:fix": "eslint . --fix",
     "lint:todo": "node scripts/check-todos.js",
+<<<<<<< HEAD
     "db:categories": "node --env-file=.env.local src/lib/mongodb/scripts/seed-categories.js",
     "db:demo": "node --env-file=.env.local src/lib/mongodb/scripts/seed-beta-demo.js",
     "db:full": "npm run db:categories && npm run db:demo",
     "db:test": "node --env-file=.env.local src/lib/mongodb/scripts/test-integration.js",
+=======
+>>>>>>> origin/main
     "prepare": "husky"
   },
   "lint-staged": {

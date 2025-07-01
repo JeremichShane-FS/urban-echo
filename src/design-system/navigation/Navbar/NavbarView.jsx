@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 
 import UrbanEchoLogo from "@assets/images/logo/UrbanEchoLogo";
 import { MAIN_NAV_ITEMS } from "@config/constants";
+<<<<<<< HEAD
 import { MenuToggle } from "@design-system/buttons";
+=======
+import MenuToggle from "@design-system/buttons/MenuToggle";
+>>>>>>> origin/main
 import Searchbar from "@design-system/forms/Searchbar";
 import Container from "@design-system/layout/Container";
 import ActionIcons from "@design-system/navigation/ActionIcons";

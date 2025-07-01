@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
 import { errorHandler } from "@modules/core/services/errorHandler";
@@ -70,12 +71,36 @@ export async function GET(request) {
       action: "getFeaturedProducts",
       endpoint: `/api/${API_ENDPOINTS.products}/featured`,
     });
+=======
+import { API_ENDPOINTS } from "@config/constants";
+import { productService as data } from "@modules/product/services/product-service";
+
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get("limit")) || 4;
+
+    const products = await data.getFeaturedProducts();
+
+    return Response.json({
+      success: true,
+      data: products.slice(0, limit),
+      meta: {
+        total: products.length,
+        limit: limit,
+        endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+      },
+    });
+  } catch (error) {
+    console.error("Featured products API error:", error);
+>>>>>>> origin/main
 
     return Response.json(
       {
         success: false,
         error: "Failed to fetch featured products",
         message: error.message,
+<<<<<<< HEAD
         source: "mongodb",
       },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
@@ -93,3 +118,10 @@ export async function OPTIONS() {
     },
   });
 }
+=======
+      },
+      { status: 500 }
+    );
+  }
+}
+>>>>>>> origin/main

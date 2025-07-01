@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * @fileoverview Urban Echo - E-commerce Clothing Platform
  * @copyright Copyright (c) 2025 Shane Jeremich / Urban Echo. All rights reserved.
@@ -28,6 +29,11 @@ import PropTypes from "prop-types";
 
 import { montserrat, openSans } from "@config/fonts";
 import { defaultMetadata } from "@config/seo";
+=======
+import PropTypes from "prop-types";
+
+import { montserrat, openSans } from "@config/fonts";
+>>>>>>> origin/main
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";

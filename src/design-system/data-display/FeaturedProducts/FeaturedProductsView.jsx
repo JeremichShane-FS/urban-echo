@@ -38,7 +38,11 @@ const FeaturedProductsView = ({ error, featuredProducts, isLoading, onProductCli
             <ProductCard
               key={product.id}
               product={product}
+<<<<<<< HEAD
               className={`${styles.card} ${index === 3 ? "lg:col-start-2 xl:col-start-auto" : ""}`}
+=======
+              className={styles.card}
+>>>>>>> origin/main
               onClick={onProductClick}
             />
           ))}

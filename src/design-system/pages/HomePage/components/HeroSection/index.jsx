@@ -1,11 +1,19 @@
 "use client";
 
+<<<<<<< HEAD
 import { useHeroContent } from "@lib/hooks/useContent";
+=======
+import { useHeroContent } from "@modules/content/hooks/useHeroContent";
+>>>>>>> origin/main
 
 import HeroSectionView from "./HeroSectionView";
 
 const HeroSection = () => {
+<<<<<<< HEAD
   const { data: heroData, error, isLoading: loading } = useHeroContent();
+=======
+  const { error, heroData, loading } = useHeroContent();
+>>>>>>> origin/main
 
   const handleCtaClick = () => {
     if (typeof window !== "undefined" && window.gtag) {

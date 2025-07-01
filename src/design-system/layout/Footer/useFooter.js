@@ -11,8 +11,13 @@ import {
   FOOTER_NAV_SECTIONS,
   FOOTER_SOCIAL_LINKS,
   FOOTER_UTILITY_LINKS,
+<<<<<<< HEAD
   SITE_NAME,
 } from "@config/constants";
+=======
+} from "@config/constants/footer-constants";
+import { SITE_NAME } from "@config/constants/site-constants";
+>>>>>>> origin/main
 import { setCopyright } from "@modules/core/utils/setCopyright";
 
 export const useFooter = () => {

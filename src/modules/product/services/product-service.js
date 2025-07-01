@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 // import { API_ENDPOINTS } from "@config/constants";
+=======
+import { API_ENDPOINTS } from "@config/constants/api-constants";
+>>>>>>> origin/main
 import { bestSellers, categories, newArrivals, productList } from "@modules/product/data/mock-data";
 
 export const productService = {
   async getFeaturedProducts(limit = 4) {
+<<<<<<< HEAD
+=======
+    console.log("API END_POINTS", API_ENDPOINTS);
+>>>>>>> origin/main
     try {
       // TODO: [DATA] Replace mock data with API call when ready (featured products)
       // const response = await fetch(`/api/${API_ENDPOINTS.featuredProducts}?limit=${limit}`);
@@ -11,7 +19,11 @@ export const productService = {
       const featuredProducts = productList.filter(product => product.featured);
       return featuredProducts.slice(0, limit);
     } catch (error) {
+<<<<<<< HEAD
       console.error("Error fetching featured products:", error.message);
+=======
+      console.error("Error fetching featured products:", error);
+>>>>>>> origin/main
       throw new Error("Failed to fetch featured products");
     }
   },
@@ -50,7 +62,11 @@ export const productService = {
         },
       };
     } catch (error) {
+<<<<<<< HEAD
       console.error("Error fetching new arrivals:", error.message);
+=======
+      console.error("Error fetching new arrivals:", error);
+>>>>>>> origin/main
       throw new Error("Failed to fetch new arrivals");
     }
   },
@@ -63,7 +79,11 @@ export const productService = {
 
       return bestSellers.sort((a, b) => b.salesCount - a.salesCount).slice(0, limit);
     } catch (error) {
+<<<<<<< HEAD
       console.error("Error fetching best sellers:", error.message);
+=======
+      console.error("Error fetching best sellers:", error);
+>>>>>>> origin/main
       throw new Error("Failed to fetch best sellers");
     }
   },
@@ -149,7 +169,11 @@ export const productService = {
         filters: { category, sort, search, minPrice, maxPrice },
       };
     } catch (error) {
+<<<<<<< HEAD
       console.error("Error fetching products:", error.message);
+=======
+      console.error("Error fetching products:", error);
+>>>>>>> origin/main
       throw new Error("Failed to fetch products");
     }
   },
@@ -204,7 +228,11 @@ export const productService = {
 
       return categories;
     } catch (error) {
+<<<<<<< HEAD
       console.error("Error fetching categories:", error.message);
+=======
+      console.error("Error fetching categories:", error);
+>>>>>>> origin/main
       throw new Error("Failed to fetch categories");
     }
   },

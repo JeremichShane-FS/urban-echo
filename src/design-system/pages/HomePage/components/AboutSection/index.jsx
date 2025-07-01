@@ -1,11 +1,19 @@
 "use client";
 
+<<<<<<< HEAD
 import { useAboutContent } from "@lib/hooks/useContent";
+=======
+import { useAboutContent } from "@modules/content/hooks/useAboutContent";
+>>>>>>> origin/main
 
 import AboutSectionView from "./AboutSectionView";
 
 const AboutSection = () => {
+<<<<<<< HEAD
   const { data: aboutContent, error, isLoading: loading } = useAboutContent();
+=======
+  const { aboutContent, error, loading } = useAboutContent("homepage");
+>>>>>>> origin/main
 
   if (loading) {
     return <div>Loading about content...</div>;

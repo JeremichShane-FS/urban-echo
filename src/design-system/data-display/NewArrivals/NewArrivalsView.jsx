@@ -1,9 +1,12 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
+<<<<<<< HEAD
 
 import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
 import { Button } from "@design-system/buttons";
 import ProductCard from "@design-system/data-display/ProductCard";
+=======
+>>>>>>> origin/main
 
 import styles from "./NewArrivals.module.scss";
 

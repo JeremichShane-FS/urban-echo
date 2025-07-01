@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * @fileoverview Urban Echo - E-commerce Clothing Platform
  * @copyright Copyright (c) 2025 Shane Jeremich / Urban Echo. All rights reserved.
@@ -49,6 +50,9 @@ export async function generateMetadata() {
     return generatePageMetadata();
   }
 }
+=======
+import HomePage from "@design-system/pages/HomePage";
+>>>>>>> origin/main
 
 export default function Home() {
   return <HomePage />;

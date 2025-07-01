@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import ProductCardView from "./ProductCardView";
 import { useProductCard } from "./useProductCard";
 
+<<<<<<< HEAD
 const ProductCard = ({
   className = "",
   onClick,
@@ -10,6 +11,9 @@ const ProductCard = ({
   showDescription,
   showNewBadge = false,
 }) => {
+=======
+const ProductCard = ({ className = "", onClick, product, showNewBadge = false }) => {
+>>>>>>> origin/main
   const { handleProductClick } = useProductCard({ onClick, product });
 
   return (
@@ -17,7 +21,10 @@ const ProductCard = ({
       className={className}
       product={product}
       showNewBadge={showNewBadge}
+<<<<<<< HEAD
       showDescription={showDescription}
+=======
+>>>>>>> origin/main
       onClick={handleProductClick}
     />
   );
@@ -32,6 +39,9 @@ ProductCard.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
   product: PropTypes.object.isRequired,
+<<<<<<< HEAD
   showDescription: PropTypes.bool,
+=======
+>>>>>>> origin/main
   showNewBadge: PropTypes.bool,
 };

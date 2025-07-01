@@ -35,7 +35,11 @@ jobs:
             exit 1
           fi
 
+<<<<<<< HEAD
           if grep -rE "\beval\s*\(|innerHTML\s*=|document\.write\s*\(" src/ 2>/dev/null; then
+=======
+          if grep -r "eval\|innerHTML\|document.write" src/ 2>/dev/null; then
+>>>>>>> origin/main
             echo "❌ SECURITY VIOLATION: Dangerous code patterns detected"
             exit 1
           fi
@@ -62,8 +66,11 @@ jobs:
           }
 
           echo "✅ Build verification passed"
+<<<<<<< HEAD
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+=======
+>>>>>>> origin/main
 
       - name: "Dependency Vulnerability Check"
         run: |

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { API_ENDPOINTS } from "@config/constants";
+=======
+>>>>>>> origin/main
 import { productService as data } from "@modules/product/services/product-service";
 
 export async function GET(request) {
@@ -20,11 +23,19 @@ export async function GET(request) {
       pagination: result.pagination,
       filters: result.filters,
       meta: {
+<<<<<<< HEAD
         endpoint: `/api/${API_ENDPOINTS.newArrivals}`,
       },
     });
   } catch (error) {
     console.error("New arrivals API error:", error.message);
+=======
+        endpoint: "/api/products/new-arrivals",
+      },
+    });
+  } catch (error) {
+    console.error("New arrivals API error:", error);
+>>>>>>> origin/main
 
     return Response.json(
       {

@@ -66,9 +66,12 @@ export const FOOTER_LEGAL_LINKS = [
   { label: "Terms of Service", href: "/legal/terms" },
   { label: "Return Policy", href: "/legal/returns" },
   { label: "Shipping Policy", href: "/legal/shipping" },
+<<<<<<< HEAD
   { label: "Copyright", href: "/legal/copyright" },
   { label: "DMCA", href: "/legal/dmca" },
   { label: "Accessibility", href: "/legal/accessibility" },
+=======
+>>>>>>> origin/main
 ];
 
 // Utility Links

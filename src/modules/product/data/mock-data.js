@@ -77,8 +77,12 @@ export const newArrivals = [
     category: "t-shirts",
     inStock: true,
     createdAt: new Date(Date.now() - 86400000), // 1 day ago
+<<<<<<< HEAD
     description:
       "Modern graphic tee with unique urban design that captures the essence of contemporary street fashion. Crafted from premium cotton blend fabric that offers exceptional softness and breathability for all-day comfort. Features bold, eye-catching graphics inspired by urban street art and modern design aesthetics. The high-quality print ensures long-lasting vibrancy and won't fade after multiple washes. Perfect for casual outings, weekend adventures, or layering under jackets and hoodies.",
+=======
+    description: "Modern graphic tee with unique urban design.",
+>>>>>>> origin/main
     colors: ["white", "black", "grey"],
     sizes: ["S", "M", "L", "XL"],
     rating: 4.2,
@@ -171,7 +175,11 @@ export const newArrivals = [
   },
   {
     id: 107,
+<<<<<<< HEAD
     name: "Classic Blue Shirt",
+=======
+    name: "Classic White Shirt",
+>>>>>>> origin/main
     price: 95,
     image:
       "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",

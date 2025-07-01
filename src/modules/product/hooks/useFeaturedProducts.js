@@ -25,9 +25,15 @@ export const useFeaturedProducts = () => {
           throw new Error("No featured products found");
         }
         setFeaturedProducts(response);
+<<<<<<< HEAD
       } catch (error) {
         setError("Failed to load featured products");
         console.error("Error fetching featured products:", error.message);
+=======
+      } catch (error_) {
+        setError("Failed to load featured products");
+        console.error("Error fetching featured products:", error_);
+>>>>>>> origin/main
       } finally {
         setIsLoading(false);
       }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { isValidEmail } from "@modules/core/utils/validators";
@@ -18,11 +19,23 @@ export async function POST(request) {
         missingField: "email",
       });
 
+=======
+import { API_ENDPOINTS } from "@config/constants/api-constants";
+
+export async function POST(request) {
+  try {
+    console.log("API END_POINTS", API_ENDPOINTS);
+
+    const { email } = await request.json();
+
+    if (!email) {
+>>>>>>> origin/main
       return Response.json(
         {
           success: false,
           error: "Email is required",
         },
+<<<<<<< HEAD
         { status: HTTP_STATUS.BAD_REQUEST }
       );
     }
@@ -38,12 +51,25 @@ export async function POST(request) {
         reason: "invalid-format",
       });
 
+=======
+        { status: 400 }
+      );
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+>>>>>>> origin/main
       return Response.json(
         {
           success: false,
           error: "Please enter a valid email address",
         },
+<<<<<<< HEAD
         { status: HTTP_STATUS.BAD_REQUEST }
+=======
+        { status: 400 }
+>>>>>>> origin/main
       );
     }
 
@@ -51,10 +77,14 @@ export async function POST(request) {
     // const Newsletter = await import('@lib/database/models/Newsletter');
     // const existingSubscriber = await Newsletter.findOne({ email });
     // if (existingSubscriber) {
+<<<<<<< HEAD
     //   return Response.json({
     //     success: false,
     //     error: 'Email already subscribed'
     //   }, { status: HTTP_STATUS.CONFLICT });
+=======
+    //   return Response.json({ success: false, error: 'Email already subscribed' }, { status: 409 });
+>>>>>>> origin/main
     // }
     // await Newsletter.create({ email, subscribedAt: new Date() });
 
@@ -70,6 +100,7 @@ export async function POST(request) {
         email,
         subscribedAt: new Date().toISOString(),
       },
+<<<<<<< HEAD
       meta: {
         endpoint: `/api/${API_ENDPOINTS.newsletter}/subscribe`,
         timestamp: new Date().toISOString(),
@@ -83,6 +114,11 @@ export async function POST(request) {
     });
 
     console.error("Newsletter subscription error:", error.message);
+=======
+    });
+  } catch (error) {
+    console.error("Newsletter subscription error:", error);
+>>>>>>> origin/main
 
     return Response.json(
       {
@@ -90,12 +126,17 @@ export async function POST(request) {
         error: "Failed to subscribe to newsletter",
         message: error.message,
       },
+<<<<<<< HEAD
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
+=======
+      { status: 500 }
+>>>>>>> origin/main
     );
   }
 }
 
 export async function GET() {
+<<<<<<< HEAD
   try {
     // TODO: [DATA] Replace with MongoDB integration (newsletter)
     // const Newsletter = await import('@lib/database/models/Newsletter');
@@ -154,4 +195,14 @@ export async function OPTIONS() {
       "Access-Control-Allow-Headers": "Content-Type",
     },
   });
+=======
+  // Admin endpoint to list subscribers
+  return Response.json(
+    {
+      success: false,
+      error: "Method not implemented",
+    },
+    { status: 501 }
+  );
+>>>>>>> origin/main
 }

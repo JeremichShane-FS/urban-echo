@@ -5,7 +5,11 @@
 
 import ROUTES from "@config/routes";
 
+<<<<<<< HEAD
 // Main product categories
+=======
+// Main product categories - USING ROUTES
+>>>>>>> origin/main
 export const PRODUCT_CATEGORIES = [
   { id: "men", name: "Men", path: ROUTES.MEN },
   { id: "women", name: "Women", path: ROUTES.WOMEN },
@@ -13,7 +17,7 @@ export const PRODUCT_CATEGORIES = [
   { id: "sale", name: "Sale", path: ROUTES.SALE, highlight: true },
 ];
 
-// Subcategories
+// Subcategories - USING ROUTES as BASE
 export const MEN_SUBCATEGORIES = [
   { id: "tshirts", name: "T-Shirts", path: `${ROUTES.MEN}/tshirts` },
   { id: "shirts", name: "Shirts", path: `${ROUTES.MEN}/shirts` },

@@ -134,8 +134,14 @@ const eslintConfig = [
       ...reactHooks.configs.recommended.rules,
 
       // =================================================================
+<<<<<<< HEAD
       // ACCESSIBILITY RULES
       // =================================================================
+=======
+      // ACCESSIBILITY RULES (E-commerce focused)
+      // =================================================================
+      // Essential for e-commerce user experience
+>>>>>>> origin/main
       "jsx-a11y/alt-text": "error", // Product images need alt text
       "jsx-a11y/anchor-has-content": "error", // Navigation links need content
       "jsx-a11y/anchor-is-valid": "error", // Valid links for navigation

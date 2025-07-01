@@ -1,8 +1,13 @@
 import { API_ENDPOINTS } from "@config/constants";
+<<<<<<< HEAD
+=======
+import { aboutContentService as data } from "@modules/content/services/about-content-service";
+>>>>>>> origin/main
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
+<<<<<<< HEAD
     const section = searchParams.get("section") || "homepage";
 
     const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
@@ -47,6 +52,31 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error("About content API error:", error.message);
+=======
+    const section = searchParams.get("section");
+
+    let content;
+    if (section === "homepage") {
+      content = await data.getAboutSectionContent();
+    } else if (section === "full") {
+      content = await data.getAboutPageContent();
+    } else {
+      // Default to homepage section
+      content = await data.getAboutSectionContent();
+    }
+
+    return Response.json({
+      success: true,
+      data: content,
+      meta: {
+        endpoint: `/api/${API_ENDPOINTS.content}/about`,
+        section: section || "homepage",
+        lastUpdated: content.lastUpdated || new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error("About content API error:", error);
+>>>>>>> origin/main
 
     return Response.json(
       {
