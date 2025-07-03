@@ -9,7 +9,6 @@ const nextConfig = {
   reactStrictMode: true,
   sassOptions: {
     includePaths: [join(__dirname, "src/assets/styles/"), join(__dirname, "src")],
-    // Remove the problematic prependData that's causing the import error
     additionalData: `@use "sass:math";`,
   },
   images: {
@@ -40,7 +39,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cms.gourbanecho.com", // Your future production CMS domain
+        hostname: "cms.gourbanecho.com",
         pathname: "/uploads/**",
       },
     ],
