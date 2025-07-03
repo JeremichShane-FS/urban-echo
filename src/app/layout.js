@@ -68,6 +68,12 @@ export default function RootLayout({ children }) {
   );
 }
 
+// TODO: [TEST] More todo comments to make sure things are working
+// test
+// test
+// test
+// test
+
 RootLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };

@@ -18,14 +18,18 @@ jobs:
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          CLOSE_ISSUES: "true"
+          # CLOSE_ISSUES: "true"
           AUTO_P: "false"
           PROJECT: "user/JeremichShane-FS/urban-echo"
           PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}"
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": ["auto-generated", "type: enhancement"]},
-              {"name": "FIX:", "labels": ["auto-generated", "type: bug"]}
+              {"name": "FIX:", "labels": ["auto-generated", "type: bug"]},
+              {"name": "FIXME:", "labels": ["auto-generated", "type: bug", "priority: high"]},
+              {"name": "HACK:", "labels": ["auto-generated", "type: technical-debt"]},
+              {"name": "NOTE:", "labels": ["auto-generated", "type: documentation"]},
+              {"name": "REVIEW:", "labels": ["auto-generated", "needs-review"]}
             ]
           ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
 
