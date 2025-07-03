@@ -28,8 +28,8 @@ import { generatePageMetadata } from "@config/seo";
 import HomePage from "@design-system/pages/HomePage";
 import { getPageConfig } from "@lib/services/api-service";
 
-// TODO: [DATA] testing the workflow is working again
-// a new comment
+// TODO: [DATA] testing the workflow is working again (v2)
+// a new comment again
 // test
 // test
 // test
