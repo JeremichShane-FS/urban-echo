@@ -42,6 +42,12 @@ export const viewport = {
   themeColor: "#333333",
 };
 
+// FIX: [BUG] Testing another component to see if workflow is working
+// test
+// test
+// test
+// test
+
 export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
