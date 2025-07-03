@@ -20,7 +20,7 @@ jobs:
           REPO: ${{ github.repository }}
           CLOSE_ISSUES: "true"
           AUTO_P: "false"
-          PROJECT: "user/JeremichShane-FS/2506-WDV359-JeremichShane"
+          PROJECT: "user/JeremichShane-FS/urban-echo"
           PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}"
           IDENTIFIERS: >
             [
