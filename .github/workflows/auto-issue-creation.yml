@@ -37,7 +37,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-
       - name: "Apply Smart Labels (No Validation Needed)"
         run: |
           echo "🏷️ Applying smart labels to recent TODO/FIX issues..."
