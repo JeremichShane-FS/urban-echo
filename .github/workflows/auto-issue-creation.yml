@@ -14,11 +14,6 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-permissions:
-  contents: read
-  issues: write
-  actions: read
-
 jobs:
   todo-to-issue:
     runs-on: ubuntu-latest
@@ -29,26 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-          persist-credentials: false
-
-      - name: "Security validation"
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          COMMIT_AUTHOR: ${{ github.event.head_commit.author.name }}
-        run: |
-          echo "🔒 Performing security validation..."
-
-          # Validate commit message length (prevent extremely long messages)
-          if [[ ${#COMMIT_MESSAGE} -gt 1000 ]]; then
-            echo "❌ Commit message too long, potential attack"
-            exit 1
-          fi
-
-          # Log sanitized info for debugging (without exposing full message)
-          echo "Commit author: $COMMIT_AUTHOR"
-          echo "Message length: ${#COMMIT_MESSAGE}"
-          echo "First 50 chars: ${COMMIT_MESSAGE:0:50}..."
+          fetch-depth: 2 # Get previous commit for comparison
 
       - name: "Check if workflow should run"
         id: should-run
@@ -92,19 +68,7 @@ jobs:
               {"name": "NOTE:", "labels": ["auto-generated", "type: documentation"]},
               {"name": "REVIEW:", "labels": ["auto-generated", "needs-review"]}
             ]
-          ISSUE_TEMPLATE: |
-            {{ body }}
-
-            ---
-            **📁 File:** [{{ filename }}]({{ url }})
-            **📍 Line:** {{ line }}
-            **👤 Author:** @{{ author }}
-            **🌿 Branch:** dev → staging → main
-            **📅 Created:** {{ date }}
-
-            ```{{ language }}
-            {{ snippet }}
-            ```
+          ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
 
   apply-smart-labels:
     needs: [todo-to-issue]
@@ -115,8 +79,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: "Apply Smart Labels & Intelligence"
         run: |
@@ -127,34 +89,30 @@ jobs:
 
           CUTOFF_TIME=$(date -d '3 minutes ago' --iso-8601=seconds)
 
-          # Get recent auto-generated issues with secure jq processing
-          RECENT_ISSUES=$(gh issue list --label "auto-generated" --limit 15 --json number,title,body,createdAt)
+          # Get recent auto-generated issues
+          RECENT_ISSUES=$(gh issue list --label "auto-generated" --limit 15 --json number,title,body,createdAt --jq --arg cutoff "$CUTOFF_TIME" '.[] | select(.createdAt > $cutoff)')
 
-          if [[ -z "$RECENT_ISSUES" || "$RECENT_ISSUES" == "[]" ]]; then
+          if [[ -z "$RECENT_ISSUES" ]]; then
             echo "No recent issues found to process"
             exit 0
           fi
 
-          # Process issues with secure parameter expansion
-          echo "$RECENT_ISSUES" | jq -r --arg cutoff "$CUTOFF_TIME" '.[] | select(.createdAt > $cutoff) | [.number, .title, .body] | @tsv' | while IFS=$'\t' read -r number title body; do
+          echo "$RECENT_ISSUES" | jq -r '"(.number)|(.title)|(.body)"' | while IFS='|' read -r number title body; do
             if [[ -n "$number" && -n "$title" ]]; then
-              echo "📝 Processing issue #$number"
-              
-              # Sanitize inputs for security
-              title=$(echo "$title" | tr -d '\n\r' | head -c 200)
+              echo "📝 Processing issue #$number: $title"
               
               # Enhanced template extraction with fallback
               TEMPLATE=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]' | sed 's/\[//g' | sed 's/\]//g')
               
               if [[ -z "$TEMPLATE" ]]; then
-                # Fallback: detect template from content (safely)
-                if echo "$body" | grep -qi 'component\|ui\|ux\|frontend'; then
+                # Fallback: detect template from content
+                if [[ "$body" =~ (component|ui|ux|frontend) ]]; then
                   TEMPLATE="COMPONENT"
-                elif echo "$body" | grep -qi 'api\|route\|backend\|server'; then
+                elif [[ "$body" =~ (api|route|backend|server) ]]; then
                   TEMPLATE="ROUTES"
-                elif echo "$body" | grep -qi 'test\|spec\|cypress\|jest'; then
+                elif [[ "$body" =~ (test|spec|cypress|jest) ]]; then
                   TEMPLATE="TEST"
-                elif echo "$body" | grep -qi 'security\|auth\|vulnerability'; then
+                elif [[ "$body" =~ (security|auth|vulnerability) ]]; then
                   TEMPLATE="SECURITY"
                 else
                   TEMPLATE="GENERAL"
@@ -164,56 +122,108 @@ jobs:
                 echo "   🎯 Found template: $TEMPLATE"
               fi
               
-              # Apply labels based on template (using safe commands)
+              # Enhanced template-based labeling with size estimation
               case "$TEMPLATE" in
-                "SECURITY")
-                  gh issue edit "$number" --add-label "area: security,priority: critical" 2>/dev/null || true
-                  if echo "$body" | grep -qi 'FIX:\|FIXME:'; then
-                    gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug,priority: critical" 2>/dev/null || true
-                  fi
+                "CI"|"CD"|"WORKFLOW"|"AUTOMATION"|"ACTIONS"|"DEPLOY"|"BUILD")
+                  gh issue edit "$number" --add-label "area: ci/cd,priority: high" 2>/dev/null || true
                   ;;
                 "COMPONENT"|"UI/UX"|"FRONTEND")
                   gh issue edit "$number" --add-label "area: frontend,priority: medium" 2>/dev/null || true
+                  # Estimate complexity
+                  if [[ "$body" =~ (complex|state|redux|context) ]]; then
+                    gh issue edit "$number" --add-label "size: large" 2>/dev/null || true
+                  elif [[ "$body" =~ (simple|basic|quick) ]]; then
+                    gh issue edit "$number" --add-label "size: small" 2>/dev/null || true
+                  else
+                    gh issue edit "$number" --add-label "size: medium" 2>/dev/null || true
+                  fi
                   ;;
                 "ROUTES"|"DATA"|"BACKEND"|"API")
                   gh issue edit "$number" --add-label "area: backend,area: api,priority: medium" 2>/dev/null || true
                   ;;
+                "SECURITY")
+                  gh issue edit "$number" --add-label "area: security,priority: critical" 2>/dev/null || true
+                  if [[ "$body" =~ FIX:|FIXME: ]]; then
+                    gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug,priority: critical" 2>/dev/null || true
+                  fi
+                  ;;
                 "BUG")
                   gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug" 2>/dev/null || true
+                  if [[ "$body" =~ FIX:|FIXME: ]]; then
+                    gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+                  else
+                    gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
+                  fi
+                  ;;
+                "PERF"|"PERFORMANCE")
+                  gh issue edit "$number" --add-label "type: performance,priority: medium" 2>/dev/null || true
+                  ;;
+                "REFACTOR")
+                  gh issue edit "$number" --add-label "type: refactor,technical-debt,priority: low" 2>/dev/null || true
                   ;;
                 "TEST")
                   gh issue edit "$number" --add-label "area: testing,priority: medium" 2>/dev/null || true
+                  ;;
+                "DOCS"|"DOCUMENTATION")
+                  gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: documentation,priority: low" 2>/dev/null || true
                   ;;
                 *)
                   gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                   ;;
               esac
               
-              echo "   ✅ Secure labels applied to #$number"
+              # Enhanced technology and framework detection
+              ANALYSIS_TEXT="$title $body"
+              
+              # Frontend frameworks
+              [[ "$ANALYSIS_TEXT" =~ (Next\.js|NextJS|Next) ]] && gh issue edit "$number" --add-label "tech: nextjs" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (React|react) ]] && gh issue edit "$number" --add-label "tech: react" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (Vue|vue) ]] && gh issue edit "$number" --add-label "tech: vue" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (Angular|angular) ]] && gh issue edit "$number" --add-label "tech: angular" 2>/dev/null || true
+              
+              # Backend & Database
+              [[ "$ANALYSIS_TEXT" =~ (MongoDB|mongo) ]] && gh issue edit "$number" --add-label "tech: mongodb" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (PostgreSQL|postgres) ]] && gh issue edit "$number" --add-label "tech: postgresql" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (MySQL|mysql) ]] && gh issue edit "$number" --add-label "tech: mysql" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (Redis|redis) ]] && gh issue edit "$number" --add-label "tech: redis" 2>/dev/null || true
+              
+              # Services & APIs
+              [[ "$ANALYSIS_TEXT" =~ (Stripe|stripe) ]] && gh issue edit "$number" --add-label "integration: stripe" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (Auth0|auth0) ]] && gh issue edit "$number" --add-label "integration: auth0" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (AWS|aws) ]] && gh issue edit "$number" --add-label "integration: aws" 2>/dev/null || true
+              [[ "$ANALYSIS_TEXT" =~ (GraphQL|graphql) ]] && gh issue edit "$number" --add-label "tech: graphql" 2>/dev/null || true
+              
+              # Quality & Code Health detection
+              if [[ "$ANALYSIS_TEXT" =~ (console\.log|console\s+log|alert\(|debugger) ]]; then
+                echo "     🧹 Debug code detected"
+                gh issue edit "$number" --add-label "code-quality: cleanup,priority: low" 2>/dev/null || true
+              fi
+              
+              if [[ "$ANALYSIS_TEXT" =~ (deprecated|legacy|old) ]]; then
+                echo "     📅 Legacy code detected"
+                gh issue edit "$number" --add-label "technical-debt,priority: medium" 2>/dev/null || true
+              fi
+              
+              if [[ "$ANALYSIS_TEXT" =~ (performance|optimize|optimization|speed|slow|bottleneck) ]]; then
+                echo "     ⚡ Performance issue detected"
+                gh issue edit "$number" --add-label "type: performance" 2>/dev/null || true
+              fi
+              
+              # Urgency detection
+              if [[ "$ANALYSIS_TEXT" =~ (urgent|critical|asap|important) ]]; then
+                echo "     🚨 High urgency detected"
+                gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
+              fi
+              
+              # Effort estimation based on keywords
+              if [[ "$ANALYSIS_TEXT" =~ (quick|small|minor|simple) ]]; then
+                gh issue edit "$number" --add-label "effort: small" 2>/dev/null || true
+              elif [[ "$ANALYSIS_TEXT" =~ (major|complex|refactor|rewrite) ]]; then
+                gh issue edit "$number" --add-label "effort: large" 2>/dev/null || true
+              fi
+              
+              echo "   ✅ Enhanced labels applied to #$number"
             fi
           done
 
-          echo "🎉 Secure smart labeling complete!"
-
-      - name: "Create daily TODO summary"
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "📊 Creating daily TODO summary..."
-
-          TODAY=$(date +%Y-%m-%d)
-          OPEN_TODOS=$(gh issue list --label "auto-generated" --state "open" --limit 100 --json number | jq '. | length')
-          CLOSED_TODAY=$(gh issue list --label "auto-generated" --state "closed" --limit 100 --json closedAt | jq --arg today "$TODAY" '[.[] | select(.closedAt | startswith($today))] | length')
-
-          {
-            echo "## 📋 Daily TODO Summary - $TODAY"
-            echo ""
-            echo "- 🔓 **Open TODOs:** $OPEN_TODOS"
-            echo "- ✅ **Completed Today:** $CLOSED_TODAY"
-            echo ""
-            echo "### 🔥 High Priority Items"
-            gh issue list --label "auto-generated,priority: high" --state "open" --limit 5 --json title,number | jq -r '.[] | "- #\(.number): \(.title)"'
-          } > /tmp/summary.md
-
-          gh issue create --title "📊 TODO Summary - $TODAY" --body-file /tmp/summary.md --label "summary,auto-generated" 2>/dev/null || echo "Summary created"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "🎉 Smart labeling with intelligence complete!"
