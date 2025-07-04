@@ -4,13 +4,13 @@ import { errorHandler } from "@modules/core/services/errorHandler";
 export const productSearchService = {
   async searchProducts(query, params = {}) {
     try {
-      const { category, limit = 20, page = 1, sort = "relevance" } = params;
+      const { category, limit = 20, page = 1, sortBy = "relevance" } = params;
 
       const queryParams = new URLSearchParams({
-        query,
+        q: query,
         page: page.toString(),
         limit: limit.toString(),
-        sort: sort === "relevance" ? "newest" : sort,
+        sortBy: sortBy === "relevance" ? "newest" : sortBy,
       });
 
       if (category) queryParams.append("category", category);
@@ -28,7 +28,17 @@ export const productSearchService = {
         throw error;
       }
 
-      return await response.json();
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || result.error || "Failed to search products");
+      }
+
+      return {
+        products: result.data || [],
+        pagination: result.pagination || {},
+        meta: result.meta || {},
+      };
     } catch (error) {
       errorHandler.handleError(error, ERROR_TYPES.API_ERROR, {
         service: "productSearchService",

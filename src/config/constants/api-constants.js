@@ -154,6 +154,8 @@ export const ERROR_TYPES = {
   RATE_LIMIT_ERROR: "RATE_LIMIT_ERROR",
   SERVER_ERROR: "SERVER_ERROR",
   UNKNOWN_ERROR: "UNKNOWN_ERROR",
+  DATABASE_ERROR: "DATABASE_ERROR",
+  CMS_ERROR: "CMS_ERROR",
 };
 
 // Headers
@@ -192,4 +194,19 @@ export const WEBHOOK_EVENTS = {
   PRODUCT_DELETED: "product.deleted",
   INVENTORY_LOW: "inventory.low",
   USER_REGISTERED: "user.registered",
+};
+
+// Validation patterns for API utilities
+export const API_VALIDATION_PATTERNS = {
+  // MongoDB ObjectId pattern
+  MONGODB_OBJECT_ID: /^[\dA-Fa-f]{24}$/,
+
+  // Product slug pattern (lowercase, hyphens, numbers)
+  PRODUCT_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
+
+  // Category slug pattern
+  CATEGORY_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
+
+  // Price pattern (allows decimals)
+  PRICE: /^\d+(\.\d{1,2})?$/,
 };

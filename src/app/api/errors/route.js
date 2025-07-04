@@ -1,21 +1,27 @@
-import { NextResponse } from "next/server";
-
 import { HTTP_STATUS } from "@config/constants";
+import {
+  createErrorResponse,
+  createSuccessResponse,
+  validateRequiredFields,
+} from "@modules/core/utils/api";
 
 /**
- * Simple error logging endpoint for portfolio demonstration
- * In production, you'd typically use Sentry, LogRocket, or similar service
+ * POST /api/errors
+ * @description Log client-side errors for monitoring
+ * @param {Object} body - Request body
+ * @param {string} body.type - Error type (required)
+ * @param {string} body.message - Error message (required)
+ * @param {Object} [body.context] - Additional error context
+ * @param {string} [body.timestamp] - Error timestamp
+ * @returns {Object} Error logging confirmation with error ID
+ * @example POST /api/errors { "type": "javascript", "message": "Uncaught TypeError" }
  */
 export async function POST(request) {
   try {
     const errorData = await request.json();
 
-    if (!errorData?.type || !errorData?.message) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields" },
-        { status: HTTP_STATUS.BAD_REQUEST }
-      );
-    }
+    const validation = validateRequiredFields(errorData, ["type", "message"], "/api/errors");
+    if (!validation.isValid) return validation.response;
 
     if (process.env.NODE_ENV === "development") {
       console.log("📊 Error API Called:", {
@@ -26,33 +32,45 @@ export async function POST(request) {
       });
     }
 
-    // In production, integrate with monitoring service
-    // Sentry seems like a good option for error tracking
-    // Add free plan integration for demonstration
+    // In production, integrate with monitoring service (Sentry)
     // https://sentry.io/pricing/?original_referrer=https%3A%2F%2Fwww.google.com%2F
+    // Developer is a free plan
 
-    return NextResponse.json({
-      success: true,
-      message: "Error logged successfully",
-      data: {
+    return createSuccessResponse(
+      {
         errorId: `error_${Date.now()}`,
         timestamp: new Date().toISOString(),
       },
-    });
+      {
+        endpoint: "/api/errors",
+        message: "Error logged successfully",
+      }
+    );
   } catch (error) {
     console.error("Error API failed:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to log error" },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
+    return createErrorResponse(
+      "Failed to log error",
+      error.message,
+      {},
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
     );
   }
 }
 
-// Simple health check endpoint
+/**
+ * GET /api/errors
+ * @description Health check for error logging endpoint
+ * @returns {Object} API status confirmation
+ */
 export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: "Error logging API is active",
-    timestamp: new Date().toISOString(),
-  });
+  return createSuccessResponse(
+    {
+      status: "active",
+      timestamp: new Date().toISOString(),
+    },
+    {
+      endpoint: "/api/errors",
+      message: "Error logging API is active",
+    }
+  );
 }

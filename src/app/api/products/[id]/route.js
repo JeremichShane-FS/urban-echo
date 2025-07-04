@@ -1,42 +1,49 @@
-import { ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import { API_REQUIRED_FIELDS, ERROR_TYPES } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
 import { errorHandler } from "@modules/core/services/errorHandler";
+import {
+  createCorsResponse,
+  createErrorResponse,
+  createNotFoundResponse,
+  createSuccessResponse,
+  isValidObjectId,
+  transformProductForDetail,
+  validateRequiredFields,
+} from "@modules/core/utils/api";
 
+const ERROR_SOURCE = "product-detail-api";
+
+/**
+ * GET /api/products/[id]
+ * @description Get individual product by ID or slug with full details
+ * @param {Object} params - Route parameters
+ * @param {string} params.id - Product ID (ObjectId) or slug
+ * @returns {Object} Complete product details with variants, images, and SEO data
+ * @example GET /api/products/507f1f77bcf86cd799439011
+ * @example GET /api/products/classic-denim-jacket
+ */
 export async function GET(request, { params }) {
   try {
     const { id } = params;
+    const validation = validateRequiredFields(
+      { id },
+      API_REQUIRED_FIELDS.PRODUCT_DETAIL,
+      `/api/products/[id]`
+    );
 
-    if (!id) {
-      errorHandler.handleError(new Error("Product ID is required"), ERROR_TYPES.VALIDATION_ERROR, {
-        endpoint: `/api/products/[id]`,
-        method: "GET",
-      });
-
-      return Response.json(
-        {
-          success: false,
-          error: "Product ID is required",
-          message: "Missing required parameter: id",
-        },
-        { status: HTTP_STATUS.BAD_REQUEST }
-      );
-    }
+    if (!validation.isValid) return validation.response;
 
     await dbConnect();
     const Product = (await import("@lib/mongodb/models/product")).default;
-
-    // Try to find by MongoDB _id first, then by slug as fallback
     let product;
 
-    // Check if it's a valid MongoDB ObjectId
-    const isValidObjectId = /^[\dA-Fa-f]{24}$/.test(id);
-
-    if (isValidObjectId) {
-      // Search by MongoDB _id
+    if (isValidObjectId(id)) {
       product = await Product.findById(id).lean();
     } else {
-      // Search by slug
-      product = await Product.findOne({ slug: id, isActive: true }).lean();
+      product = await Product.findOne({
+        slug: id,
+        isActive: true,
+      }).lean();
     }
 
     if (!product) {
@@ -45,81 +52,34 @@ export async function GET(request, { params }) {
         endpoint: `/api/products/${id}`,
       });
 
-      return Response.json(
-        {
-          success: false,
-          error: "Product not found",
-          message: `No product found with ID or slug: ${id}`,
-        },
-        { status: HTTP_STATUS.NOT_FOUND }
-      );
+      return createNotFoundResponse("Product", id, {
+        endpoint: `/api/products/${id}`,
+      });
     }
 
-    const transformedProduct = {
-      id: product._id.toString(),
-      name: product.name,
-      slug: product.slug,
-      description: product.description,
-      price: product.price,
-      compareAtPrice: product.compareAtPrice,
-      category: product.category,
-      subcategory: product.subcategory,
-      brand: product.brand,
-      images: product.images || [],
-      variants: product.variants || [],
-      tags: product.tags || [],
-      isActive: product.isActive,
-      isFeatured: product.isFeatured,
-      isNewArrival: product.isNewArrival,
-      averageRating: product.averageRating,
-      reviewCount: product.reviewCount,
-      seo: product.seo || {},
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
-      inStock: product.variants?.some(v => v.inventory > 0) || false,
-      totalInventory: product.variants?.reduce((sum, v) => sum + v.inventory, 0) || 0,
-      colors: [...new Set(product.variants?.map(v => v.color) || [])],
-      sizes: [...new Set(product.variants?.map(v => v.size) || [])],
-    };
+    const transformedProduct = transformProductForDetail(product);
 
-    return Response.json({
-      success: true,
-      data: transformedProduct,
-      meta: {
-        endpoint: `/api/products/${id}`,
-        productId: id,
-        source: "mongodb",
-        timestamp: new Date().toISOString(),
-      },
+    return createSuccessResponse(transformedProduct, {
+      endpoint: `/api/products/${id}`,
+      productId: id,
+      source: "mongodb",
     });
   } catch (error) {
     errorHandler.handleError(error, ERROR_TYPES.API_ERROR, {
+      source: ERROR_SOURCE,
       endpoint: `/api/products/[id]`,
       method: "GET",
       params,
     });
 
-    console.error("Individual product API error:", error.message);
-
-    return Response.json(
-      {
-        success: false,
-        error: "Failed to fetch product",
-        message: error.message,
-        source: "mongodb",
-      },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-    );
+    return createErrorResponse("Failed to fetch product", error.message, { source: "mongodb" });
   }
 }
 
+/**
+ * OPTIONS /api/products/[id]
+ * @description CORS preflight handler
+ */
 export async function OPTIONS() {
-  return new Response(null, {
-    status: HTTP_STATUS.OK,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return createCorsResponse("GET_ONLY");
 }

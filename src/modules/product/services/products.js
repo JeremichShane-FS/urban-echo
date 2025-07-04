@@ -11,17 +11,17 @@ export const productsService = {
         minPrice,
         page = DEFAULT_PAGINATION.page,
         search,
-        sort = "newest",
+        sortBy = "newest",
       } = params;
 
       const queryParams = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
-        sort,
+        sortBy,
       });
 
       if (category) queryParams.append("category", category);
-      if (search) queryParams.append("search", search);
+      if (search) queryParams.append("q", search);
       if (minPrice) queryParams.append("minPrice", minPrice.toString());
       if (maxPrice) queryParams.append("maxPrice", maxPrice.toString());
 
@@ -37,7 +37,17 @@ export const productsService = {
         throw error;
       }
 
-      return await response.json();
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || result.error || "Failed to fetch products");
+      }
+
+      return {
+        products: result.data || [],
+        pagination: result.pagination || {},
+        meta: result.meta || {},
+      };
     } catch (error) {
       errorHandler.handleError(error, ERROR_TYPES.API_ERROR, {
         service: "productsService",

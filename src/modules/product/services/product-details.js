@@ -16,8 +16,13 @@ export const productDetailsService = {
         throw error;
       }
 
-      const data = await response.json();
-      return data.product || data;
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || result.error || "Failed to fetch product");
+      }
+
+      return result.data;
     } catch (error) {
       errorHandler.handleError(error, ERROR_TYPES.API_ERROR, {
         service: "productDetailsService",

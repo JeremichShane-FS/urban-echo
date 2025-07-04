@@ -25,16 +25,20 @@ export const newArrivalsService = {
         throw error;
       }
 
-      const data = await response.json();
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || result.error || "Failed to fetch new arrivals");
+      }
 
       return {
-        products: data.products || [],
-        pagination: data.pagination || {
+        products: result.data || [],
+        pagination: result.pagination || {
           page,
           limit,
-          total: data.total || 0,
-          hasMore: data.hasMore || false,
-          totalPages: data.totalPages || 0,
+          total: 0,
+          hasMore: false,
+          totalPages: 0,
         },
         filters: {
           category: category || "all",
