@@ -1,106 +1,171 @@
-import { API_ENDPOINTS, HTTP_STATUS } from "@config/constants";
-import dbConnect from "@lib/mongodb/client.js";
+import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import dbConnect from "@lib/mongodb/client";
+import { errorHandler } from "@modules/core/services/errorHandler";
 
+// eslint-disable-next-line
 export async function GET(request) {
   try {
-    await dbConnect();
-
-    const Product = (await import("@lib/mongodb/models/product")).default;
-
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-    const featured = searchParams.get("featured") === "true";
-    const newArrivals = searchParams.get("new") === "true";
-    const limit = parseInt(searchParams.get("limit")) || 20;
+    const query = searchParams.get("q") || "";
+    const limit = parseInt(searchParams.get("limit")) || 12;
     const page = parseInt(searchParams.get("page")) || 1;
-    const sort = searchParams.get("sort") || "createdAt";
-    const order = searchParams.get("order") === "asc" ? 1 : -1;
+    const category = searchParams.get("category");
+    const sortBy = searchParams.get("sortBy") || "relevance";
+    const minPrice = parseFloat(searchParams.get("minPrice")) || null;
+    const maxPrice = parseFloat(searchParams.get("maxPrice")) || null;
 
-    const query = { isActive: true };
+    if (limit > 100) {
+      errorHandler.handleError(
+        new Error("Limit exceeds maximum allowed value"),
+        ERROR_TYPES.VALIDATION_ERROR,
+        { limit, endpoint: `/api/${API_ENDPOINTS.productSearch}` }
+      );
 
-    if (category) {
-      query.category = category;
+      return Response.json(
+        {
+          success: false,
+          error: "Invalid limit parameter",
+          message: "Limit cannot exceed 100 items per request",
+        },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      );
     }
 
-    if (featured) {
-      query.isFeatured = true;
+    if (page < 1) {
+      errorHandler.handleError(new Error("Invalid page parameter"), ERROR_TYPES.VALIDATION_ERROR, {
+        page,
+        endpoint: `/api/${API_ENDPOINTS.productSearch}`,
+      });
+
+      return Response.json(
+        {
+          success: false,
+          error: "Invalid page parameter",
+          message: "Page must be a positive integer",
+        },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      );
     }
 
-    if (newArrivals) {
-      query.isNewArrival = true;
+    await dbConnect();
+    const Product = (await import("@lib/mongodb/models/product")).default;
+    const searchQuery = { isActive: true };
+
+    if (query.trim()) {
+      searchQuery.$or = [
+        { name: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+        { tags: { $in: [new RegExp(query, "i")] } },
+        { brand: { $regex: query, $options: "i" } },
+      ];
     }
 
-    // Calculate skip for pagination
+    if (category) searchQuery.category = category;
+    if (minPrice !== null || maxPrice !== null) {
+      searchQuery.price = {};
+      if (minPrice !== null) searchQuery.price.$gte = minPrice;
+      if (maxPrice !== null) searchQuery.price.$lte = maxPrice;
+    }
+
+    let sortOptions = {};
+    switch (sortBy) {
+      case "price-low":
+        sortOptions = { price: 1 };
+        break;
+      case "price-high":
+        sortOptions = { price: -1 };
+        break;
+      case "rating":
+        sortOptions = { averageRating: -1, reviewCount: -1 };
+        break;
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "relevance":
+      default:
+        if (query.trim()) {
+          sortOptions = { score: { $meta: "textScore" } };
+        } else {
+          sortOptions = { createdAt: -1 };
+        }
+        break;
+    }
+
     const skip = (page - 1) * limit;
 
-    // Build sort object
-    const sortObj = {};
-    sortObj[sort] = order;
+    let searchPipeline = Product.find(searchQuery);
 
-    // Execute query
+    if (query.trim() && sortBy === "relevance") {
+      searchPipeline = searchPipeline.sort({ $text: { $search: query } });
+    } else {
+      searchPipeline = searchPipeline.sort(sortOptions);
+    }
+
     const [products, totalCount] = await Promise.all([
-      Product.find(query).sort(sortObj).skip(skip).limit(limit).lean(),
-      Product.countDocuments(query),
+      searchPipeline.skip(skip).limit(limit).lean(),
+      Product.countDocuments(searchQuery),
     ]);
 
     const transformedProducts = products.map(product => ({
       id: product._id.toString(),
       name: product.name,
+      slug: product.slug,
+      description: product.description,
       price: product.price,
       compareAtPrice: product.compareAtPrice,
-      image: product.images?.[0]?.url || null,
-      slug: product.slug,
       category: product.category,
       subcategory: product.subcategory,
       brand: product.brand,
-      description: product.description,
+      images: product.images || [],
+      tags: product.tags || [],
+      isFeatured: product.isFeatured,
+      isNewArrival: product.isNewArrival,
+      averageRating: product.averageRating,
+      reviewCount: product.reviewCount,
+      inStock: product.variants?.some(v => v.inventory > 0) || false,
       colors: [...new Set(product.variants?.map(v => v.color) || [])],
       sizes: [...new Set(product.variants?.map(v => v.size) || [])],
-      inStock: product.variants?.some(v => v.inventory > 0) || false,
-      featured: product.isFeatured,
-      isNew: product.isNewArrival,
-      rating: product.averageRating,
-      reviewCount: product.reviewCount,
-      tags: product.tags,
-      variants: product.variants,
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
     }));
 
-    // Pagination
     const totalPages = Math.ceil(totalCount / limit);
-    const hasNextPage = page < totalPages;
-    const hasPrevPage = page > 1;
+    const hasMore = page < totalPages;
 
     return Response.json({
       success: true,
       data: transformedProducts,
-      meta: {
+      pagination: {
+        page,
+        limit,
         total: totalCount,
-        page: page,
-        limit: limit,
-        totalPages: totalPages,
-        hasNextPage: hasNextPage,
-        hasPrevPage: hasPrevPage,
-        endpoint: `/api/${API_ENDPOINTS.products}`,
+        totalPages,
+        hasMore,
+      },
+      filters: {
+        query,
+        category,
+        sortBy,
+        minPrice,
+        maxPrice,
+      },
+      meta: {
+        endpoint: `/api/${API_ENDPOINTS.productSearch}`,
+        searchQuery: query,
         source: "mongodb",
-        query: {
-          category,
-          featured,
-          newArrivals,
-          sort,
-          order: order === 1 ? "asc" : "desc",
-        },
         timestamp: new Date().toISOString(),
       },
     });
   } catch (error) {
-    console.error("Products API error:", error);
+    errorHandler.handleError(error, ERROR_TYPES.API_ERROR, {
+      endpoint: `/api/${API_ENDPOINTS.productSearch}`,
+      method: "GET",
+    });
+
+    console.error("Product search API error:", error.message);
 
     return Response.json(
       {
         success: false,
-        error: "Failed to fetch products",
+        error: "Search failed",
         message: error.message,
         source: "mongodb",
       },
@@ -109,63 +174,13 @@ export async function GET(request) {
   }
 }
 
-// POST endpoint for creating products (admin only)
-export async function POST(request) {
-  try {
-    await dbConnect();
-    const Product = (await import("@lib/mongodb/models/product")).default;
-
-    const productData = await request.json();
-
-    // Validate required fields
-    const requiredFields = ["name", "slug", "description", "price", "category"];
-    const missingFields = requiredFields.filter(field => !productData[field]);
-
-    if (missingFields.length > 0) {
-      return Response.json(
-        {
-          success: false,
-          error: "Missing required fields",
-          missingFields: missingFields,
-        },
-        { status: HTTP_STATUS.BAD_REQUEST }
-      );
-    }
-
-    // Check if slug already exists
-    const existingProduct = await Product.findOne({ slug: productData.slug });
-    if (existingProduct) {
-      return Response.json(
-        {
-          success: false,
-          error: "Product with this slug already exists",
-        },
-        { status: HTTP_STATUS.CONFLICT }
-      );
-    }
-
-    // Create new product
-    const newProduct = new Product(productData);
-    const savedProduct = await newProduct.save();
-
-    return Response.json(
-      {
-        success: true,
-        data: savedProduct,
-        message: "Product created successfully",
-      },
-      { status: HTTP_STATUS.CREATED }
-    );
-  } catch (error) {
-    console.error("Create product error:", error);
-
-    return Response.json(
-      {
-        success: false,
-        error: "Failed to create product",
-        message: error.message,
-      },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-    );
-  }
+export async function OPTIONS() {
+  return new Response(null, {
+    status: HTTP_STATUS.OK,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
 }
