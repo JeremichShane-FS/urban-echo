@@ -37,11 +37,11 @@ const ERROR_SOURCE = "new-arrivals-api";
  */
 export async function GET(request) {
   try {
-    const searchParams = new URL(request.url, "http://localhost:3000").searchParams;
+    const searchParams = new URL(request.url).searchParams;
     const category = searchParams.get("category");
     const rawLimit = parseInt(searchParams.get("limit")) || 8;
     const rawPage = parseInt(searchParams.get("page")) || DEFAULT_PAGINATION.page;
-    const sort = searchParams.get("sort") || "newest"; // ✅ Changed from "createdAt" to "newest"
+    const sort = searchParams.get("sort") || "newest";
     const order = searchParams.get("order") === "asc" ? 1 : -1;
     const paginationValidation = validatePagination({
       limit: rawLimit,

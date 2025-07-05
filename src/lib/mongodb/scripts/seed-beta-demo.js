@@ -651,7 +651,7 @@ const createDemoOrders = (users, products) => {
         const itemTotal = itemPrice * quantity;
 
         orderItems.push({
-          product: product._id, // ✅ Fixed: product instead of productId
+          product: product._id,
           productName: product.name,
           variant: {
             size: variant.size,
@@ -659,8 +659,8 @@ const createDemoOrders = (users, products) => {
             sku: variant.sku,
           },
           quantity: quantity,
-          price: itemPrice, // ✅ Fixed: price instead of unitPrice
-          total: itemTotal, // ✅ Fixed: total instead of totalPrice
+          price: itemPrice,
+          total: itemTotal,
         });
 
         orderTotal += itemTotal;
