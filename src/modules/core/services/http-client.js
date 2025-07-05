@@ -30,7 +30,7 @@ const request = async (endpoint, options = {}) => {
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
   let baseUrl = "";
-  if (typeof window !== "undefined") {
+  if (typeof window === "undefined") {
     // Server-side: use localhost for development or site URL for production
     baseUrl =
       process.env.node === "production"
