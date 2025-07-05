@@ -184,7 +184,6 @@ productSchema.index({ price: 1 });
 productSchema.index({ createdAt: -1 });
 productSchema.index({ salesCount: -1 });
 productSchema.index({ rating: -1 });
-productSchema.index({ "variants.sku": 1 });
 
 productSchema.statics.findByCategory = function (category, options = {}) {
   const query = { category, isActive: true };
