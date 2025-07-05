@@ -42,12 +42,6 @@ export const viewport = {
   themeColor: "#333333",
 };
 
-// FIX: [BUG] Testing another component to see if workflow is working
-// test
-// test
-// test
-// test
-
 export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
@@ -67,12 +61,6 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
-// TODO: [TEST] More todo comments to make sure things are working
-// test
-// test
-// test
-// test
 
 RootLayout.propTypes = {
   children: PropTypes.node.isRequired,

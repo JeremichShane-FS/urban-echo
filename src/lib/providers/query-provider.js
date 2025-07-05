@@ -110,9 +110,7 @@ QueryProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// Updated query keys to match your current structure
 export const queryKeys = {
-  // Content queries (using your api-service)
   content: {
     all: ["content"],
     hero: () => [...queryKeys.content.all, "hero"],
@@ -120,7 +118,6 @@ export const queryKeys = {
     pageConfig: pageName => [...queryKeys.content.all, "page-config", pageName],
   },
 
-  // Product queries (for future implementation)
   products: {
     all: ["products"],
     lists: () => [...queryKeys.products.all, "list"],
@@ -135,21 +132,18 @@ export const queryKeys = {
     category: category => [...queryKeys.products.all, "category", category],
   },
 
-  // Categories
   categories: {
     all: ["categories"],
     list: () => [...queryKeys.categories.all, "list"],
     detail: slug => [...queryKeys.categories.all, "detail", slug],
   },
 
-  // Collections
   collections: {
     all: ["collections"],
     list: () => [...queryKeys.collections.all, "list"],
     detail: slug => [...queryKeys.collections.all, "detail", slug],
   },
 
-  // User data (for future auth implementation)
   user: {
     all: ["user"],
     profile: () => [...queryKeys.user.all, "profile"],
@@ -159,7 +153,6 @@ export const queryKeys = {
     preferences: () => [...queryKeys.user.all, "preferences"],
   },
 
-  // Cart (though you're using Zustand for this)
   cart: {
     all: ["cart"],
     items: () => [...queryKeys.cart.all, "items"],
@@ -168,32 +161,29 @@ export const queryKeys = {
     promo: () => [...queryKeys.cart.all, "promo"],
   },
 
-  // Reviews (for future implementation)
+  // for future implementation
   reviews: {
     all: ["reviews"],
     product: productId => [...queryKeys.reviews.all, "product", productId],
     user: userId => [...queryKeys.reviews.all, "user", userId],
   },
 
-  // Newsletter
   newsletter: {
     all: ["newsletter"],
     subscription: () => [...queryKeys.newsletter.all, "subscription"],
   },
 };
 
-// Prefetch Utilities (updated to use your api-service)
+/**
+ * Prefetch content data
+ * @param {QueryClient} queryClient - React Query client
+ * @param {string} contentType - Content type to prefetch
+ */
 export const prefetchUtils = {
-  /**
-   * Prefetch content data
-   * @param {QueryClient} queryClient - React Query client
-   * @param {string} contentType - Content type to prefetch
-   */
   prefetchContent: (queryClient, contentType) => {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content[contentType](),
       queryFn: () => {
-        // This will use your api-service automatically
         const apiService = require("@lib/services/api-service").default;
         switch (contentType) {
           case "hero":
@@ -225,7 +215,6 @@ export const prefetchUtils = {
   },
 };
 
-// Error Recovery Utilities
 export const errorRecovery = {
   /**
    * Clear all queries and refetch

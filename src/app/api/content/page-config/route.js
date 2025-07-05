@@ -1,98 +1,90 @@
-import { API_ENDPOINTS } from "@config/constants";
+import { API_ENDPOINTS, API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
+import { errorHandler } from "@modules/core/services/errorHandler";
+import {
+  createCorsResponse,
+  createFallbackResponse,
+  createSuccessResponse,
+  fetchFromStrapi,
+  transformContentWithFallbacks,
+} from "@modules/core/utils/api";
 
+const ERROR_SOURCE = "page-config-api";
+const PAGE_CONFIG_FALLBACKS = API_FALLBACK_DATA.PAGE_CONFIG;
+
+/**
+ * GET /api/content/page-config
+ * @description Get page configuration settings with fallback support
+ * @param {Object} searchParams - Query parameters
+ * @param {string} [searchParams.page=homepage] - Page name
+ * @returns {Object} Page configuration with feature flags and SEO settings
+ * @example GET /api/content/page-config?page=shop
+ */
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const pageName = searchParams.get("page") || "homepage";
-
   try {
-    const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN;
+    const { searchParams } = new URL(request.url);
+    const pageName = searchParams.get("page") || "homepage";
 
-    // Fetch from Strapi with filters
-    const response = await fetch(
-      `${STRAPI_URL}/api/page-configs?filters[pageName][$eq]=${pageName}&populate=*`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
-        },
+    try {
+      const response = await fetchFromStrapi(
+        `page-configs?filters[pageName][$eq]=${pageName}&populate=*`,
+        ERROR_SOURCE
+      );
+      const data = await response.json();
+      const config = data.data?.[0];
+
+      if (!config) {
+        return createFallbackResponse(
+          { ...PAGE_CONFIG_FALLBACKS, pageName },
+          {
+            endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
+            pageName,
+          },
+          "No configuration found in CMS"
+        );
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Strapi API responded with status: ${response.status}`);
-    }
+      const transformedConfig = transformContentWithFallbacks(config, PAGE_CONFIG_FALLBACKS);
+      transformedConfig.pageName = config.pageName || pageName;
 
-    const data = await response.json();
-    const config = data.data?.[0];
-
-    if (!config) {
-      throw new Error("No config found");
-    }
-
-    // Transform Strapi data to my expected format
-    const transformedConfig = {
-      pageName: config.pageName || "homepage",
-      seoTitle: config.seoTitle || "Urban Echo | Modern Fashion",
-      seoDescription: config.seoDescription || "Discover trendy, high-quality clothing",
-      showFeaturedProducts: config.showFeaturedProducts ?? true,
-      showNewArrivals: config.showNewArrivals ?? true,
-      showNewsletter: config.showNewsletter ?? true,
-      showAboutSection: config.showAboutSection ?? true,
-      showTestimonials: config.showTestimonials ?? true,
-      showCategories: config.showCategories ?? true,
-      maxFeaturedProducts: config.maxFeaturedProducts || 8,
-      maxNewArrivals: config.maxNewArrivals || 8,
-    };
-
-    return Response.json({
-      success: true,
-      data: transformedConfig,
-      meta: {
+      return createSuccessResponse(transformedConfig, {
         endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
-        pageName: pageName,
-        lastUpdated: config.updatedAt || new Date().toISOString(),
-      },
-    });
+        pageName,
+        lastUpdated: transformedConfig.lastUpdated,
+        source: "strapi",
+      });
+    } catch (strapiError) {
+      return createFallbackResponse(
+        { ...PAGE_CONFIG_FALLBACKS, pageName },
+        {
+          endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
+          pageName,
+        },
+        strapiError.message
+      );
+    }
   } catch (error) {
-    console.error("Page config API error:", error.message);
-
-    const fallbackConfig = {
-      pageName: pageName,
-      seoTitle: "Urban Echo | Modern Fashion E-Commerce",
-      seoDescription:
-        "Discover trendy, high-quality clothing at Urban Echo. Shop our curated collection of contemporary fashion.",
-      showFeaturedProducts: true,
-      showNewArrivals: true,
-      showNewsletter: true,
-      showAboutSection: true,
-      showTestimonials: true,
-      showCategories: true,
-      maxFeaturedProducts: 8,
-      maxNewArrivals: 8,
-    };
-
-    console.warn("Using fallback page config due to error:", error.message);
-    return Response.json({
-      success: true,
-      data: fallbackConfig,
-      meta: {
-        endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
-        pageName: fallbackConfig.pageName,
-        lastUpdated: new Date().toISOString(),
-        fallback: true,
-      },
+    errorHandler.handleError(error, ERROR_TYPES.SERVER_ERROR, {
+      source: ERROR_SOURCE,
+      action: "fetch-page-config",
+      endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
     });
+
+    const pageName = new URL(request.url).searchParams.get("page") || "homepage";
+    return createFallbackResponse(
+      { ...PAGE_CONFIG_FALLBACKS, pageName },
+      {
+        endpoint: `/api/${API_ENDPOINTS.content}/page-config`,
+        pageName,
+      },
+      error.message
+    );
   }
 }
 
+/**
+ * OPTIONS /api/content/page-config
+ * @description CORS preflight handler
+ */
 export async function OPTIONS() {
-  return new Response(null, {
-    status: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return createCorsResponse("GET_ONLY");
 }

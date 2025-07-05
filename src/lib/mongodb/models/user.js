@@ -22,12 +22,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    // Alternative name fields (for Auth0 compatibility)
     given_name: String,
     family_name: String,
-    name: String, // Full name
+    name: String,
 
-    // Profile Information
     dateOfBirth: {
       type: Date,
     },
@@ -36,10 +34,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     avatar: {
-      type: String, // URL to profile image
+      type: String,
     },
 
-    // User Preferences
     preferences: {
       theme: {
         type: String,
@@ -62,23 +59,20 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: true,
       },
-      // E-commerce preferences
       smsUpdates: {
         type: Boolean,
         default: false,
       },
-      size: String, // Preferred clothing size
+      size: String,
       favoriteCategories: [String],
     },
 
-    // User Role & Permissions
     role: {
       type: String,
       enum: ["USER", "ADMIN", "SUPER_ADMIN", "MODERATOR"],
       default: "USER",
     },
 
-    // Account Status
     isActive: {
       type: Boolean,
       default: true,
@@ -91,7 +85,6 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
 
-    // Addresses
     addresses: [
       {
         type: {
@@ -114,7 +107,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    // Wishlist (stored in DB for persistence across devices)
     wishlist: [
       {
         productId: {
@@ -129,7 +121,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    // Recently Viewed (limited storage, rest handled by Zustand)
     recentlyViewed: [
       {
         productId: {
@@ -144,7 +135,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    // Relationships
     orders: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -158,29 +148,26 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    // Auth0 Integration Fields
     auth0Id: {
       type: String,
       unique: true,
-      sparse: true, // Allows null values but ensures uniqueness when present
+      sparse: true,
     },
     provider: {
       type: String,
-      default: "local", // 'auth0', 'google', 'local', etc.
+      default: "local",
     },
 
-    // Tracking & Analytics
-    signupSource: String, // 'website', 'mobile', 'social', etc.
+    signupSource: String,
     utmSource: String,
     utmMedium: String,
     utmCampaign: String,
   },
   {
-    timestamps: true, // Creates createdAt and updatedAt automatically
+    timestamps: true,
   }
 );
 
-// Indexes for performance
 userSchema.index({ email: 1 });
 userSchema.index({ auth0Id: 1 });
 userSchema.index({ role: 1 });
@@ -188,7 +175,6 @@ userSchema.index({ "addresses.zipCode": 1 });
 userSchema.index({ "wishlist.productId": 1 });
 userSchema.index({ "recentlyViewed.productId": 1 });
 
-// Virtual for full name
 userSchema.virtual("fullName").get(function () {
   if (this.name) return this.name;
 
@@ -198,7 +184,6 @@ userSchema.virtual("fullName").get(function () {
   return `${firstName} ${lastName}`.trim() || this.email;
 });
 
-// Virtual for display name
 userSchema.virtual("displayName").get(function () {
   return (
     this.name ||
@@ -208,7 +193,6 @@ userSchema.virtual("displayName").get(function () {
   );
 });
 
-// Virtual for user initials
 userSchema.virtual("initials").get(function () {
   const firstName = this.firstName || this.given_name || "";
   const lastName = this.lastName || this.family_name || "";
@@ -234,16 +218,11 @@ userSchema.methods.removeFromWishlist = function (productId) {
   return this.save();
 };
 
-// Remove if already exists
 userSchema.methods.addToRecentlyViewed = function (productId) {
   this.recentlyViewed = this.recentlyViewed.filter(
     item => item.productId.toString() !== productId.toString()
   );
-
-  // Add to beginning
   this.recentlyViewed.unshift({ productId });
-
-  // Keep only last 10
   this.recentlyViewed = this.recentlyViewed.slice(0, 10);
 
   return this.save();

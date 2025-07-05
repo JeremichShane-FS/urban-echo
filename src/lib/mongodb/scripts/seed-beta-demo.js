@@ -87,9 +87,9 @@ const demoProducts = [
   },
 
   {
-    name: "Classic White Dress Shirt",
-    slug: "classic-white-dress-shirt",
-    description: "Essential white dress shirt perfect for business or formal occasions.",
+    name: "Classic Blue Dress Shirt",
+    slug: "classic-blue-dress-shirt",
+    description: "Essential blue dress shirt perfect for business or formal occasions.",
     price: 89.99,
     compareAtPrice: 129.99,
     category: "men",
@@ -98,16 +98,16 @@ const demoProducts = [
     images: [
       {
         url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80",
-        alt: "Classic White Dress Shirt",
+        alt: "Classic Blue Dress Shirt",
         position: 0,
       },
     ],
     variants: [
-      { size: "S", color: "White", sku: "CWDS-WHT-S", inventory: 25, price: 89.99 },
-      { size: "M", color: "White", sku: "CWDS-WHT-M", inventory: 30, price: 89.99 },
-      { size: "L", color: "White", sku: "CWDS-WHT-L", inventory: 28, price: 89.99 },
-      { size: "XL", color: "White", sku: "CWDS-WHT-XL", inventory: 20, price: 89.99 },
-      { size: "XXL", color: "White", sku: "CWDS-WHT-XXL", inventory: 15, price: 89.99 },
+      { size: "S", color: "Blue", sku: "CWDS-WHT-S", inventory: 25, price: 89.99 },
+      { size: "M", color: "Blue", sku: "CWDS-WHT-M", inventory: 30, price: 89.99 },
+      { size: "L", color: "Blue", sku: "CWDS-WHT-L", inventory: 28, price: 89.99 },
+      { size: "XL", color: "Blue", sku: "CWDS-WHT-XL", inventory: 20, price: 89.99 },
+      { size: "XXL", color: "Blue", sku: "CWDS-WHT-XXL", inventory: 15, price: 89.99 },
     ],
     tags: ["dress", "formal", "business", "classic"],
     collections: ["new-arrivals"],
@@ -421,7 +421,7 @@ const demoProducts = [
     categoryPath: "men/shorts",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1506629905057-bc209b05dfd4?auto=format&fit=crop&w=1000&q=80",
+        url: "https://images.unsplash.com/photo-1600404909295-aa6fb386f450?q=80",
         alt: "Athletic Performance Shorts",
         position: 0,
       },
@@ -651,7 +651,7 @@ const createDemoOrders = (users, products) => {
         const itemTotal = itemPrice * quantity;
 
         orderItems.push({
-          product: product._id, // ✅ Fixed: product instead of productId
+          product: product._id,
           productName: product.name,
           variant: {
             size: variant.size,
@@ -659,8 +659,8 @@ const createDemoOrders = (users, products) => {
             sku: variant.sku,
           },
           quantity: quantity,
-          price: itemPrice, // ✅ Fixed: price instead of unitPrice
-          total: itemTotal, // ✅ Fixed: total instead of totalPrice
+          price: itemPrice,
+          total: itemTotal,
         });
 
         orderTotal += itemTotal;
