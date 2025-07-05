@@ -50,32 +50,50 @@ export const errorHandler = {
 
       const backgroundColor =
         level === "error" ? "#dc3545" : level === "warn" ? "#ffc107" : "#28a745";
-      const endpointHtml = safeData.endpoint
-        ? `<br><strong>Endpoint:</strong> ${safeData.endpoint}`
-        : "";
 
-      logElement.innerHTML = `
-        <div style="
-          position: fixed; 
-          top: 20px; 
-          left: 20px; 
-          background: ${backgroundColor}; 
-          color: white; 
-          padding: 8px 12px; 
-          border-radius: 4px; 
-          font-family: monospace; 
-          font-size: 12px; 
-          z-index: 10000;
-          max-width: 400px;
-          margin-bottom: 5px;
-        ">
-          <strong>${emoji} ${level.toUpperCase()}</strong> [${timestamp}]<br>
-          <strong>Type:</strong> ${safeData.type}<br>
-          <strong>Message:</strong> ${safeData.message}<br>
-          <strong>Source:</strong> ${safeData.source || "N/A"}${endpointHtml}
-        </div>
+      // Create the main container div using createElement (SECURE)
+      const container = document.createElement("div");
+      container.style.cssText = `
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        background: ${backgroundColor}; 
+        color: white; 
+        padding: 8px 12px; 
+        border-radius: 4px; 
+        font-family: monospace; 
+        font-size: 12px; 
+        z-index: 10000;
+        max-width: 400px;
+        margin-bottom: 5px;
       `;
 
+      // Helper function to add a line with optional label
+      const addLine = (label, value, isFirst = false) => {
+        if (!isFirst) container.appendChild(document.createElement("br"));
+
+        if (label) {
+          const strong = document.createElement("strong");
+          strong.textContent = label;
+          container.appendChild(strong);
+        }
+
+        container.appendChild(document.createTextNode(value));
+      };
+
+      // Build content securely
+      addLine(null, `${emoji} ${level.toUpperCase()} [${timestamp}]`, true);
+      addLine("Type:", ` ${safeData.type}`);
+      addLine("Message:", ` ${safeData.message}`);
+      addLine("Source:", ` ${safeData.source || "N/A"}`);
+
+      // Add endpoint if it exists
+      if (safeData.endpoint) {
+        addLine("Endpoint:", ` ${safeData.endpoint}`);
+      }
+
+      // Append the container to logElement
+      logElement.appendChild(container);
       document.body.appendChild(logElement);
 
       // Remove after 8 seconds
