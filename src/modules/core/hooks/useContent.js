@@ -5,12 +5,12 @@ import {
   DEFAULT_LOCALE,
   ROUTES,
 } from "@config/constants";
-import { queryKeys } from "@lib/providers/query-provider";
+import { queryKeys } from "@modules/core/providers/query-provider";
 import {
   getAboutContent as apiGetAboutContent,
   getHeroContent as apiGetHeroContent,
   getPageConfig as apiGetPageConfig,
-} from "@lib/services/api-service";
+} from "@modules/core/services/api-service";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { useQuery } from "@tanstack/react-query";
 

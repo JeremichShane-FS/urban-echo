@@ -20,9 +20,9 @@ async function testDatabaseConnection() {
 // Helper function to import models
 async function importModels() {
   console.log("2. Testing MongoDB models...");
-  const Product = (await import("./node/models/product.js")).default;
-  const User = (await import("./node/models/user.js")).default;
-  const Order = (await import("./node/models/order.js")).default;
+  const Product = (await import("../utils/models/product.js")).default;
+  const User = (await import("../utils/models/user.js")).default;
+  const Order = (await import("../utils/models/order.js")).default;
 
   console.log("✅ All models imported successfully\n");
   return { Product, User, Order };

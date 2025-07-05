@@ -26,7 +26,7 @@
 
 import { generatePageMetadata } from "@config/seo";
 import HomePage from "@design-system/pages/HomePage";
-import { getPageConfig } from "@lib/services/api-service";
+import { getPageConfig } from "@modules/core/services/api-service";
 
 export async function generateMetadata() {
   try {
