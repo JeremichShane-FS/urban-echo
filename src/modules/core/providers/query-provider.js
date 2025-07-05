@@ -184,12 +184,12 @@ export const prefetchUtils = {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content[contentType](),
       queryFn: () => {
-        const apiService = require("@modules/core/services/api-service").default;
+        const { contentService } = require("@modules/core/services").default;
         switch (contentType) {
           case "hero":
-            return apiService.getHeroContent();
+            return contentService.getHeroContent();
           case "about":
-            return apiService.getAboutContent();
+            return contentService.getAboutContent();
           default:
             throw new Error(`Unknown content type: ${contentType}`);
         }
@@ -207,8 +207,8 @@ export const prefetchUtils = {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content.pageConfig(pageName),
       queryFn: () => {
-        const apiService = require("@modules/core/services/api-service").default;
-        return apiService.getPageConfig(pageName);
+        const { contentService } = require("@modules/core/services").default;
+        return contentService.getPageConfig(pageName);
       },
       staleTime: CACHE_DURATION.long,
     });

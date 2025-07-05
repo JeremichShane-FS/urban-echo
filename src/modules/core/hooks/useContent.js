@@ -6,13 +6,15 @@ import {
   ROUTES,
 } from "@config/constants";
 import { queryKeys } from "@modules/core/providers/query-provider";
-import {
-  getAboutContent as apiGetAboutContent,
-  getHeroContent as apiGetHeroContent,
-  getPageConfig as apiGetPageConfig,
-} from "@modules/core/services/api-service";
+import { contentService } from "@modules/core/services";
 import { errorHandler } from "@modules/core/services/errorHandler";
 import { useQuery } from "@tanstack/react-query";
+
+const {
+  getAboutContent: apiGetAboutContent,
+  getHeroContent: apiGetHeroContent,
+  getPageConfig: apiGetPageConfig,
+} = contentService;
 
 const DEFAULT_HERO_CONTENT = {
   title: "Discover Your Style",
