@@ -33,7 +33,7 @@ const request = async (endpoint, options = {}) => {
   if (typeof window === "undefined") {
     // Server-side: use localhost for development or site URL for production
     baseUrl =
-      process.env.node === "production"
+      process.env.NODE_ENV === "production"
         ? process.env.NEXT_PUBLIC_SITE_URL || "https://shopurbanecho.com"
         : "http://localhost:3000";
   }
