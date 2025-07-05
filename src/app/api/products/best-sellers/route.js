@@ -12,16 +12,16 @@ import {
   validatePagination,
 } from "@modules/core/utils/api";
 
-const ERROR_SOURCE = "featured-products-api";
+const ERROR_SOURCE = "best-sellers-api";
 
 /**
- * GET /api/products/featured
- * @description Get featured products sorted by rating
+ * GET /api/products/best-sellers
+ * @description Get best selling products sorted by sales count
  * @param {Object} searchParams - Query parameters
  * @param {number} [searchParams.limit=8] - Number of products (max 50)
  * @param {string} [searchParams.category] - Category filter
- * @returns {Object} Featured products array with metadata
- * @example GET /api/products/featured?category=clothing&limit=12
+ * @returns {Object} Best seller products array with metadata
+ * @example GET /api/products/best-sellers?category=electronics&limit=12
  */
 export async function GET(request) {
   try {
@@ -31,8 +31,8 @@ export async function GET(request) {
     const validation = validatePagination({
       limit: rawLimit,
       page: 1,
-      maxLimit: API_VALIDATION_LIMITS.MAX_FEATURED_PRODUCTS,
-      endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+      maxLimit: API_VALIDATION_LIMITS.MAX_BEST_SELLERS,
+      endpoint: `/api/${API_ENDPOINTS.bestSellers}`,
     });
 
     if (!validation.isValid) return validation.response;
@@ -42,18 +42,17 @@ export async function GET(request) {
     const query = buildProductQuery({
       category,
       isActive: true,
-      isFeatured: true,
+      isBestSeller: true,
     });
 
-    const featuredProducts = await Product.find(query)
-      .sort({ averageRating: -1, reviewCount: -1 })
+    const bestSellerProducts = await Product.find(query)
+      .sort({ salesCount: -1, averageRating: -1, reviewCount: -1 })
       .limit(rawLimit)
       .select(buildFieldSelection("listing"))
       .lean();
-
-    const transformedProducts = transformProducts(featuredProducts);
+    const transformedProducts = transformProducts(bestSellerProducts);
     const meta = createProductMeta(
-      `/api/${API_ENDPOINTS.featuredProducts}`,
+      `/api/${API_ENDPOINTS.bestSellers}`,
       { category, limit: rawLimit },
       "mongodb"
     );
@@ -65,18 +64,18 @@ export async function GET(request) {
   } catch (error) {
     errorHandler.handleError(error, ERROR_TYPES.DATABASE_ERROR, {
       source: ERROR_SOURCE,
-      action: "getFeaturedProducts",
-      endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+      action: "getBestSellers",
+      endpoint: `/api/${API_ENDPOINTS.bestSellers}`,
     });
 
-    return createErrorResponse("Failed to fetch featured products", error.message, {
+    return createErrorResponse("Failed to fetch best sellers", error.message, {
       source: "mongodb",
     });
   }
 }
 
 /**
- * OPTIONS /api/products/featured
+ * OPTIONS /api/products/best-sellers
  * @description CORS preflight handler
  */
 export async function OPTIONS() {

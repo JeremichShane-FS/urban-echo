@@ -1,4 +1,3 @@
-// src/lib/mongodb/scripts/node-models/order.js - NODE.JS ONLY VERSION
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -105,7 +104,6 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.index({ user: 1, createdAt: -1 });
-// Removed duplicate orderNumber index since it's already unique: true
 orderSchema.index({ status: 1 });
 
 export default mongoose.models.Order || mongoose.model("Order", orderSchema);

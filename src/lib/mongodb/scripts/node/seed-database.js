@@ -299,7 +299,6 @@ async function seedDatabase() {
   }
 }
 
-// Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   seedDatabase();
 }

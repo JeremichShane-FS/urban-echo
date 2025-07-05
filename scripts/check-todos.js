@@ -36,7 +36,7 @@ const VALID_TEMPLATES = [
 ];
 
 function validateTodoComment(line, _lineNumber, _fileName) {
-  const match = line.match(/\/\/\s*(TODO|FIX):\s*(.+)/);
+  const match = line.match(/\/\/\s*(TODO|FIX|FIXME|HACK|NOTE|REVIEW):\s*(.+)/);
   if (!match) return [];
 
   const comment = match[2].trim();

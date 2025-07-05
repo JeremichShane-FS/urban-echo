@@ -1,25 +1,6 @@
-/**
- * @fileoverview Enhanced error handling service for Urban Echo e-commerce platform.
- * Provides comprehensive error management including logging, classification, and user notifications.
- * Integrates with existing error types and constants from the application.
- * @example
- * import { errorHandler } from 'src/modules/core/services/errorHandler';
- * errorHandler.handleError(new Error("Something went wrong"), 'NETWORK_ERROR');
- */
-
-import { ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import { ERROR_TYPES } from "@config/constants";
 
 export const errorHandler = {
-  /**
-   * Handles errors with proper classification and logging
-   * @param {Error|string} error - The error to handle
-   * @param {string} errorType - Error type from ERROR_TYPES constants
-   * @param {Object} context - Additional context for the error
-   * @returns {void}
-   * @example
-   * errorHandler.handleError(new Error("Network failed"), 'NETWORK_ERROR', { userId: '123' });
-   */
-
   handleError: (error, errorType = ERROR_TYPES.UNKNOWN_ERROR, context = {}) => {
     const errorInfo = {
       timestamp: new Date().toISOString(),
@@ -44,25 +25,115 @@ export const errorHandler = {
   },
 
   /**
-   * Logs error information with proper formatting
+   * Logs error information with proper formatting - completely avoids console
    * @param {Object} errorInfo - Structured error information
    * @returns {void}
    */
   logError: errorInfo => {
     const logLevel = errorHandler.getLogLevel(errorInfo.type);
 
+    // Create a visual log in the DOM instead of console
+    const createVisualLog = (level, emoji, data) => {
+      if (typeof window === "undefined") return;
+
+      const logElement = document.createElement("div");
+      const timestamp = new Date().toLocaleTimeString();
+
+      const safeData = {
+        timestamp: data.timestamp,
+        type: data.type,
+        message: data.message,
+        source: data.context?.source,
+        endpoint: data.context?.endpoint,
+        userId: data.context?.userId,
+      };
+
+      const backgroundColor =
+        level === "error" ? "#dc3545" : level === "warn" ? "#ffc107" : "#28a745";
+
+      // Create the main container div using createElement (SECURE)
+      const container = document.createElement("div");
+      container.style.cssText = `
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        background: ${backgroundColor}; 
+        color: white; 
+        padding: 8px 12px; 
+        border-radius: 4px; 
+        font-family: monospace; 
+        font-size: 12px; 
+        z-index: 10000;
+        max-width: 400px;
+        margin-bottom: 5px;
+      `;
+
+      // Helper function to add a line with optional label
+      const addLine = (label, value, isFirst = false) => {
+        if (!isFirst) container.appendChild(document.createElement("br"));
+
+        if (label) {
+          const strong = document.createElement("strong");
+          strong.textContent = label;
+          container.appendChild(strong);
+        }
+
+        container.appendChild(document.createTextNode(value));
+      };
+
+      // Build content securely
+      addLine(null, `${emoji} ${level.toUpperCase()} [${timestamp}]`, true);
+      addLine("Type:", ` ${safeData.type}`);
+      addLine("Message:", ` ${safeData.message}`);
+      addLine("Source:", ` ${safeData.source || "N/A"}`);
+
+      // Add endpoint if it exists
+      if (safeData.endpoint) {
+        addLine("Endpoint:", ` ${safeData.endpoint}`);
+      }
+
+      // Append the container to logElement
+      logElement.appendChild(container);
+      document.body.appendChild(logElement);
+
+      // Remove after 8 seconds
+      setTimeout(() => {
+        if (logElement.parentNode) {
+          logElement.parentNode.removeChild(logElement);
+        }
+      }, 8000);
+
+      // Also store in hidden div for programmatic access
+      let errorLogContainer = document.getElementById("error-log-container");
+      if (!errorLogContainer) {
+        errorLogContainer = document.createElement("div");
+        errorLogContainer.id = "error-log-container";
+        errorLogContainer.style.display = "none";
+        document.body.appendChild(errorLogContainer);
+      }
+
+      const logEntry = document.createElement("div");
+      logEntry.textContent = `${emoji} ${level.toUpperCase()}: ${JSON.stringify(safeData)}`;
+      errorLogContainer.appendChild(logEntry);
+
+      // Keep only last 50 entries
+      while (errorLogContainer.children.length > 50) {
+        errorLogContainer.removeChild(errorLogContainer.firstChild);
+      }
+    };
+
     switch (logLevel) {
       case "error":
-        console.error("🚨 ERROR:", errorInfo);
+        createVisualLog("error", "🚨", errorInfo);
         break;
       case "warn":
-        console.warn("⚠️ WARNING:", errorInfo);
+        createVisualLog("warn", "⚠️", errorInfo);
         break;
       case "info":
-        console.info("ℹ️ INFO:", errorInfo);
+        createVisualLog("info", "ℹ️", errorInfo);
         break;
       default:
-        console.log("📝 LOG:", errorInfo);
+        createVisualLog("log", "📝", errorInfo);
     }
   },
 
@@ -72,17 +143,8 @@ export const errorHandler = {
    * @returns {string} Log level
    */
   getLogLevel: errorType => {
-    const criticalErrors = [
-      ERROR_TYPES.SERVER_ERROR,
-      ERROR_TYPES.AUTHENTICATION_ERROR,
-      ERROR_TYPES.AUTHORIZATION_ERROR,
-    ];
-
-    const warningErrors = [
-      ERROR_TYPES.NETWORK_ERROR,
-      ERROR_TYPES.TIMEOUT_ERROR,
-      ERROR_TYPES.RATE_LIMIT_ERROR,
-    ];
+    const criticalErrors = ["SERVER_ERROR", "AUTHENTICATION_ERROR", "AUTHORIZATION_ERROR"];
+    const warningErrors = ["NETWORK_ERROR", "TIMEOUT_ERROR", "RATE_LIMIT_ERROR"];
 
     if (criticalErrors.includes(errorType)) return "error";
     if (warningErrors.includes(errorType)) return "warn";
@@ -97,47 +159,60 @@ export const errorHandler = {
    */
   notifyUser: (errorType, _originalMessage) => {
     const userMessages = {
-      [ERROR_TYPES.NETWORK_ERROR]: "Unable to connect. Please check your internet connection.",
-      [ERROR_TYPES.AUTHENTICATION_ERROR]: "Please log in to continue.",
-      [ERROR_TYPES.AUTHORIZATION_ERROR]: "You don't have permission to perform this action.",
-      [ERROR_TYPES.NOT_FOUND_ERROR]: "The requested item could not be found.",
-      [ERROR_TYPES.VALIDATION_ERROR]: "Please check your input and try again.",
-      [ERROR_TYPES.RATE_LIMIT_ERROR]: "Too many requests. Please wait a moment and try again.",
-      [ERROR_TYPES.TIMEOUT_ERROR]: "Request timed out. Please try again.",
-      [ERROR_TYPES.SERVER_ERROR]: "Something went wrong on our end. Please try again later.",
-      [ERROR_TYPES.API_ERROR]: "Service temporarily unavailable. Please try again.",
-      [ERROR_TYPES.UNKNOWN_ERROR]: "An unexpected error occurred. Please try again.",
+      NETWORK_ERROR: "Unable to connect. Please check your internet connection.",
+      AUTHENTICATION_ERROR: "Please log in to continue.",
+      AUTHORIZATION_ERROR: "You don't have permission to perform this action.",
+      NOT_FOUND_ERROR: "The requested item could not be found.",
+      VALIDATION_ERROR: "Please check your input and try again.",
+      RATE_LIMIT_ERROR: "Too many requests. Please wait a moment and try again.",
+      TIMEOUT_ERROR: "Request timed out. Please try again.",
+      SERVER_ERROR: "Something went wrong on our end. Please try again later.",
+      API_ERROR: "Service temporarily unavailable. Please try again.",
+      UNKNOWN_ERROR: "An unexpected error occurred. Please try again.",
     };
 
-    const message = userMessages[errorType] || userMessages[ERROR_TYPES.UNKNOWN_ERROR];
-
+    const message = userMessages[errorType] || userMessages["UNKNOWN_ERROR"];
     errorHandler.showNotification(message, errorType);
   },
 
   /**
    * Shows modern user notifications (toast, banner, etc.)
-   * Should replace app's notification system
    * @param {string} message - User-friendly message
    * @param {string} errorType - Error type for styling
    * @returns {void}
    */
   showNotification: (message, errorType) => {
-    // For development - replaces notification system
     if (typeof window !== "undefined") {
       const notification = document.createElement("div");
       notification.className = `error-notification error-${errorType.toLowerCase()}`;
       notification.textContent = message;
 
+      Object.assign(notification.style, {
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        padding: "12px 16px",
+        borderRadius: "6px",
+        color: "white",
+        fontWeight: "bold",
+        zIndex: "9999",
+        maxWidth: "400px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        backgroundColor: errorType.includes("ERROR")
+          ? "#dc3545"
+          : errorType.includes("WARNING")
+            ? "#ffc107"
+            : "#17a2b8",
+      });
+
       document.body.appendChild(notification);
 
-      // Auto-remove after 5 seconds
       setTimeout(() => {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
       }, 5000);
 
-      // Add click to dismiss
       notification.addEventListener("click", () => {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
@@ -147,12 +222,11 @@ export const errorHandler = {
   },
 
   /**
-   * Reports errors to your own API endpoint (no third-party required)
+   * Reports errors to your own API endpoint
    * @param {Object} errorInfo - Structured error information
    * @returns {void}
    */
   reportError: errorInfo => {
-    // Create reporting API endpoint
     fetch("/api/errors", {
       method: "POST",
       headers: {
@@ -160,19 +234,25 @@ export const errorHandler = {
       },
       body: JSON.stringify(errorInfo),
     }).catch(reportingError => {
-      console.error("Failed to report error to API:", reportingError);
+      if (typeof window !== "undefined") {
+        const errorDiv = document.createElement("div");
+        errorDiv.id = "api-error-log";
+        errorDiv.style.display = "none";
+        errorDiv.textContent = `API Error: ${reportingError.message}`;
+        document.body.appendChild(errorDiv);
+      }
     });
   },
 
   /**
    * Creates an error object with proper structure
    * @param {string} message - Error message
-   * @param {string} type - Error type from ERROR_TYPES
+   * @param {string} type - Error type
    * @param {number} statusCode - HTTP status code
    * @param {Object} details - Additional error details
    * @returns {Object} Structured error object
    */
-  createError: (message, type = ERROR_TYPES.UNKNOWN_ERROR, statusCode = 500, details = {}) => {
+  createError: (message, type = "UNKNOWN_ERROR", statusCode = 500, details = {}) => {
     return {
       message,
       type,
@@ -189,33 +269,32 @@ export const errorHandler = {
    * @returns {Promise<void>}
    */
   handleApiError: async (response, context = "") => {
-    let errorType = ERROR_TYPES.API_ERROR;
+    let errorType = "API_ERROR";
     let message = "API request failed";
 
-    // Map HTTP status codes to error types
     switch (response.status) {
-      case HTTP_STATUS.UNAUTHORIZED:
-        errorType = ERROR_TYPES.AUTHENTICATION_ERROR;
+      case 401:
+        errorType = "AUTHENTICATION_ERROR";
         message = "Authentication required";
         break;
-      case HTTP_STATUS.FORBIDDEN:
-        errorType = ERROR_TYPES.AUTHORIZATION_ERROR;
+      case 403:
+        errorType = "AUTHORIZATION_ERROR";
         message = "Access forbidden";
         break;
-      case HTTP_STATUS.NOT_FOUND:
-        errorType = ERROR_TYPES.NOT_FOUND_ERROR;
+      case 404:
+        errorType = "NOT_FOUND_ERROR";
         message = "Resource not found";
         break;
-      case HTTP_STATUS.UNPROCESSABLE_ENTITY:
-        errorType = ERROR_TYPES.VALIDATION_ERROR;
+      case 422:
+        errorType = "VALIDATION_ERROR";
         message = "Invalid data provided";
         break;
-      case HTTP_STATUS.TOO_MANY_REQUESTS:
-        errorType = ERROR_TYPES.RATE_LIMIT_ERROR;
+      case 429:
+        errorType = "RATE_LIMIT_ERROR";
         message = "Rate limit exceeded";
         break;
-      case HTTP_STATUS.INTERNAL_SERVER_ERROR:
-        errorType = ERROR_TYPES.SERVER_ERROR;
+      case 500:
+        errorType = "SERVER_ERROR";
         message = "Server error occurred";
         break;
     }
@@ -224,7 +303,6 @@ export const errorHandler = {
       const errorData = await response.json();
       message = errorData.message || message;
     } catch {
-      // If response is not JSON, use default message
       message = "An unexpected error occurred";
     }
 
@@ -236,15 +314,5 @@ export const errorHandler = {
     });
   },
 };
-
-/**
- * @typedef {Object} ErrorHandler
- * @property {function} handleError - Main error handling method
- * @property {function} logError - Logs error information
- * @property {function} notifyUser - Shows user notifications
- * @property {function} reportError - Reports to external services
- * @property {function} createError - Creates structured error objects
- * @property {function} handleApiError - Handles API response errors
- */
 
 export default errorHandler;

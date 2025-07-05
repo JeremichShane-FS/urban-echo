@@ -33,12 +33,16 @@ const nextConfig = compat.extends("next/core-web-vitals");
 const eslintConfig = [
   ...nextConfig,
 
-  // Ignore patterns for build artifacts and dependencies
+  // =================================================================
+  // IGNORE PATTERNS FOR BUILD ARTIFACTS AND DEPENDENCIES
+  // =================================================================
   {
     ignores: ["dist", "build", "node_modules", "*.min.js", "coverage", ".next"],
   },
 
-  // Base configuration for JavaScript files
+  // =================================================================
+  // BASE CONFIGURATION
+  // =================================================================
   {
     files: ["**/*.{js,jsx}"],
     languageOptions: {
@@ -90,10 +94,11 @@ const eslintConfig = [
         },
       },
     },
+
+    // =================================================================
+    // CORE JAVASCRIPT RULES
+    // =================================================================
     rules: {
-      // =================================================================
-      // CORE JAVASCRIPT RULES
-      // =================================================================
       ...js.configs.recommended.rules,
       "no-var": "error",
       "prefer-const": "error",
@@ -107,7 +112,6 @@ const eslintConfig = [
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
 
-      // Essential React rules
       "react/prop-types": "error",
       "react/jsx-key": "error",
       "react/jsx-no-duplicate-props": "error",
@@ -119,11 +123,11 @@ const eslintConfig = [
       "react/jsx-sort-props": [
         "warn",
         {
-          callbacksLast: true, // Event handlers at the end
-          shorthandFirst: true, // Shorthand props first
+          callbacksLast: true,
+          shorthandFirst: true,
           noSortAlphabetically: true,
-          reservedFirst: true, // Reserved props (key, ref) first
-          ignoreCase: true, // Ignore case when sorting
+          reservedFirst: true,
+          ignoreCase: true,
         },
       ],
       "react/prefer-stateless-function": "error",

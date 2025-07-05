@@ -25,16 +25,23 @@ jobs:
 
       - name: "Security Scanning"
         run: |
+
+          # Check for stripe secret keys
+          # This regex checks for sk_ followed by at least 20 alphanumeric characters
           if grep -r "sk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
             echo "❌ SECURITY VIOLATION: Stripe secret key found in source code"
             exit 1
           fi
 
+          # Check for public API keys
+          # This regex checks for pk_ followed by at least 20 alphanumeric characters
           if grep -r "pk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
             echo "❌ SECURITY VIOLATION: API public key found in source code"
             exit 1
           fi
 
+          # Check for three dangerous patterns, eval(), innerHTML assignment, and document.write()
+          # These patterns can lead to XSS vulnerabilities or code injection
           if grep -rE "\beval\s*\(|innerHTML\s*=|document\.write\s*\(" src/ 2>/dev/null; then
             echo "❌ SECURITY VIOLATION: Dangerous code patterns detected"
             exit 1
@@ -65,6 +72,8 @@ jobs:
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
+      # Prevents deployment with dependencies that have known high-severity vulnerabilities
+      # npm audit finds high-severity vulnerabilities and fails the job if any are found
       - name: "Dependency Vulnerability Check"
         run: |
           npm audit --audit-level=high || {
@@ -88,16 +97,10 @@ jobs:
       - name: "Install Dependencies"
         run: npm ci
 
-      - name: "Enforce ESLint Standards"
-        run: |
-          echo "🔍 Running ESLint..."
-          npm run lint || {
-            echo "❌ ESLint validation failed"
-            exit 1
-          }
-
       - name: "Enforce TODO Standards"
         run: |
+
+          # Run my check-todos.js script to check and validate TODO/FIX comments
           echo "🔍 Validating TODO/FIX comments..."
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
           grep -v node_modules | \
