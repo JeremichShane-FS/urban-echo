@@ -1,9 +1,11 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @fileoverview Additional constants specifically for API utilities
- * Extends existing api-constants.js with utility-specific needs
+ * @fileoverview API utility constants for validation, formatting, and data processing.
+ * This file contains validation patterns, limits, sort options, templates, and helper constants.
+ * For core API endpoints and configuration, see api-constants.js
  */
 
+// Validation patterns for API data
 export const API_VALIDATION_PATTERNS = {
   // MongoDB ObjectId pattern
   MONGODB_OBJECT_ID: /^[\dA-Fa-f]{24}$/,
@@ -27,6 +29,7 @@ export const API_VALIDATION_PATTERNS = {
   SIZE: /^(xxs|xs|s|m|l|xl|xxl|xxxl|\d+)$/i,
 };
 
+// API request and response limits
 export const API_VALIDATION_LIMITS = {
   // Product endpoints
   MAX_PRODUCTS_PER_REQUEST: 100,
@@ -49,6 +52,7 @@ export const API_VALIDATION_LIMITS = {
   MAX_CTA_TEXT_LENGTH: 50,
 };
 
+// Sorting options for different endpoints
 export const API_SORT_OPTIONS = {
   PRODUCTS: [
     "relevance",
@@ -67,7 +71,7 @@ export const API_SORT_OPTIONS = {
   BEST_SELLERS: ["popularity", "rating", "newest", "price-low", "price-high"],
 };
 
-// MongoDB field selection templates
+// MongoDB field selection templates for optimized queries
 export const FIELD_SELECTIONS = {
   MINIMAL: {
     name: 1,
@@ -98,10 +102,11 @@ export const FIELD_SELECTIONS = {
     updatedAt: 1,
   },
   DETAIL: {
-    // (empty object = include all)
+    // (empty object = include all fields)
   },
 };
 
+// Standard API response messages
 export const API_RESPONSE_MESSAGES = {
   SUCCESS: {
     DATA_RETRIEVED: "Data retrieved successfully",
@@ -130,25 +135,7 @@ export const API_RESPONSE_MESSAGES = {
   },
 };
 
-export const API_CORS_CONFIGS = {
-  GET_ONLY: {
-    methods: ["GET", "OPTIONS"],
-    headers: ["Content-Type"],
-  },
-  READ_WRITE: {
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    headers: ["Content-Type", "Authorization"],
-  },
-  CONTENT_MANAGEMENT: {
-    methods: ["GET", "POST", "PUT", "OPTIONS"],
-    headers: ["Content-Type", "Authorization"],
-  },
-  PUBLIC_API: {
-    methods: ["GET", "POST", "OPTIONS"],
-    headers: ["Content-Type"],
-  },
-};
-
+// API response metadata templates
 export const API_META_TEMPLATES = {
   BASIC: endpoint => ({
     endpoint,
@@ -191,6 +178,7 @@ export const API_META_TEMPLATES = {
   }),
 };
 
+// Fallback data for when external services are unavailable
 export const API_FALLBACK_DATA = {
   HERO: {
     title: "Discover Your Style",
@@ -224,6 +212,7 @@ export const API_FALLBACK_DATA = {
   },
 };
 
+// Required fields for different API operations
 export const API_REQUIRED_FIELDS = {
   NEWSLETTER_SUBSCRIBE: ["email"],
   PRODUCT_DETAIL: ["id"],
@@ -231,6 +220,7 @@ export const API_REQUIRED_FIELDS = {
   CONTENT_UPDATE: ["title"],
 };
 
+// Content variant types for CMS
 export const API_CONTENT_VARIANTS = {
   HERO: ["default", "holiday", "sale", "seasonal", "featured"],
   ABOUT: ["homepage", "company", "mission", "team"],

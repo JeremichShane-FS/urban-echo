@@ -1,15 +1,15 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @fileoverview This file contains constants related to API endpoints, versions, and configurations.
- * It serves as a centralized location for managing all API-related constants used in the application.
+ * @fileoverview API endpoints, versions, and core configurations.
+ * This file contains constants related to API infrastructure, endpoints, and basic configuration.
+ * For API utilities, validation patterns, and helper constants, see api-utils-constants.js
  */
 
-// Base URLs
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_URL;
 export const CDN_BASE_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
-// API versions
 export const API_VERSION = "v1";
 export const LEGACY_API_VERSION = "v0";
 
@@ -196,17 +196,22 @@ export const WEBHOOK_EVENTS = {
   USER_REGISTERED: "user.registered",
 };
 
-// Validation patterns for API utilities
-export const API_VALIDATION_PATTERNS = {
-  // MongoDB ObjectId pattern
-  MONGODB_OBJECT_ID: /^[\dA-Fa-f]{24}$/,
-
-  // Product slug pattern (lowercase, hyphens, numbers)
-  PRODUCT_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
-
-  // Category slug pattern
-  CATEGORY_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
-
-  // Price pattern (allows decimals)
-  PRICE: /^\d+(\.\d{1,2})?$/,
+// CORS configurations for different endpoint types
+export const API_CORS_CONFIGS = {
+  GET_ONLY: {
+    methods: ["GET", "OPTIONS"],
+    headers: ["Content-Type"],
+  },
+  READ_WRITE: {
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    headers: ["Content-Type", "Authorization"],
+  },
+  CONTENT_MANAGEMENT: {
+    methods: ["GET", "POST", "PUT", "OPTIONS"],
+    headers: ["Content-Type", "Authorization"],
+  },
+  PUBLIC_API: {
+    methods: ["GET", "POST", "OPTIONS"],
+    headers: ["Content-Type"],
+  },
 };
