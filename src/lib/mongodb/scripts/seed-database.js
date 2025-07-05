@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
-import dbConnect from "../../client.js";
+import dbConnect from "../client.js";
 
 const seedProducts = [
   {
@@ -173,15 +173,15 @@ async function seedDatabase() {
 
     // Import models (Node.js versions)
     console.log("📦 Importing Product model...");
-    const Product = (await import("./models/product.js")).default;
+    const Product = (await import("../utils/models/product.js")).default;
     console.log("   Product model name:", Product.modelName);
 
     console.log("👥 Importing User model...");
-    const User = (await import("./models/user.js")).default;
+    const User = (await import("../utils/models/user.js")).default;
     console.log("   User model name:", User.modelName);
 
     console.log("📦 Importing Order model...");
-    const Order = (await import("./models/order.js")).default;
+    const Order = (await import("../utils/models/order.js")).default;
     console.log("   Order model name:", Order.modelName);
 
     // Clear existing data

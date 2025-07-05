@@ -1,6 +1,6 @@
 "use client";
 
-import { useHeroContent } from "@lib/hooks/useContent";
+import { useHeroContent } from "@modules/core/hooks/useContent";
 
 import HeroSectionView from "./HeroSectionView";
 

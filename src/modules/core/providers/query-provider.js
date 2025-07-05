@@ -184,7 +184,7 @@ export const prefetchUtils = {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content[contentType](),
       queryFn: () => {
-        const apiService = require("@lib/services/api-service").default;
+        const apiService = require("@modules/core/services/api-service").default;
         switch (contentType) {
           case "hero":
             return apiService.getHeroContent();
@@ -207,7 +207,7 @@ export const prefetchUtils = {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content.pageConfig(pageName),
       queryFn: () => {
-        const apiService = require("@lib/services/api-service").default;
+        const apiService = require("@modules/core/services/api-service").default;
         return apiService.getPageConfig(pageName);
       },
       staleTime: CACHE_DURATION.long,
