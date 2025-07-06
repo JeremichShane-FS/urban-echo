@@ -3,7 +3,7 @@ import { Search, ShoppingBag, User } from "lucide-react";
 import PropTypes from "prop-types";
 
 import { ACCOUNT_NAV_ITEMS } from "@config/constants";
-import { getNavItemsByIds } from "@modules/core/utils/getNavItems";
+import { getNavItemsByIds } from "@modules/core/utils";
 
 import styles from "./ActionIcons.module.scss";
 

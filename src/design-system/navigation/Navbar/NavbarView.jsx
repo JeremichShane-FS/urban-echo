@@ -10,7 +10,7 @@ import Container from "@design-system/layout/Container";
 import ActionIcons from "@design-system/navigation/ActionIcons";
 import MobileMenu from "@design-system/navigation/MobileMenu";
 import NavLinks from "@design-system/navigation/NavLinks";
-import { getNavItemById } from "@modules/core/utils/getNavItems";
+import { getNavItemById } from "@modules/core/utils";
 
 import styles from "./Navbar.module.scss";
 

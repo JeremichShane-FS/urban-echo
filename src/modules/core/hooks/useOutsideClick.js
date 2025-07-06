@@ -31,7 +31,7 @@ export const useOutsideClick = (ref, callback) => {
 
 useOutsideClick.propTypes = {
   ref: PropTypes.shape({
-    current: PropTypes.instanceOf(Element),
+    current: PropTypes.object,
   }).isRequired,
   callback: PropTypes.func.isRequired,
 };

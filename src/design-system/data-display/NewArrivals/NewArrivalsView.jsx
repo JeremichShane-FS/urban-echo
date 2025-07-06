@@ -40,6 +40,8 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
     );
   }
 
+  const products = Array.isArray(newArrivals) ? newArrivals : [];
+
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -51,7 +53,7 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 auto-rows-max gap-4 md:gap-6 lg:gap-8 mt-8">
-          {newArrivals.slice(0, 8).map((product, index) => {
+          {products.slice(0, 8).map((product, index) => {
             if (!product || !product.id || !product.name || !product.price || !product.slug) {
               console.warn("Invalid product data:", product);
               return null;

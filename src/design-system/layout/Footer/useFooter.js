@@ -13,7 +13,7 @@ import {
   FOOTER_UTILITY_LINKS,
   SITE_NAME,
 } from "@config/constants";
-import { setCopyright } from "@modules/core/utils/setCopyright";
+import { setCopyright } from "@modules/core/utils";
 
 export const useFooter = () => {
   const [copyrightText, setCopyrightText] = useState(`© ${SITE_NAME}. All rights reserved`);

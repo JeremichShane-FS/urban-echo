@@ -14,9 +14,8 @@ import {
   ROLE_PERMISSIONS,
   USER_ROLES,
 } from "@config/constants";
-import { errorHandler } from "@modules/core/services/errorHandler";
-import { formatDate } from "@modules/core/utils/formatters";
-import { isValidEmail } from "@modules/core/utils/validators";
+import { formatDate, isValidEmail } from "@modules/core/utils";
+import { errorHandler } from "@utils/errorHandler";
 
 const useUserStore = create(
   persist(
