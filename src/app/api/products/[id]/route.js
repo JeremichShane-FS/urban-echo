@@ -1,6 +1,5 @@
 import { API_REQUIRED_FIELDS, ERROR_TYPES } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
-import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   createCorsResponse,
   createErrorResponse,
@@ -10,6 +9,7 @@ import {
   transformProductForDetail,
   validateRequiredFields,
 } from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "product-detail-api";
 

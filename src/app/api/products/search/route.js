@@ -5,7 +5,6 @@ import {
   ERROR_TYPES,
 } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
-import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   buildFieldSelection,
   buildPagination,
@@ -20,6 +19,7 @@ import {
   validatePriceRange,
   validateSort,
 } from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "product-search-api";
 

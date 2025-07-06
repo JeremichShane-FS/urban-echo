@@ -9,9 +9,9 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { API_TIMEOUT, CACHE_DURATION, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
-import { errorHandler } from "@modules/core/services/errorHandler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { errorHandler } from "@utils/errorHandler";
 
 const createQueryClient = () =>
   new QueryClient({

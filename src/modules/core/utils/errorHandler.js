@@ -222,7 +222,7 @@ export const errorHandler = {
   },
 
   /**
-   * Reports errors to your own API endpoint
+   * Reports errors to API endpoint
    * @param {Object} errorInfo - Structured error information
    * @returns {void}
    */

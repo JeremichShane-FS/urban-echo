@@ -4,9 +4,9 @@ import SearchbarView from "./SearchbarView";
 import useSearchbar from "./useSearchbar";
 
 const Searchbar = ({ isOpen }) => {
-  const { handleSubmit } = useSearchbar();
+  const { handleInputFocus, handleSubmit } = useSearchbar();
 
-  return <SearchbarView isOpen={isOpen} onSubmit={handleSubmit} />;
+  return <SearchbarView isOpen={isOpen} onSubmit={handleSubmit} onInputFocus={handleInputFocus} />;
 };
 
 export default Searchbar;

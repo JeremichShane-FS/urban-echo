@@ -13,6 +13,7 @@ export default MenuToggle;
 
 MenuToggle.displayName = "MenuToggle";
 MenuToggle.View = MenuToggleView;
+MenuToggle.useMenuToggle = useMenuToggle;
 MenuToggle.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
