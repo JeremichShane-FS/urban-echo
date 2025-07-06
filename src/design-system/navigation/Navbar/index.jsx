@@ -1,10 +1,25 @@
 "use client";
-import { useToggle } from "@modules/core/hooks";
+import useToggle from "@modules/core/hooks/useToggle";
 
 import NavbarView from "./NavbarView";
 
 const Navbar = () => {
-  const { handleMenuToggle, handleSearchToggle, isMenuOpen, isSearchOpen } = useToggle(false);
+  const [isMenuOpen, toggleMenu, , closeMenu] = useToggle(false);
+  const [isSearchOpen, toggleSearch, , closeSearch] = useToggle(false);
+
+  const handleMenuToggle = () => {
+    toggleMenu();
+    if (!isMenuOpen && isSearchOpen) {
+      closeSearch();
+    }
+  };
+
+  const handleSearchToggle = () => {
+    toggleSearch();
+    if (!isSearchOpen && isMenuOpen) {
+      closeMenu();
+    }
+  };
 
   return (
     <NavbarView
@@ -17,7 +32,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-Navbar.displayName = "Navbar";
-Navbar.View = NavbarView;
-Navbar.useNavbar = useToggle;

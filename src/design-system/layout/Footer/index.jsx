@@ -10,7 +10,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-Footer.displayName = "Footer";
-Footer.View = FooterView;
-Footer.useFooter = useFooter;

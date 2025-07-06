@@ -9,11 +9,7 @@ import HeroSection from "./components/HeroSection";
 
 import styles from "./HomePage.module.scss";
 
-const HomePageView = ({ error, isLoading, pageData }) => {
-  if (error) {
-    return <div>Error loading about section</div>;
-  }
-
+const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
   if (isLoading) {
     return (
       <main className={styles.page}>
@@ -42,7 +38,7 @@ export default HomePageView;
 
 HomePageView.displayName = "HomePageView";
 HomePageView.propTypes = {
-  error: PropTypes.bool.isRequired,
+  _onSectionView: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({
     showFeaturedProducts: PropTypes.bool,

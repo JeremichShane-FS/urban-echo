@@ -31,7 +31,7 @@ import { defaultMetadata } from "@config/seo";
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";
-import AppProviders from "@modules/core/providers/app-provider";
+import QueryProvider from "@modules/core/providers/query-provider";
 
 import "@styles/globals.css";
 import "@styles/main.scss";
@@ -48,7 +48,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
       <body className="min-h-screen grid grid-rows-[auto_1fr_auto]" suppressHydrationWarning={true}>
-        <AppProviders>
+        <QueryProvider>
           <header>
             <Navbar />
           </header>
@@ -56,7 +56,7 @@ export default function RootLayout({ children }) {
             <Container>{children}</Container>
           </main>
           <Footer />
-        </AppProviders>
+        </QueryProvider>
       </body>
     </html>
   );

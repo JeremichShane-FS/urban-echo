@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { API_ENDPOINTS } from "@config/constants";
-import { trackEvent } from "@modules/core/utils";
 
 export const useNewsletter = () => {
   const [email, setEmail] = useState("");
@@ -54,15 +53,11 @@ export const useNewsletter = () => {
       setMessageType("success");
       setEmail("");
 
-      // Tracks successful newsletter signup
-      trackEvent("newsletter_signup", "Newsletter", "Email Subscription");
-
-      // Clears success message after 5 seconds
+      // Clear success message after 5 seconds
       setTimeout(() => {
         setMessage("");
         setMessageType("");
       }, 5000);
-
       return { success: true, data };
     } catch (error) {
       console.error("Newsletter subscription error:", error.message);
@@ -74,11 +69,6 @@ export const useNewsletter = () => {
     }
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    await submitNewsletter();
-  };
-
   const isFormValid = email && !isSubmitting;
 
   return {
@@ -88,7 +78,6 @@ export const useNewsletter = () => {
     messageType,
     isFormValid,
     onEmailChange: handleEmailChange,
-    onSubmit: handleSubmit,
     submitNewsletter,
   };
 };

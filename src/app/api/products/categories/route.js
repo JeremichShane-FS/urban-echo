@@ -1,11 +1,11 @@
 import { API_ENDPOINTS, ERROR_TYPES } from "@config/constants";
-import dbConnect from "@lib/mongodb/client";
-import { errorHandler } from "@modules/core/utils";
+import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   createCorsResponse,
   createErrorResponse,
   createSuccessResponse,
 } from "@modules/core/utils/api";
+import { categoriesService } from "@modules/product/services";
 
 const ERROR_SOURCE = "categories-api";
 
@@ -25,48 +25,23 @@ export async function GET(request) {
     const includeProductCount = searchParams.get("includeProductCount") === "true";
     const includeSubCategories = searchParams.get("includeSubCategories") === "true";
     const status = searchParams.get("status") || "active";
-
-    await dbConnect();
-
-    const Category = (await import("@lib/mongodb/utils/models/category")).default;
-    const query = {};
-    if (status === "active") {
-      query.isActive = true;
-      query.isVisible = true;
-    }
-    let categoriesQuery = Category.find(query).sort({ navigationOrder: 1, name: 1 });
-
-    if (!includeSubCategories) {
-      categoriesQuery = categoriesQuery.where({ level: 0 });
-    }
-
-    const categories = await categoriesQuery.lean();
-
-    if (includeProductCount && categories.length > 0) {
-      const Product = (await import("@lib/mongodb/utils/models/product")).default;
-
-      for (const category of categories) {
-        const productCount = await Product.countDocuments({
-          category: category.slug,
-          isActive: true,
-        });
-        category.productCount = productCount;
-      }
-    }
+    const categories = await categoriesService.getCategories({
+      includeProductCount,
+      includeSubCategories,
+      status,
+    });
 
     if (!categories || categories.length === 0) {
       return createSuccessResponse([], {
         endpoint: `/api/${API_ENDPOINTS.categories}`,
         count: 0,
         message: "No categories found",
-        source: "mongodb",
       });
     }
 
     return createSuccessResponse(categories, {
       endpoint: `/api/${API_ENDPOINTS.categories}`,
       count: categories.length,
-      source: "mongodb",
       filters: {
         includeProductCount,
         includeSubCategories,
@@ -80,10 +55,7 @@ export async function GET(request) {
       method: "GET",
     });
 
-    return createErrorResponse("Failed to fetch categories", error.message, {
-      source: "mongodb",
-      debug: process.env.NODE_ENV === "development" ? { stack: error.stack } : undefined,
-    });
+    return createErrorResponse("Failed to fetch categories", error.message);
   }
 }
 

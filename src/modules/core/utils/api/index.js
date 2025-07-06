@@ -1,21 +1,3 @@
-/**
- * @fileoverview Barrel export file for core utility api functions
- * This file centralizes exports for all core utility api functions in the project
- * making imports cleaner and more organized across components.
- *
- * @example - Instead of multiple imports:
- * import { trackEvent } from '@modules/core/utils/api/analytics';
- * import { formatCurrency } from '@modules/core/utils/api/formatters';
- * import { isValidEmail } from '@modules/core/utils/api/validators';
- *
- * You can now import from a single location:
- * import {
- *   trackEvent,
- *   formatCurrency,
- *   isValidEmail
- * } from '@modules/core/utils/api';
- */
-
 // Product transformers
 export {
   transformProduct,

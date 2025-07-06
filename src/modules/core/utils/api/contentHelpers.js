@@ -1,5 +1,5 @@
 import { API_RESPONSE_MESSAGES, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/services/errorHandler";
 
 /**
  * Makes a request to Strapi CMS with authentication

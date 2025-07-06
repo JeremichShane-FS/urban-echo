@@ -1,67 +1,92 @@
-// src/modules/product/hooks/useFeaturedProducts.js
-import { CACHE_DURATION, ERROR_TYPES } from "@config/constants";
-import { queryKeys } from "@modules/core/providers/query-provider";
-import { errorHandler } from "@modules/core/utils/errorHandler";
-import { featuredProductsService } from "@modules/product/services";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+
+import { API_ENDPOINTS, ERROR_TYPES } from "@config/constants";
+import { errorHandler } from "@modules/core/services/errorHandler";
+import { featuredProductsService as data } from "@modules/product/services";
 
 /**
- * Custom hook for managing featured products data using TanStack Query
- * @description Fetches and manages featured products from the API with automatic
- * caching, background updates, error handling, and retry logic. Uses TanStack Query
- * for optimal performance and data synchronization.
- * @param {Object} [options={}] - Configuration options for the hook
- * @param {number} [options.limit=8] - Number of featured products to fetch
- * @param {boolean} [options.enabled=true] - Whether the query should run automatically
- * @returns {Object} TanStack Query result object
- * @returns {Array} returns.data - Array of featured product objects (undefined while loading)
- * @returns {boolean} returns.isLoading - Initial loading state indicator
- * @returns {boolean} returns.isFetching - Background fetching state indicator
- * @returns {boolean} returns.isError - Error state indicator
- * @returns {Error|null} returns.error - Error object if request fails, null otherwise
- * @returns {Function} returns.refetch - Function to manually refetch featured products
+ * Custom hook for managing featured products data and state
+ * @description Fetches and manages featured products from the API with comprehensive
+ * error handling, analytics tracking, and integration with the application's error
+ * handling system. Uses centralized constants and follows established patterns.
+ * @returns {Object} Hook state and methods
+ * @returns {Array} returns.featuredProducts - Array of featured product objects
+ * @returns {boolean} returns.isLoading - Loading state indicator
+ * @returns {string|null} returns.error - Error message if request fails, null otherwise
  * @returns {Function} returns.onProductClick - Analytics tracking function for product clicks
- * @returns {boolean} returns.isStale - Whether data is considered stale
- * @returns {string} returns.status - Query status: 'pending', 'error', 'success'
+ * @returns {Function} returns.refetch - Function to manually refetch featured products
  * @example
- * Basic usage
- * const { data: featuredProducts, isLoading, error, onProductClick } = useFeaturedProducts();
- *
- * With custom limit
- * const { data: featuredProducts, refetch } = useFeaturedProducts({ limit: 12 });
- *
- * Conditional fetching
- * const { data, isLoading } = useFeaturedProducts({
- *   limit: 6,
- *   enabled: shouldFetch
- * });
+ * const { featuredProducts, isLoading, error, onProductClick } = useFeaturedProducts();
  */
+export const useFeaturedProducts = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
-const ERROR_SOURCE = "featured-products-api";
+  /**
+   * Fetches featured products from the API
+   * @description Retrieves featured products using the centralized service layer
+   * with comprehensive error handling and logging. Integrates with the application's
+   * error handling system for consistent error management and user notifications.
+   * @async
+   * @function
+   * @returns {Promise<void>} Promise that resolves when fetch is complete
+   */
+  const fetchFeaturedProducts = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-export const useFeaturedProducts = (options = {}) => {
-  const { enabled = true, limit = 8 } = options;
+      // TODO: [ROUTES] Featured products API w/ admin controls
+      // Replace productService mock with backend API integration.
+      // Required API endpoints:
+      // - GET /api/${API_ENDPOINTS.featuredProducts} (fetch current featured products)
+      // - POST /api/admin/products/:id/feature (admin: mark product as featured)
+      // - DELETE /api/admin/products/:id/feature (admin: remove product)
 
-  const queryResult = useQuery({
-    queryKey: queryKeys.products.featured(),
-    queryFn: () => featuredProductsService.getFeaturedProducts(limit),
-    enabled,
-    staleTime: CACHE_DURATION.medium, // 30 minutes
-    gcTime: CACHE_DURATION.long, // 24 hours
-    retry: 3,
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    select: data => {
-      // The featuredProductsService already returns just the products array
-      // So we don't need to extract from data.data or data.products
-      return Array.isArray(data) ? data : [];
-    },
-    meta: {
-      source: ERROR_SOURCE,
-      limit,
-    },
-  });
+      const response = await data.getFeaturedProducts();
+
+      if (!response || response.length === 0) {
+        const noDataError = errorHandler.createError(
+          "No featured products found",
+          ERROR_TYPES.NOT_FOUND_ERROR,
+          404,
+          { endpoint: `/api/${API_ENDPOINTS.featuredProducts}` }
+        );
+        errorHandler.handleError(noDataError, ERROR_TYPES.NOT_FOUND_ERROR, {
+          source: "useFeaturedProducts",
+          action: "fetchFeaturedProducts",
+          endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+        });
+        throw new Error(noDataError.message);
+      }
+
+      setFeaturedProducts(response);
+    } catch (error) {
+      const errorMessage = "Failed to load featured products";
+      setError(errorMessage);
+
+      const structuredError = errorHandler.createError(errorMessage, ERROR_TYPES.API_ERROR, 500, {
+        originalError: error.message,
+        endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+      });
+
+      errorHandler.handleError(structuredError, ERROR_TYPES.API_ERROR, {
+        source: "useFeaturedProducts",
+        action: "fetchFeaturedProducts",
+        endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+        originalMessage: error.message,
+      });
+
+      console.error("Error fetching featured products:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
 
   /**
    * Handles product click events with analytics tracking
@@ -80,6 +105,7 @@ export const useFeaturedProducts = (options = {}) => {
         400,
         { productId, productName }
       );
+
       errorHandler.handleError(validationError, ERROR_TYPES.VALIDATION_ERROR, {
         source: "useFeaturedProducts",
         action: "handleProductClick",
@@ -125,28 +151,10 @@ export const useFeaturedProducts = (options = {}) => {
   };
 
   return {
-    ...queryResult,
+    isLoading,
+    error,
+    featuredProducts,
     onProductClick: handleProductClick,
-  };
-};
-
-/**
- * Hook for prefetching featured products
- * @description Prefetches featured products data without subscribing to updates.
- * Useful for optimizing user experience by loading data before it's needed.
- * @param {number} [limit=8] - Number of products to prefetch
- * @example
- * Prefetch featured products on component mount
- * usePrefetchFeaturedProducts(12);
- */
-export const usePrefetchFeaturedProducts = (limit = 8) => {
-  const queryClient = useQueryClient();
-
-  return () => {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.products.featured(),
-      queryFn: () => featuredProductsService.getFeaturedProducts(limit),
-      staleTime: CACHE_DURATION.medium,
-    });
+    refetch: fetchFeaturedProducts,
   };
 };

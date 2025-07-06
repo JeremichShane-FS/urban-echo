@@ -4,8 +4,26 @@ import NewsletterView from "./NewsletterView";
 import { useNewsletter } from "./useNewsletter";
 
 const Newsletter = () => {
-  const { email, isFormValid, isSubmitting, message, messageType, onEmailChange, onSubmit } =
-    useNewsletter();
+  const {
+    email,
+    isFormValid,
+    isSubmitting,
+    message,
+    messageType,
+    onEmailChange,
+    submitNewsletter,
+  } = useNewsletter();
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const result = await submitNewsletter();
+    if (result?.success && typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "newsletter_signup", {
+        event_category: "Newsletter",
+        event_label: "Email Subscription",
+      });
+    }
+  };
 
   return (
     <NewsletterView
@@ -15,13 +33,9 @@ const Newsletter = () => {
       messageType={messageType}
       isFormValid={isFormValid}
       onEmailChange={onEmailChange}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     />
   );
 };
 
 export default Newsletter;
-
-Newsletter.displayName = "Newsletter";
-Newsletter.View = NewsletterView;
-Newsletter.useNewsletter = useNewsletter;

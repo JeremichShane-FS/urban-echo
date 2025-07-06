@@ -4,7 +4,8 @@
  */
 
 import { API_TIMEOUT, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
-import { errorHandler } from "@modules/core/utils";
+
+import errorHandler from "./errorHandler";
 
 /**
  * Creates a status-specific error

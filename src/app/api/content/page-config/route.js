@@ -1,4 +1,5 @@
 import { API_ENDPOINTS, API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
+import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   createCorsResponse,
   createFallbackResponse,
@@ -6,7 +7,6 @@ import {
   fetchFromStrapi,
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
-import { errorHandler } from "@modules/core/utils/errorHandler";
 
 const ERROR_SOURCE = "page-config-api";
 const PAGE_CONFIG_FALLBACKS = API_FALLBACK_DATA.PAGE_CONFIG;

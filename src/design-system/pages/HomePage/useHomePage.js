@@ -1,20 +1,27 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
-import { usePageConfig } from "@modules/core/hooks";
-import { trackEvent, trackPageView } from "@modules/core/utils";
+import { usePageConfig } from "@modules/core/hooks/useContent";
 
 export const useHomePage = () => {
   const { data: pageData = {}, error, isLoading, refetch } = usePageConfig("homepage");
 
   useEffect(() => {
-    if (pageData.seoTitle && !isLoading) {
-      trackPageView(window.location.pathname);
+    if (typeof window !== "undefined" && window.gtag && pageData.seoTitle) {
+      window.gtag("config", "GA_TRACKING_ID", {
+        page_title: pageData.seoTitle,
+        page_location: window.location.href,
+      });
     }
-  }, [pageData.seoTitle, isLoading]);
+  }, [pageData.seoTitle]);
 
-  const handleSectionView = useCallback(sectionName => {
-    trackEvent("section_view", "Homepage", sectionName);
-  }, []);
+  const handleSectionView = sectionName => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "section_view", {
+        event_category: "Homepage",
+        event_label: sectionName,
+      });
+    }
+  };
 
   return {
     isLoading,

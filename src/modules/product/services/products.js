@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, DEFAULT_PAGINATION, ERROR_TYPES } from "@config/constants";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/services/errorHandler";
 
 export const productsService = {
   async getProducts(params = {}) {

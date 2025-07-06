@@ -1,5 +1,6 @@
 import { API_ENDPOINTS, API_VALIDATION_LIMITS, ERROR_TYPES } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
+import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   buildFieldSelection,
   buildProductQuery,
@@ -10,7 +11,6 @@ import {
   transformProducts,
   validatePagination,
 } from "@modules/core/utils/api";
-import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "featured-products-api";
 

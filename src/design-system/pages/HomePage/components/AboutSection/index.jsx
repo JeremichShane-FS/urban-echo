@@ -1,23 +1,40 @@
 "use client";
 
+import { useAboutContent } from "@modules/core/hooks/useContent";
+
 import AboutSectionView from "./AboutSectionView";
-import { useAboutSection } from "./useAboutSection";
 
 const AboutSection = () => {
-  const { aboutContent, error, isLoading, onLearnMoreClick } = useAboutSection();
+  const { data: aboutContent, error, isLoading: loading } = useAboutContent();
+
+  if (loading) {
+    return <div>Loading about content...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading about content: {error}</div>;
+  }
+
+  if (!aboutContent) {
+    return <div>No about content found.</div>;
+  }
+
+  const handleLearnMoreClick = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "click", {
+        event_category: "About Section",
+        event_label: "Learn More About Us",
+      });
+    }
+  };
 
   return (
     <AboutSectionView
       aboutContent={aboutContent}
-      isLoading={isLoading}
-      error={error}
-      onLearnMoreClick={onLearnMoreClick}
+      isLoading={loading}
+      onLearnMoreClick={handleLearnMoreClick}
     />
   );
 };
 
 export default AboutSection;
-
-AboutSection.displayName = "AboutSection";
-AboutSection.View = AboutSectionView;
-AboutSection.useAboutSection = useAboutSection;

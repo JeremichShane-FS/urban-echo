@@ -40,11 +40,11 @@ export const API_ENDPOINTS = {
   bestSellers: "products/best-sellers",
 
   // Categories
-  categories: "products/categories",
-  subCategories: "products/categories/subcategories",
+  categories: "categories",
+  subCategories: "subcategories",
 
   // Collections
-  collections: "products/collections",
+  collections: "collections",
 
   // Cart
   cart: "cart",

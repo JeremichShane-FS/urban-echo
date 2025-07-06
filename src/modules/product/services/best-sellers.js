@@ -1,5 +1,5 @@
 import { API_ENDPOINTS, ERROR_TYPES } from "@config/constants";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/services/errorHandler";
 
 export const bestSellersService = {
   async getBestSellers(limit = 8) {

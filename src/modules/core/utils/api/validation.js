@@ -5,7 +5,7 @@ import {
   ERROR_TYPES,
   HTTP_STATUS,
 } from "@config/constants";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/services/errorHandler";
 
 /**
  * Validates pagination parameters

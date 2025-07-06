@@ -5,6 +5,7 @@ import {
   ERROR_TYPES,
   HTTP_STATUS,
 } from "@config/constants";
+import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   createCorsResponse,
   createErrorResponse,
@@ -12,7 +13,6 @@ import {
   validateRequiredFields,
 } from "@modules/core/utils/api";
 import { isValidEmail } from "@modules/core/utils/validators";
-import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "newsletter-api";
 
