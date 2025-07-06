@@ -31,7 +31,6 @@ import { defaultMetadata } from "@config/seo";
 import Container from "@design-system/layout/Container";
 import Footer from "@design-system/layout/Footer";
 import Navbar from "@design-system/navigation/Navbar";
-import { QueryProvider } from "@modules/core/providers";
 import AppProviders from "@modules/core/providers/app-provider";
 
 import "@styles/globals.css";
