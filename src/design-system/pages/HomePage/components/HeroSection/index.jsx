@@ -1,26 +1,16 @@
 "use client";
 
-import { useHeroContent } from "@modules/core/hooks/useContent";
-
 import HeroSectionView from "./HeroSectionView";
+import { useHeroSection } from "./useHeroSection";
 
 const HeroSection = () => {
-  const { data: heroData, error, isLoading: loading } = useHeroContent();
-
-  const handleCtaClick = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "click", {
-        event_category: "Hero",
-        event_label: "Shop Now Button",
-      });
-    }
-  };
+  const { error, handleCtaClick, heroData, isLoading } = useHeroSection();
 
   return (
     <HeroSectionView
       heroData={heroData}
-      isLoading={loading}
       error={error}
+      isLoading={isLoading}
       onCtaClick={handleCtaClick}
     />
   );
@@ -30,4 +20,4 @@ export default HeroSection;
 
 HeroSection.displayName = "HeroSection";
 HeroSection.View = HeroSectionView;
-HeroSection.useHeroContent = useHeroContent;
+HeroSection.useHeroSection = useHeroSection;
