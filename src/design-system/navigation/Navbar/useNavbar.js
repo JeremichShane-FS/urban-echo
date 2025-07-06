@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import useToggle from "@modules/core/hooks/useToggle";
+import useToggle from "@modules/core/hooks";
 
 const useNavbar = () => {
   const [isMenuOpen, toggleMenu, , closeMenu] = useToggle(false);

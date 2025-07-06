@@ -9,8 +9,8 @@ import {
   MAX_QUANTITY_PER_ITEM,
   STANDARD_SHIPPING_COST,
 } from "@config/constants";
-import { errorHandler } from "@modules/core/services/errorHandler";
-import { formatCurrency } from "@modules/core/utils/formatters";
+import { formatCurrency } from "@modules/core/utils";
+import { errorHandler } from "@utils/errorHandler";
 
 const initialState = {
   items: [],

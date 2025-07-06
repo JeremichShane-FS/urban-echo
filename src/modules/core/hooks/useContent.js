@@ -5,10 +5,10 @@ import {
   DEFAULT_LOCALE,
   ROUTES,
 } from "@config/constants";
-import { queryKeys } from "@modules/core/providers/query-provider";
+import { queryKeys } from "@modules/core/providers";
 import { contentService } from "@modules/core/services";
-import { errorHandler } from "@modules/core/services/errorHandler";
 import { useQuery } from "@tanstack/react-query";
+import { errorHandler } from "@utils/errorHandler";
 
 const {
   getAboutContent: apiGetAboutContent,

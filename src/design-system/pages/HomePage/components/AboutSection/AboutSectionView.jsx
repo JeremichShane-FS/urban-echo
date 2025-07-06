@@ -6,7 +6,11 @@ import Button from "@design-system/buttons/Button";
 
 import styles from "./AboutSection.module.scss";
 
-const AboutSectionView = ({ aboutContent, isLoading, onLearnMoreClick }) => {
+const AboutSectionView = ({ aboutContent, error, isLoading, onLearnMoreClick }) => {
+  if (error) {
+    return <div>Error loading about section</div>;
+  }
+
   if (isLoading) {
     return (
       <section className={styles.section}>
@@ -56,6 +60,7 @@ AboutSectionView.propTypes = {
     vision: PropTypes.string.isRequired,
     values: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  error: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onLearnMoreClick: PropTypes.func.isRequired,
 };

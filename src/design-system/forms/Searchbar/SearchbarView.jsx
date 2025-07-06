@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import styles from "./Searchbar.module.scss";
 
-const SearchbarView = ({ isOpen, onSubmit }) => {
+const SearchbarView = ({ isOpen, onInputFocus, onSubmit }) => {
   return (
     <div
       id="searchbar"
@@ -18,6 +18,7 @@ const SearchbarView = ({ isOpen, onSubmit }) => {
             className={styles.input}
             placeholder="Search for products..."
             aria-label="Search for products"
+            onFocus={onInputFocus}
           />
           <button type="submit" className={styles.button} aria-label="Submit search">
             <Search className="h-5 w-5" aria-hidden="true" />
@@ -34,4 +35,5 @@ SearchbarView.displayName = "SearchbarView";
 SearchbarView.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onInputFocus: PropTypes.func.isRequired,
 };

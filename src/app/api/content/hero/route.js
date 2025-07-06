@@ -1,5 +1,4 @@
 import { API_ENDPOINTS, API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
-import { errorHandler } from "@modules/core/services/errorHandler";
 import {
   createCorsResponse,
   createErrorResponse,
@@ -9,6 +8,7 @@ import {
   processImageUrl,
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "hero-content-api";
 const HERO_FALLBACKS = API_FALLBACK_DATA.HERO;
