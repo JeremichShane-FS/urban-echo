@@ -1,16 +1,14 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { Button } from "@design-system/buttons";
-
-import styles from "./ShopLanding.module.scss";
-
 export default function ShopLandingView({
+  Button,
+  Link,
   categories,
   error,
   featuredProducts,
   isLoading,
   newArrivals,
+  styles,
 }) {
   if (isLoading) {
     return (
@@ -187,39 +185,42 @@ export default function ShopLandingView({
 
 ShopLandingView.displayName = "ShopLandingView";
 ShopLandingView.propTypes = {
+  Button: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
   categories: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
-      id: PropTypes.string,
-      name: PropTypes.string.isRequired,
       description: PropTypes.string,
-      slug: PropTypes.string,
+      id: PropTypes.string,
       image: PropTypes.string,
       imageUrl: PropTypes.string,
+      name: PropTypes.string.isRequired,
+      slug: PropTypes.string,
     })
   ).isRequired,
   error: PropTypes.string,
   featuredProducts: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
-      id: PropTypes.string,
-      name: PropTypes.string.isRequired,
       description: PropTypes.string,
-      price: PropTypes.number.isRequired,
-      originalPrice: PropTypes.number,
-      images: PropTypes.arrayOf(PropTypes.string),
+      id: PropTypes.string,
       image: PropTypes.string,
+      images: PropTypes.arrayOf(PropTypes.string),
+      name: PropTypes.string.isRequired,
+      originalPrice: PropTypes.number,
+      price: PropTypes.number.isRequired,
     })
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
   newArrivals: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
-      id: PropTypes.string,
-      name: PropTypes.string.isRequired,
       description: PropTypes.string,
-      images: PropTypes.arrayOf(PropTypes.string),
+      id: PropTypes.string,
       image: PropTypes.string,
+      images: PropTypes.arrayOf(PropTypes.string),
+      name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  styles: PropTypes.objectOf(PropTypes.string).isRequired,
 };

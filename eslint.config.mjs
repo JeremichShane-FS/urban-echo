@@ -131,6 +131,16 @@ const eslintConfig = [
         },
       ],
       "react/prefer-stateless-function": "error",
+      "react/sort-prop-types": [
+        "error",
+        {
+          callbacksLast: false,
+          ignoreCase: false,
+          requiredFirst: false,
+          sortShapeProp: true,
+          noSortAlphabetically: false,
+        },
+      ],
 
       // =================================================================
       // REACT HOOKS RULES

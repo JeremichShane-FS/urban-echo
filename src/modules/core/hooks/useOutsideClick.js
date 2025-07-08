@@ -12,13 +12,12 @@
  */
 
 import { useEffect } from "react";
-import PropTypes from "prop-types";
 
-export const useOutsideClick = (ref, callback) => {
+export const useOutsideClick = (ref, handler) => {
   useEffect(() => {
     const handleClickOutside = event => {
       if (ref.current && !ref.current.contains(event.target)) {
-        callback(event);
+        handler();
       }
     };
 
@@ -26,12 +25,5 @@ export const useOutsideClick = (ref, callback) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ref, callback]);
-};
-
-useOutsideClick.propTypes = {
-  ref: PropTypes.shape({
-    current: PropTypes.object,
-  }).isRequired,
-  callback: PropTypes.func.isRequired,
+  }, [ref, handler]);
 };
