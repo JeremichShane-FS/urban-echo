@@ -1,10 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
-import useToggle from "@modules/core/hooks";
+import { useToggle } from "@modules/core/hooks";
+import { useOutsideClick } from "@modules/core/hooks/useOutsideClick";
 
 const useNavbar = () => {
   const [isMenuOpen, toggleMenu, , closeMenu] = useToggle(false);
   const [isSearchOpen, toggleSearch, , closeSearch] = useToggle(false);
+
+  const searchbarRef = useRef(null);
 
   const handleMenuToggle = useCallback(() => {
     toggleMenu();
@@ -20,11 +23,21 @@ const useNavbar = () => {
     }
   }, [isSearchOpen, isMenuOpen, toggleSearch, closeMenu]);
 
+  useOutsideClick(
+    searchbarRef,
+    useCallback(() => {
+      if (isSearchOpen) {
+        closeSearch();
+      }
+    }, [isSearchOpen, closeSearch])
+  );
+
   return {
     isMenuOpen,
     isSearchOpen,
     handleMenuToggle,
     handleSearchToggle,
+    searchbarRef,
   };
 };
 

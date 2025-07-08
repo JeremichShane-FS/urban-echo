@@ -33,7 +33,6 @@ export const useFooter = () => {
   };
 
   const handleLinkClick = (label, href) => {
-    // Track footer link clicks
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "click", {
         event_category: "Footer",
@@ -42,6 +41,10 @@ export const useFooter = () => {
       });
     }
   };
+
+  const shopSection = getNavigationSection("Shop");
+  const aboutSection = getNavigationSection("About");
+  const helpSection = getNavigationSection("Help");
 
   return {
     navigationSections,
@@ -52,5 +55,6 @@ export const useFooter = () => {
     copyrightText,
     getNavigationSection,
     onLinkClick: handleLinkClick,
+    sections: { shopSection, aboutSection, helpSection },
   };
 };

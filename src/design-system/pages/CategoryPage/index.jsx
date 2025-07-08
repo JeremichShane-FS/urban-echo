@@ -1,9 +1,15 @@
 "use client";
-
+import Image from "next/image";
+import Link from "next/link";
 import PropTypes from "prop-types";
+
+import { Button } from "@design-system/buttons";
+import { renderStars } from "@modules/core/utils/renderStars";
 
 import CategoryPageView from "./CategoryPageView";
 import { useCategoryPage } from "./useCategoryPage";
+
+import styles from "./CategoryPage.module.scss";
 
 export default function CategoryPage({ params }) {
   const {
@@ -49,6 +55,11 @@ export default function CategoryPage({ params }) {
       handleSortChange={handleSortChange}
       handlePriceRangeChange={handlePriceRangeChange}
       handlePageChange={handlePageChange}
+      styles={styles}
+      Button={Button}
+      Image={Image}
+      Link={Link}
+      renderStars={renderStars}
     />
   );
 }

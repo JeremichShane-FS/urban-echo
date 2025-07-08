@@ -52,3 +52,6 @@ export {
   isValidZipCode,
   validatePassword,
 } from "./validators";
+
+// Star Ratings
+export { renderStars } from "./renderStars";

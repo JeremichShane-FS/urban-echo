@@ -1,12 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { Button } from "@design-system/buttons";
-
-import styles from "./CategoryPage.module.scss";
-
 export default function CategoryPageView({
+  Button,
+  Image,
+  Link,
   categories,
   category,
   currentPage,
@@ -21,23 +18,14 @@ export default function CategoryPageView({
   isLoading,
   priceRange,
   products,
+  renderStars,
   searchTerm,
   selectedCategory,
   sortBy,
+  styles,
   totalPages,
   totalProducts,
 }) {
-  const renderStars = rating => {
-    if (!rating) return null;
-    return Array.from({ length: 5 }, (_, i) => (
-      <span
-        key={i}
-        className={i < Math.floor(rating) ? styles["star-filled"] : styles["star-empty"]}>
-        ★
-      </span>
-    ));
-  };
-
   if (error) {
     return (
       <div className={styles.error}>
@@ -323,47 +311,52 @@ export default function CategoryPageView({
 CategoryPageView.displayName = "CategoryPageView";
 
 CategoryPageView.propTypes = {
+  Button: PropTypes.elementType.isRequired,
+  Image: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      count: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  category: PropTypes.string.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  error: PropTypes.object,
+  filters: PropTypes.shape({
+    freeShipping: PropTypes.bool.isRequired,
+    newArrivals: PropTypes.bool.isRequired,
+    onSale: PropTypes.bool.isRequired,
+  }).isRequired,
+  handleCategoryChange: PropTypes.func.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
+  handlePageChange: PropTypes.func.isRequired,
+  handlePriceRangeChange: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  handleSortChange: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  priceRange: PropTypes.arrayOf(PropTypes.number).isRequired,
   products: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string,
       id: PropTypes.string,
-      name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
-      originalPrice: PropTypes.number,
-      images: PropTypes.arrayOf(PropTypes.string),
       image: PropTypes.string,
+      images: PropTypes.arrayOf(PropTypes.string),
+      isNew: PropTypes.bool,
+      name: PropTypes.string.isRequired,
+      onSale: PropTypes.bool,
+      originalPrice: PropTypes.number,
+      price: PropTypes.number.isRequired,
       rating: PropTypes.number,
       reviewCount: PropTypes.number,
-      isNew: PropTypes.bool,
-      onSale: PropTypes.bool,
     })
   ).isRequired,
-  categories: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      count: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  totalProducts: PropTypes.number.isRequired,
-  totalPages: PropTypes.number.isRequired,
-  currentPage: PropTypes.number.isRequired,
+  renderStars: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
   selectedCategory: PropTypes.string.isRequired,
   sortBy: PropTypes.string.isRequired,
-  priceRange: PropTypes.arrayOf(PropTypes.number).isRequired,
-  searchTerm: PropTypes.string.isRequired,
-  filters: PropTypes.shape({
-    onSale: PropTypes.bool.isRequired,
-    newArrivals: PropTypes.bool.isRequired,
-    freeShipping: PropTypes.bool.isRequired,
-  }).isRequired,
-  category: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  error: PropTypes.object,
-  handleCategoryChange: PropTypes.func.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  handleSortChange: PropTypes.func.isRequired,
-  handlePriceRangeChange: PropTypes.func.isRequired,
-  handlePageChange: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  totalProducts: PropTypes.number.isRequired,
 };

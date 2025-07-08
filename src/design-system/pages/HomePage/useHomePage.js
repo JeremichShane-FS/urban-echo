@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 
 import { usePageConfig } from "@modules/core/hooks";
+import { useIntersectionObserver } from "@modules/core/hooks/useIntersectionObserver";
 import { trackEvent, trackPageView } from "@modules/core/utils";
 
 export const useHomePage = () => {
@@ -16,11 +17,14 @@ export const useHomePage = () => {
     trackEvent("section_view", "Homepage", sectionName);
   }, []);
 
+  const refs = useIntersectionObserver(handleSectionView);
+
   return {
     isLoading,
     pageData,
     error,
     refetch,
     onSectionView: handleSectionView,
+    refs,
   };
 };
