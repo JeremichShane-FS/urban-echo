@@ -11,7 +11,7 @@ import { useCategoryPage } from "./useCategoryPage";
 
 import styles from "./CategoryPage.module.scss";
 
-export default function CategoryPage({ params }) {
+const CategoryPage = ({ params }) => {
   const {
     categories,
     category,
@@ -62,7 +62,9 @@ export default function CategoryPage({ params }) {
       renderStars={renderStars}
     />
   );
-}
+};
+
+export default CategoryPage;
 
 CategoryPage.displayName = "CategoryPage";
 CategoryPage.View = CategoryPageView;

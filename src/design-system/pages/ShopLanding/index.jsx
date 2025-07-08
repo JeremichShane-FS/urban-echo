@@ -8,7 +8,7 @@ import { useShopLanding } from "./useShopLanding";
 
 import styles from "./ShopLanding.module.scss";
 
-export default function ShopLanding() {
+const ShopLanding = () => {
   const { categories, error, featuredProducts, isLoading, newArrivals } = useShopLanding();
 
   return (
@@ -23,7 +23,8 @@ export default function ShopLanding() {
       styles={styles}
     />
   );
-}
+};
+export default ShopLanding;
 
 ShopLanding.displayName = "ShopLanding";
 ShopLanding.View = ShopLandingView;

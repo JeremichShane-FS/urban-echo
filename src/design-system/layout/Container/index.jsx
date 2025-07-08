@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 import styles from "./Container.module.scss";
 
-export default function Container({ children, className = "", fluid, size }) {
+const Container = ({ children, className = "", fluid, size }) => {
   const sizeClass = size ? `${styles[`container--${size}`]}` : "";
   const fluidClass = fluid ? `${styles["container--fluid"]}` : "";
   const containerClass = !size && !fluid ? `${styles.container}` : "";
@@ -12,7 +12,9 @@ export default function Container({ children, className = "", fluid, size }) {
       {children}
     </div>
   );
-}
+};
+
+export default Container;
 
 Container.displayName = "Container";
 Container.propTypes = {
