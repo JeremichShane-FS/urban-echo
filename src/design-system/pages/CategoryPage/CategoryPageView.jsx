@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-export default function CategoryPageView({
+const CategoryPageView = ({
   Button,
   Image,
   Link,
@@ -25,7 +25,7 @@ export default function CategoryPageView({
   styles,
   totalPages,
   totalProducts,
-}) {
+}) => {
   if (error) {
     return (
       <div className={styles.error}>
@@ -306,10 +306,11 @@ export default function CategoryPageView({
       </div>
     </div>
   );
-}
+};
+
+export default CategoryPageView;
 
 CategoryPageView.displayName = "CategoryPageView";
-
 CategoryPageView.propTypes = {
   Button: PropTypes.elementType.isRequired,
   Image: PropTypes.elementType.isRequired,

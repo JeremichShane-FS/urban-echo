@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-export default function ShopLandingView({
+const ShopLandingView = ({
   Button,
   Link,
   categories,
@@ -9,7 +9,7 @@ export default function ShopLandingView({
   isLoading,
   newArrivals,
   styles,
-}) {
+}) => {
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -181,7 +181,9 @@ export default function ShopLandingView({
       </section>
     </div>
   );
-}
+};
+
+export default ShopLandingView;
 
 ShopLandingView.displayName = "ShopLandingView";
 ShopLandingView.propTypes = {
