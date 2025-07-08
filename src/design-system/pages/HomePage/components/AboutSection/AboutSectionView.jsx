@@ -1,12 +1,21 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
-import Button from "@design-system/buttons/Button";
+const AboutSectionView = ({
+  BUTTON_SIZES,
+  BUTTON_VARIANTS,
+  Button,
+  Link,
+  ROUTES,
+  aboutContent,
+  error,
+  isLoading,
+  onLearnMoreClick,
+  styles,
+}) => {
+  if (error) {
+    return <div>Error loading about section</div>;
+  }
 
-import styles from "./AboutSection.module.scss";
-
-const AboutSectionView = ({ aboutContent, isLoading, onLearnMoreClick }) => {
   if (isLoading) {
     return (
       <section className={styles.section}>
@@ -49,13 +58,20 @@ export default AboutSectionView;
 
 AboutSectionView.displayName = "AboutSectionView";
 AboutSectionView.propTypes = {
+  BUTTON_SIZES: PropTypes.objectOf(PropTypes.string).isRequired,
+  BUTTON_VARIANTS: PropTypes.objectOf(PropTypes.string).isRequired,
+  Button: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
+  ROUTES: PropTypes.objectOf(PropTypes.string).isRequired,
   aboutContent: PropTypes.shape({
-    title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     mission: PropTypes.string.isRequired,
-    vision: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     values: PropTypes.arrayOf(PropTypes.string),
+    vision: PropTypes.string.isRequired,
   }).isRequired,
+  error: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onLearnMoreClick: PropTypes.func.isRequired,
+  styles: PropTypes.objectOf(PropTypes.string).isRequired,
 };

@@ -1,39 +1,33 @@
 "use client";
+import Link from "next/link";
 
-import { useNewArrivals } from "@modules/product/hooks/useNewArrivals";
+import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
+import { Button } from "@design-system/buttons";
+import ProductCard from "@design-system/data-display/ProductCard";
+import { useNewArrivals } from "@modules/product/hooks";
 
 import NewArrivalsView from "./NewArrivalsView";
 
+import styles from "./NewArrivals.module.scss";
+
 const NewArrivals = () => {
-  const { error, filters, loading, pagination, products } = useNewArrivals();
-
-  const handleProductClick = (productId, productName) => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "select_content", {
-        content_type: "product",
-        content_id: productId,
-        item_name: productName,
-        source: "new_arrivals",
-      });
-    }
-  };
-
-  const handleViewAllClick = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "click", {
-        event_category: "New Arrivals",
-        event_label: "View All Products",
-      });
-    }
-  };
+  const { error, filters, handleProductClick, handleViewAllClick, loading, pagination, products } =
+    useNewArrivals();
 
   return (
     <NewArrivalsView
       newArrivals={products}
       loading={loading}
-      error={error}
+      error={error?.message || null}
       filters={filters}
       pagination={pagination}
+      styles={styles}
+      ProductCard={ProductCard}
+      Button={Button}
+      BUTTON_VARIANTS={BUTTON_VARIANTS}
+      BUTTON_SIZES={BUTTON_SIZES}
+      ROUTES={ROUTES}
+      Link={Link}
       onProductClick={handleProductClick}
       onViewAllClick={handleViewAllClick}
     />
@@ -44,4 +38,3 @@ export default NewArrivals;
 
 NewArrivals.displayName = "NewArrivals";
 NewArrivals.View = NewArrivalsView;
-NewArrivals.useNewArrivals = useNewArrivals;

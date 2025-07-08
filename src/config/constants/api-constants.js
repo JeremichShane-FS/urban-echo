@@ -1,15 +1,15 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @fileoverview This file contains constants related to API endpoints, versions, and configurations.
- * It serves as a centralized location for managing all API-related constants used in the application.
+ * @fileoverview API endpoints, versions, and core configurations.
+ * This file contains constants related to API infrastructure, endpoints, and basic configuration.
+ * For API utilities, validation patterns, and helper constants, see api-utils-constants.js
  */
 
-// Base URLs
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_URL;
 export const CDN_BASE_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
-// API versions
 export const API_VERSION = "v1";
 export const LEGACY_API_VERSION = "v0";
 
@@ -40,11 +40,11 @@ export const API_ENDPOINTS = {
   bestSellers: "products/best-sellers",
 
   // Categories
-  categories: "categories",
-  subCategories: "subcategories",
+  categories: "products/categories",
+  subCategories: "products/categories/subcategories",
 
   // Collections
-  collections: "collections",
+  collections: "products/collections",
 
   // Cart
   cart: "cart",
@@ -148,11 +148,14 @@ export const ERROR_TYPES = {
   VALIDATION_ERROR: "VALIDATION_ERROR",
   AUTHENTICATION_ERROR: "AUTHENTICATION_ERROR",
   AUTHORIZATION_ERROR: "AUTHORIZATION_ERROR",
+  PAYMENT_ERROR: "PAYMENT_ERROR",
   NOT_FOUND_ERROR: "NOT_FOUND_ERROR",
   TIMEOUT_ERROR: "TIMEOUT_ERROR",
   RATE_LIMIT_ERROR: "RATE_LIMIT_ERROR",
   SERVER_ERROR: "SERVER_ERROR",
   UNKNOWN_ERROR: "UNKNOWN_ERROR",
+  DATABASE_ERROR: "DATABASE_ERROR",
+  CMS_ERROR: "CMS_ERROR",
 };
 
 // Headers
@@ -191,4 +194,24 @@ export const WEBHOOK_EVENTS = {
   PRODUCT_DELETED: "product.deleted",
   INVENTORY_LOW: "inventory.low",
   USER_REGISTERED: "user.registered",
+};
+
+// CORS configurations for different endpoint types
+export const API_CORS_CONFIGS = {
+  GET_ONLY: {
+    methods: ["GET", "OPTIONS"],
+    headers: ["Content-Type"],
+  },
+  READ_WRITE: {
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    headers: ["Content-Type", "Authorization"],
+  },
+  CONTENT_MANAGEMENT: {
+    methods: ["GET", "POST", "PUT", "OPTIONS"],
+    headers: ["Content-Type", "Authorization"],
+  },
+  PUBLIC_API: {
+    methods: ["GET", "POST", "OPTIONS"],
+    headers: ["Content-Type"],
+  },
 };

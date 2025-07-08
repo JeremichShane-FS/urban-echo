@@ -1,13 +1,13 @@
-import { Search } from "lucide-react";
+import { forwardRef } from "react";
 import PropTypes from "prop-types";
 
-import styles from "./Searchbar.module.scss";
-
-const SearchbarView = ({ isOpen, onSubmit }) => {
+const SearchbarView = forwardRef(({ SearchIcon, isOpen, onInputFocus, onSubmit, styles }, ref) => {
   return (
     <div
+      ref={ref}
       id="searchbar"
-      className={isOpen ? styles.searchbar : `${styles.searchbar} ${styles["searchbar--hidden"]}`}
+      className={styles.searchbar}
+      data-open={isOpen}
       aria-hidden={!isOpen}>
       <form id="search-form" className={styles.form} onSubmit={onSubmit}>
         <div className={styles.container}>
@@ -18,20 +18,24 @@ const SearchbarView = ({ isOpen, onSubmit }) => {
             className={styles.input}
             placeholder="Search for products..."
             aria-label="Search for products"
+            onFocus={onInputFocus}
           />
           <button type="submit" className={styles.button} aria-label="Submit search">
-            <Search className="h-5 w-5" aria-hidden="true" />
+            <SearchIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
       </form>
     </div>
   );
-};
-
-export default SearchbarView;
+});
 
 SearchbarView.displayName = "SearchbarView";
 SearchbarView.propTypes = {
+  SearchIcon: PropTypes.elementType.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  onInputFocus: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  styles: PropTypes.objectOf(PropTypes.string).isRequired,
 };
+
+export default SearchbarView;

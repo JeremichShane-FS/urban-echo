@@ -1,13 +1,19 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
-import { Button } from "@design-system/buttons";
-import ProductCard from "@design-system/data-display/ProductCard";
-
-import styles from "./NewArrivals.module.scss";
-
-const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAllClick }) => {
+const NewArrivalsView = ({
+  BUTTON_SIZES,
+  BUTTON_VARIANTS,
+  Button,
+  Link,
+  ProductCard,
+  ROUTES,
+  error,
+  loading,
+  newArrivals,
+  onProductClick,
+  onViewAllClick,
+  styles,
+}) => {
   if (loading) {
     return (
       <section className={styles.section}>
@@ -40,6 +46,8 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
     );
   }
 
+  const products = Array.isArray(newArrivals) ? newArrivals : [];
+
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -51,7 +59,7 @@ const NewArrivalsView = ({ error, loading, newArrivals, onProductClick, onViewAl
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 auto-rows-max gap-4 md:gap-6 lg:gap-8 mt-8">
-          {newArrivals.slice(0, 8).map((product, index) => {
+          {products.slice(0, 8).map((product, index) => {
             if (!product || !product.id || !product.name || !product.price || !product.slug) {
               console.warn("Invalid product data:", product);
               return null;
@@ -102,17 +110,26 @@ export default NewArrivalsView;
 
 NewArrivalsView.displayName = "NewArrivalsView";
 NewArrivalsView.propTypes = {
+  BUTTON_SIZES: PropTypes.object.isRequired,
+  BUTTON_VARIANTS: PropTypes.object.isRequired,
+  Button: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
+  ProductCard: PropTypes.elementType.isRequired,
+  ROUTES: PropTypes.object.isRequired,
   error: PropTypes.string,
+  filters: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   newArrivals: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
+      isNew: PropTypes.bool,
       name: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
       slug: PropTypes.string.isRequired,
-      isNew: PropTypes.bool,
     })
   ).isRequired,
   onProductClick: PropTypes.func.isRequired,
   onViewAllClick: PropTypes.func.isRequired,
+  pagination: PropTypes.object,
+  styles: PropTypes.object.isRequired,
 };

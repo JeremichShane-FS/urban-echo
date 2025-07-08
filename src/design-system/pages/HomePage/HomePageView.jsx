@@ -1,15 +1,21 @@
 import PropTypes from "prop-types";
 
-import FeaturedProducts from "@design-system/data-display/FeaturedProducts";
-import NewArrivals from "@design-system/data-display/NewArrivals";
-import Newsletter from "@design-system/feedback/Newsletter";
+const HomePageView = ({
+  AboutSection,
+  FeaturedProducts,
+  HeroSection,
+  NewArrivals,
+  Newsletter,
+  error,
+  isLoading,
+  pageData,
+  refs,
+  styles,
+}) => {
+  if (error) {
+    return <div>Error loading about section</div>;
+  }
 
-import AboutSection from "./components/AboutSection";
-import HeroSection from "./components/HeroSection";
-
-import styles from "./HomePage.module.scss";
-
-const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
   if (isLoading) {
     return (
       <main className={styles.page}>
@@ -25,11 +31,33 @@ const HomePageView = ({ _onSectionView, isLoading, pageData }) => {
 
   return (
     <main className={styles.page}>
-      <HeroSection />
-      {pageData.showFeaturedProducts && <FeaturedProducts />}
-      {pageData.showNewsletter && <Newsletter />}
-      {pageData.showNewArrivals && <NewArrivals />}
-      {pageData.showAboutSection && <AboutSection />}
+      <div ref={refs.heroRef} data-section="hero">
+        <HeroSection />
+      </div>
+
+      {pageData.showFeaturedProducts && (
+        <div ref={refs.featuredRef} data-section="featured-products">
+          <FeaturedProducts />
+        </div>
+      )}
+
+      {pageData.showNewsletter && (
+        <div ref={refs.newsletterRef} data-section="newsletter">
+          <Newsletter />
+        </div>
+      )}
+
+      {pageData.showNewArrivals && (
+        <div ref={refs.newArrivalsRef} data-section="new-arrivals">
+          <NewArrivals />
+        </div>
+      )}
+
+      {pageData.showAboutSection && (
+        <div ref={refs.aboutRef} data-section="about">
+          <AboutSection />
+        </div>
+      )}
     </main>
   );
 };
@@ -38,12 +66,25 @@ export default HomePageView;
 
 HomePageView.displayName = "HomePageView";
 HomePageView.propTypes = {
-  _onSectionView: PropTypes.func.isRequired,
+  AboutSection: PropTypes.elementType.isRequired,
+  FeaturedProducts: PropTypes.elementType.isRequired,
+  HeroSection: PropTypes.elementType.isRequired,
+  NewArrivals: PropTypes.elementType.isRequired,
+  Newsletter: PropTypes.elementType.isRequired,
+  error: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({
-    showFeaturedProducts: PropTypes.bool,
-    showNewsletter: PropTypes.bool,
-    showNewArrivals: PropTypes.bool,
     showAboutSection: PropTypes.bool,
+    showFeaturedProducts: PropTypes.bool,
+    showNewArrivals: PropTypes.bool,
+    showNewsletter: PropTypes.bool,
   }).isRequired,
+  refs: PropTypes.shape({
+    aboutRef: PropTypes.object,
+    featuredRef: PropTypes.object,
+    heroRef: PropTypes.object,
+    newArrivalsRef: PropTypes.object,
+    newsletterRef: PropTypes.object,
+  }).isRequired,
+  styles: PropTypes.object.isRequired,
 };

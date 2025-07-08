@@ -1,10 +1,6 @@
 import PropTypes from "prop-types";
 
-import NavLinks from "@design-system/navigation/NavLinks";
-
-import styles from "./MobileMenu.module.scss";
-
-const MobileMenuView = ({ isOpen }) => {
+const MobileMenuView = ({ NavLinks, isOpen, styles }) => {
   return (
     <div
       id="mobile-menu"
@@ -21,5 +17,7 @@ export default MobileMenuView;
 
 MobileMenuView.displayName = "MobileMenuView";
 MobileMenuView.propTypes = {
+  NavLinks: PropTypes.elementType.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  styles: PropTypes.object.isRequired,
 };

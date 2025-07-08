@@ -1,52 +1,97 @@
-import { useCallback, useEffect, useState } from "react";
-
-import { productService as data } from "@modules/product/services/product-service";
+import { CACHE_DURATION, DEFAULT_PAGINATION } from "@config/constants";
+import { queryKeys } from "@modules/core/providers/query-provider";
+import { getNewArrivals } from "@modules/core/services";
+import { useQuery } from "@tanstack/react-query";
 
 export const useNewArrivals = (options = {}) => {
-  const { category, limit = 8, page = 1 } = options;
+  const {
+    category,
+    enabled = true,
+    limit = DEFAULT_PAGINATION.limit,
+    page = DEFAULT_PAGINATION.page,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+  } = options;
 
-  const [products, setProducts] = useState([]);
-  const [pagination, setPagination] = useState(null);
-  const [filters, setFilters] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const queryKey = [
+    ...queryKeys.products.newArrivals(),
+    { category, limit, page, sortBy, sortOrder },
+  ];
 
-  const fetchNewArrivals = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const { data, error, isLoading, ...rest } = useQuery({
+    queryKey,
+    queryFn: () => getNewArrivals({ category, limit, page, sortBy, sortOrder }),
+    enabled,
+    staleTime: CACHE_DURATION.short,
+    gcTime: CACHE_DURATION.medium,
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    select: data => {
+      const rawData = data?.data || data || {};
+      const products = rawData.products || rawData.data || rawData || [];
+      const pagination = rawData.pagination || {
+        page,
+        limit,
+        total: products.length,
+        totalPages: Math.ceil(products.length / limit),
+        hasMore: products.length === limit,
+        hasPrevious: page > 1,
+      };
+      const filters = {
+        category,
+        sortBy,
+        sortOrder,
+      };
 
-      // TODO: [ROUTES] Product catalog API endpoints defined
-      // Replace productService mock with backend API integration.
-      // Required API endpoints:
-      // - GET /api/${API_ENDPOINTS.newArrivals}?limit={limit}&page={page}
-      // - GET /api/${API_ENDPOINTS.newArrivals}/count (for pagination)
-      // - Include product variants, pricing, inventory status
-      // - Support for filtering by category, size, price range
+      return {
+        products: Array.isArray(products) ? products : [],
+        pagination,
+        filters,
+      };
+    },
+    meta: {
+      source: "new-arrivals-api",
+      filters: { category, sortBy, sortOrder },
+      pagination: { page, limit },
+    },
+  });
 
-      const response = await data.getNewArrivals({ limit, page, category });
-      setProducts(response.products);
-      setPagination(response.pagination);
-      setFilters(response.filters);
-    } catch (error) {
-      console.error("Error fetching new arrivals:", error.message);
-      setError(error.message || "An unexpected error occurred");
-      setProducts([]);
-    } finally {
-      setLoading(false);
+  // Extract transformed data
+  const products = data?.products || [];
+  const pagination = data?.pagination || {};
+  const filters = data?.filters || {};
+
+  // Business logic handlers
+  const handleProductClick = (productId, productName) => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "select_content", {
+        content_type: "product",
+        content_id: productId,
+        item_name: productName,
+        source: "new_arrivals",
+      });
     }
-  }, [limit, page, category]);
+  };
 
-  useEffect(() => {
-    fetchNewArrivals();
-  }, [fetchNewArrivals]);
+  const handleViewAllClick = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "click", {
+        event_category: "New Arrivals",
+        event_label: "View All Products",
+      });
+    }
+  };
 
   return {
     products,
     pagination,
     filters,
-    loading,
+    loading: isLoading,
     error,
-    refetch: fetchNewArrivals,
+    handleProductClick,
+    handleViewAllClick,
+    ...rest,
   };
 };

@@ -1,12 +1,13 @@
-"use client";
-
 import PropTypes from "prop-types";
 
-import ProductCard from "@design-system/data-display/ProductCard";
-
-import styles from "./FeaturedProducts.module.scss";
-
-const FeaturedProductsView = ({ error, featuredProducts, isLoading, onProductClick }) => {
+const FeaturedProductsView = ({
+  ProductCard,
+  error,
+  featuredProducts,
+  isLoading,
+  onProductClick,
+  styles,
+}) => {
   if (isLoading) {
     return (
       <section className={styles.section}>
@@ -52,19 +53,21 @@ export default FeaturedProductsView;
 
 FeaturedProductsView.displayName = "FeaturedProductsView";
 FeaturedProductsView.propTypes = {
+  ProductCard: PropTypes.elementType.isRequired,
   error: PropTypes.string,
   featuredProducts: PropTypes.arrayOf(
     PropTypes.shape({
+      category: PropTypes.string,
       id: PropTypes.string.isRequired,
+      image: PropTypes.string,
+      inStock: PropTypes.bool.isRequired,
+      isNew: PropTypes.bool,
       name: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
       slug: PropTypes.string.isRequired,
-      image: PropTypes.string,
-      category: PropTypes.string,
-      isNew: PropTypes.bool,
-      inStock: PropTypes.bool.isRequired,
     })
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onProductClick: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
 };

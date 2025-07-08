@@ -1,40 +1,35 @@
 "use client";
+import Link from "next/link";
 
-import { useAboutContent } from "@lib/hooks/useContent";
+import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
+import Button from "@design-system/buttons/Button";
 
 import AboutSectionView from "./AboutSectionView";
+import { useAboutSection } from "./useAboutSection";
+
+import styles from "./AboutSection.module.scss";
 
 const AboutSection = () => {
-  const { data: aboutContent, error, isLoading: loading } = useAboutContent();
-
-  if (loading) {
-    return <div>Loading about content...</div>;
-  }
-
-  if (error) {
-    return <div>Error loading about content: {error}</div>;
-  }
-
-  if (!aboutContent) {
-    return <div>No about content found.</div>;
-  }
-
-  const handleLearnMoreClick = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "click", {
-        event_category: "About Section",
-        event_label: "Learn More About Us",
-      });
-    }
-  };
+  const { aboutContent, error, isLoading, onLearnMoreClick } = useAboutSection();
 
   return (
     <AboutSectionView
       aboutContent={aboutContent}
-      isLoading={loading}
-      onLearnMoreClick={handleLearnMoreClick}
+      isLoading={isLoading}
+      error={error}
+      styles={styles}
+      Link={Link}
+      Button={Button}
+      BUTTON_VARIANTS={BUTTON_VARIANTS}
+      BUTTON_SIZES={BUTTON_SIZES}
+      ROUTES={ROUTES}
+      onLearnMoreClick={onLearnMoreClick}
     />
   );
 };
 
 export default AboutSection;
+
+AboutSection.displayName = "AboutSection";
+AboutSection.View = AboutSectionView;
+AboutSection.useAboutSection = useAboutSection;
