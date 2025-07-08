@@ -243,7 +243,7 @@ async function seedCategories() {
     await dbConnect();
     console.log("📊 MongoDB connected successfully\n");
 
-    const Category = (await import("./node/models/category.js")).default;
+    const Category = (await import("../utils/models/category.js")).default;
 
     console.log("🧹 Clearing existing categories...");
     await Category.deleteMany({});
@@ -254,7 +254,7 @@ async function seedCategories() {
     console.log(`✅ Created ${createdCategories.length} categories\n`);
 
     console.log("📊 Updating product counts...");
-    const Product = (await import("./node/models/product.js")).default;
+    const Product = (await import("../utils/models/product.js")).default;
 
     for (const category of createdCategories) {
       if (category.level === 0) {

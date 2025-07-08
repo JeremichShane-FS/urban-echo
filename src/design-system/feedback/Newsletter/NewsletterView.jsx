@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants";
-import Button from "@design-system/buttons/Button";
-
-import styles from "./Newsletter.module.scss";
-
 const NewsletterView = ({
+  Button,
+  TOAST_TYPES,
+  buttonSize,
+  buttonVariant,
   email,
   isFormValid,
   isSubmitting,
@@ -13,6 +12,7 @@ const NewsletterView = ({
   messageType,
   onEmailChange,
   onSubmit,
+  styles,
 }) => {
   return (
     <section className={styles.section}>
@@ -44,8 +44,8 @@ const NewsletterView = ({
 
                 <Button
                   type="submit"
-                  variant={BUTTON_VARIANTS.primary}
-                  size={BUTTON_SIZES.md}
+                  variant={buttonVariant}
+                  size={buttonSize}
                   disabled={!isFormValid}
                   className={styles.button}
                   aria-label="Subscribe to newsletter">
@@ -81,11 +81,16 @@ export default NewsletterView;
 
 NewsletterView.displayName = "NewsletterView";
 NewsletterView.propTypes = {
+  Button: PropTypes.elementType.isRequired,
+  TOAST_TYPES: PropTypes.object.isRequired,
+  buttonSize: PropTypes.string.isRequired,
+  buttonVariant: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   isFormValid: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   message: PropTypes.string,
-  messageType: PropTypes.oneOf(Object.values(TOAST_TYPES)),
+  messageType: PropTypes.string,
   onEmailChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
 };

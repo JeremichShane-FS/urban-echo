@@ -1,22 +1,15 @@
-import Image from "next/image";
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import styles from "./ProductCard.module.scss";
-
 const ProductCardView = ({
+  Image,
+  Link,
   className = "",
-  onClick,
+  onClick: handleClick,
   product,
   showDescription,
   showNewBadge = false,
+  styles,
 }) => {
-  const handleClick = () => {
-    if (onClick) {
-      onClick(product.id, product.name);
-    }
-  };
-
   if (!product.image || product.image === "") {
     return (
       <div className={`${styles.card} ${className}`}>
@@ -77,19 +70,22 @@ export default ProductCardView;
 
 ProductCardView.displayName = "ProductCardView";
 ProductCardView.propTypes = {
+  Image: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
   className: PropTypes.string,
   onClick: PropTypes.func,
   product: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-    image: PropTypes.string,
-    price: PropTypes.number.isRequired,
     category: PropTypes.string,
-    isNew: PropTypes.bool,
-    inStock: PropTypes.bool.isRequired,
     description: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    inStock: PropTypes.bool.isRequired,
+    isNew: PropTypes.bool,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
   }).isRequired,
   showDescription: PropTypes.bool,
   showNewBadge: PropTypes.bool,
+  styles: PropTypes.object.isRequired,
 };

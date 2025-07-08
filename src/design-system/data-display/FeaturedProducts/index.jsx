@@ -1,13 +1,28 @@
-import { useFeaturedProducts } from "@modules/product/hooks/useFeaturedProducts";
+"use client";
+import ProductCard from "@design-system/data-display/ProductCard";
+import { useFeaturedProducts } from "@modules/product/hooks";
 
 import FeaturedProductsView from "./FeaturedProductsView";
 
-const FeaturedProducts = () => {
-  const featuredProductsProps = useFeaturedProducts();
+import styles from "./FeaturedProducts.module.scss";
 
-  return <FeaturedProductsView {...featuredProductsProps} />;
+const FeaturedProducts = () => {
+  const { data, error, isLoading, onProductClick } = useFeaturedProducts();
+
+  return (
+    <FeaturedProductsView
+      featuredProducts={data || []}
+      isLoading={isLoading}
+      error={error?.message || null}
+      styles={styles}
+      ProductCard={ProductCard}
+      onProductClick={onProductClick}
+    />
+  );
 };
 
 export default FeaturedProducts;
 
 FeaturedProducts.displayName = "FeaturedProducts";
+FeaturedProducts.View = FeaturedProductsView;
+FeaturedProducts.useFeaturedProducts = useFeaturedProducts;

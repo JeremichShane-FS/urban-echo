@@ -1,14 +1,14 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
-import Button from "@design-system/buttons/Button";
-
-import styles from "./NavLinks.module.scss";
-
-const NavLinksView = ({ isMobile = false, navItems }) => {
-  const baseClass = isMobile ? styles["item--mobile"] : styles.item;
-
+const NavLinksView = ({
+  BUTTON_SIZES,
+  BUTTON_VARIANTS,
+  Button,
+  Link,
+  baseClass,
+  navItems,
+  styles,
+}) => {
   return (
     <>
       {navItems.slice(1).map(navItem => {
@@ -41,6 +41,11 @@ export default NavLinksView;
 
 NavLinksView.displayName = "NavLinksView";
 NavLinksView.propTypes = {
+  BUTTON_SIZES: PropTypes.object.isRequired,
+  BUTTON_VARIANTS: PropTypes.object.isRequired,
+  Button: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
+  baseClass: PropTypes.string.isRequired,
   isMobile: PropTypes.bool,
   navItems: PropTypes.arrayOf(
     PropTypes.shape({
@@ -48,4 +53,5 @@ NavLinksView.propTypes = {
       label: PropTypes.string.isRequired,
     })
   ).isRequired,
+  styles: PropTypes.object.isRequired,
 };

@@ -1,25 +1,24 @@
 "use client";
-import useToggle from "@modules/core/hooks/useToggle";
+import Link from "next/link";
+
+import UrbanEchoLogo from "@assets/images/logo/UrbanEchoLogo";
+import { MAIN_NAV_ITEMS } from "@config/constants";
+import { MenuToggle } from "@design-system/buttons";
+import Searchbar from "@design-system/forms/Searchbar";
+import Container from "@design-system/layout/Container";
+import ActionIcons from "@design-system/navigation/ActionIcons";
+import MobileMenu from "@design-system/navigation/MobileMenu";
+import NavLinks from "@design-system/navigation/NavLinks";
+import { getNavItemById } from "@modules/core/utils";
 
 import NavbarView from "./NavbarView";
+import useNavbar from "./useNavbar";
+
+import styles from "./Navbar.module.scss";
 
 const Navbar = () => {
-  const [isMenuOpen, toggleMenu, , closeMenu] = useToggle(false);
-  const [isSearchOpen, toggleSearch, , closeSearch] = useToggle(false);
-
-  const handleMenuToggle = () => {
-    toggleMenu();
-    if (!isMenuOpen && isSearchOpen) {
-      closeSearch();
-    }
-  };
-
-  const handleSearchToggle = () => {
-    toggleSearch();
-    if (!isSearchOpen && isMenuOpen) {
-      closeMenu();
-    }
-  };
+  const { handleMenuToggle, handleSearchToggle, isMenuOpen, isSearchOpen, searchbarRef } =
+    useNavbar();
 
   return (
     <NavbarView
@@ -27,8 +26,23 @@ const Navbar = () => {
       isSearchOpen={isSearchOpen}
       toggleMenu={handleMenuToggle}
       toggleSearch={handleSearchToggle}
+      searchbarRef={searchbarRef}
+      styles={styles}
+      NavLinks={NavLinks}
+      Container={Container}
+      MenuToggle={MenuToggle}
+      Searchbar={Searchbar}
+      UrbanEchoLogo={UrbanEchoLogo}
+      ActionIcons={ActionIcons}
+      MobileMenu={MobileMenu}
+      navLink={getNavItemById("home", MAIN_NAV_ITEMS)}
+      Link={Link}
     />
   );
 };
 
 export default Navbar;
+
+Navbar.displayName = "Navbar";
+Navbar.View = NavbarView;
+Navbar.useNavbar = useNavbar;

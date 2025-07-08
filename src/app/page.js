@@ -24,13 +24,37 @@
  * Portfolio: shanejeremich.com
  */
 
+import { API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
 import { generatePageMetadata } from "@config/seo";
 import HomePage from "@design-system/pages/HomePage";
-import { getPageConfig } from "@lib/services/api-service";
+import { fetchFromStrapi, transformContentWithFallbacks } from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
 export async function generateMetadata() {
   try {
-    const pageConfig = await getPageConfig("homepage");
+    const response = await fetchFromStrapi(
+      `page-configs?filters[pageName][$eq]=homepage&populate=*`,
+      "page-metadata-generation"
+    );
+
+    const data = await response.json();
+    const config = data.data?.[0];
+
+    let pageConfig;
+
+    if (config) {
+      pageConfig = transformContentWithFallbacks(config, API_FALLBACK_DATA.PAGE_CONFIG);
+      pageConfig.pageName = config.pageName || "homepage";
+    } else {
+      errorHandler.handleError(new Error("No page config found in CMS"), ERROR_TYPES.CMS_ERROR, {
+        source: "page-metadata-generation",
+        action: "fetch-homepage-config",
+        pageName: "homepage",
+        fallbackUsed: true,
+      });
+
+      pageConfig = { ...API_FALLBACK_DATA.PAGE_CONFIG, pageName: "homepage" };
+    }
 
     return generatePageMetadata({
       title: pageConfig?.seoTitle,
@@ -45,6 +69,13 @@ export async function generateMetadata() {
       },
     });
   } catch (error) {
+    errorHandler.handleError(error, ERROR_TYPES.CMS_ERROR, {
+      source: "page-metadata-generation",
+      action: "generate-metadata",
+      pageName: "homepage",
+      fallbackUsed: true,
+    });
+
     console.warn("Failed to fetch page config for metadata, using defaults", error.message);
     return generatePageMetadata();
   }

@@ -56,7 +56,7 @@ export const UPLOAD_PATHS = {
 
 // Default images
 export const DEFAULT_IMAGES = {
-  productPlaceholder: "/images/product-placeholder.jpg",
+  productPlaceholder: "@assets/images/product/product-placeholder.png",
   userAvatar: "/images/default-avatar.jpg",
   logo: "/images/svg/navbar-logo.svg",
   categoryPlaceholder: "/images/category-placeholder.jpg",

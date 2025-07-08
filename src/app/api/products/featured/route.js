@@ -1,95 +1,84 @@
-import { API_ENDPOINTS, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import { API_ENDPOINTS, API_VALIDATION_LIMITS, ERROR_TYPES } from "@config/constants";
 import dbConnect from "@lib/mongodb/client";
-import { errorHandler } from "@modules/core/services/errorHandler";
+import {
+  buildFieldSelection,
+  buildProductQuery,
+  createCorsResponse,
+  createErrorResponse,
+  createProductMeta,
+  createSuccessResponse,
+  transformProducts,
+  validatePagination,
+} from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
 const ERROR_SOURCE = "featured-products-api";
 
+/**
+ * GET /api/products/featured
+ * @description Get featured products sorted by rating
+ * @param {Object} searchParams - Query parameters
+ * @param {number} [searchParams.limit=8] - Number of products (max 50)
+ * @param {string} [searchParams.category] - Category filter
+ * @returns {Object} Featured products array with metadata
+ * @example GET /api/products/featured?category=clothing&limit=12
+ */
 export async function GET(request) {
   try {
-    await dbConnect();
-
-    const Product = (await import("@lib/mongodb/models/product.js")).default;
-
-    // Parse query parameters
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get("limit")) || 8;
+    const rawLimit = parseInt(searchParams.get("limit")) || 8;
     const category = searchParams.get("category");
+    const validation = validatePagination({
+      limit: rawLimit,
+      page: 1,
+      maxLimit: API_VALIDATION_LIMITS.MAX_FEATURED_PRODUCTS,
+      endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
+    });
 
-    // Build query for featured products
-    const query = {
+    if (!validation.isValid) return validation.response;
+
+    await dbConnect();
+    const Product = (await import("@lib/mongodb/models/product")).default;
+    const query = buildProductQuery({
+      category,
       isActive: true,
       isFeatured: true,
-    };
+    });
 
-    if (category) {
-      query.category = category;
-    }
-
-    // Get featured products
     const featuredProducts = await Product.find(query)
       .sort({ averageRating: -1, reviewCount: -1 })
-      .limit(limit)
+      .limit(rawLimit)
+      .select(buildFieldSelection("listing"))
       .lean();
 
-    const transformedProducts = featuredProducts.map(product => ({
-      id: product._id.toString(),
-      name: product.name,
-      price: product.price,
-      compareAtPrice: product.compareAtPrice,
-      image: product.images?.[0]?.url || null,
-      slug: product.slug,
-      category: product.category,
-      subcategory: product.subcategory,
-      brand: product.brand,
-      description: product.description,
-      colors: [...new Set(product.variants?.map(v => v.color) || [])],
-      sizes: [...new Set(product.variants?.map(v => v.size) || [])],
-      inStock: product.variants?.some(v => v.inventory > 0) || false,
-      featured: product.isFeatured,
-      isNew: product.isNewArrival,
-      rating: product.averageRating,
-      reviewCount: product.reviewCount,
-      tags: product.tags,
-    }));
+    const transformedProducts = transformProducts(featuredProducts);
+    const meta = createProductMeta(
+      `/api/${API_ENDPOINTS.featuredProducts}`,
+      { category, limit: rawLimit },
+      "mongodb"
+    );
 
-    return Response.json({
-      success: true,
-      data: transformedProducts,
-      meta: {
-        total: transformedProducts.length,
-        limit: limit,
-        category: category,
-        endpoint: `/api/${API_ENDPOINTS.products}/featured`,
-        source: "mongodb",
-        timestamp: new Date().toISOString(),
-      },
-    });
+    return createSuccessResponse(
+      { products: transformedProducts, total: transformedProducts.length },
+      meta
+    );
   } catch (error) {
     errorHandler.handleError(error, ERROR_TYPES.DATABASE_ERROR, {
       source: ERROR_SOURCE,
       action: "getFeaturedProducts",
-      endpoint: `/api/${API_ENDPOINTS.products}/featured`,
+      endpoint: `/api/${API_ENDPOINTS.featuredProducts}`,
     });
 
-    return Response.json(
-      {
-        success: false,
-        error: "Failed to fetch featured products",
-        message: error.message,
-        source: "mongodb",
-      },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-    );
+    return createErrorResponse("Failed to fetch featured products", error.message, {
+      source: "mongodb",
+    });
   }
 }
 
+/**
+ * OPTIONS /api/products/featured
+ * @description CORS preflight handler
+ */
 export async function OPTIONS() {
-  return new Response(null, {
-    status: HTTP_STATUS.OK,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return createCorsResponse("GET_ONLY");
 }

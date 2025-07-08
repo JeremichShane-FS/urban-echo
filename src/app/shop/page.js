@@ -1,4 +1,6 @@
+import ShopLanding from "@design-system/pages/ShopLanding";
+
 function Shop() {
-  return <div>Shop</div>;
+  return <ShopLanding />;
 }
 export default Shop;

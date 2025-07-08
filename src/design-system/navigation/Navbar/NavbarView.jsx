@@ -1,22 +1,23 @@
 import { memo } from "react";
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import UrbanEchoLogo from "@assets/images/logo/UrbanEchoLogo";
-import { MAIN_NAV_ITEMS } from "@config/constants";
-import { MenuToggle } from "@design-system/buttons";
-import Searchbar from "@design-system/forms/Searchbar";
-import Container from "@design-system/layout/Container";
-import ActionIcons from "@design-system/navigation/ActionIcons";
-import MobileMenu from "@design-system/navigation/MobileMenu";
-import NavLinks from "@design-system/navigation/NavLinks";
-import { getNavItemById } from "@modules/core/utils/getNavItems";
-
-import styles from "./Navbar.module.scss";
-
-const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
-  const navLink = getNavItemById("home", MAIN_NAV_ITEMS);
-
+const NavbarView = ({
+  ActionIcons,
+  Container,
+  Link,
+  MenuToggle,
+  MobileMenu,
+  NavLinks,
+  Searchbar,
+  UrbanEchoLogo,
+  isMenuOpen,
+  isSearchOpen,
+  navLink,
+  searchbarRef,
+  styles,
+  toggleMenu,
+  toggleSearch,
+}) => {
   return (
     <nav className={styles.navbar} aria-label="Main navigation">
       <div className={styles.inner}>
@@ -41,7 +42,7 @@ const NavbarView = ({ isMenuOpen, isSearchOpen, toggleMenu, toggleSearch }) => {
       </div>
 
       <MobileMenu isOpen={isMenuOpen} />
-      <Searchbar isOpen={isSearchOpen} />
+      <Searchbar ref={searchbarRef} isOpen={isSearchOpen} />
     </nav>
   );
 };
@@ -50,8 +51,22 @@ export default memo(NavbarView);
 
 NavbarView.displayName = "NavbarView";
 NavbarView.propTypes = {
+  ActionIcons: PropTypes.elementType.isRequired,
+  Container: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
+  MenuToggle: PropTypes.elementType.isRequired,
+  MobileMenu: PropTypes.elementType.isRequired,
+  NavLinks: PropTypes.elementType.isRequired,
+  Searchbar: PropTypes.elementType.isRequired,
+  UrbanEchoLogo: PropTypes.elementType.isRequired,
   isMenuOpen: PropTypes.bool.isRequired,
   isSearchOpen: PropTypes.bool.isRequired,
+  navLink: PropTypes.shape({
+    "aria-label": PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+  searchbarRef: PropTypes.object.isRequired,
+  styles: PropTypes.object.isRequired,
   toggleMenu: PropTypes.func.isRequired,
   toggleSearch: PropTypes.func.isRequired,
 };

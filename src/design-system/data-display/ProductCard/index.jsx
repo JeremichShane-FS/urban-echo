@@ -1,7 +1,11 @@
+import Image from "next/image";
+import Link from "next/link";
 import PropTypes from "prop-types";
 
 import ProductCardView from "./ProductCardView";
 import { useProductCard } from "./useProductCard";
+
+import styles from "./ProductCard.module.scss";
 
 const ProductCard = ({
   className = "",
@@ -18,6 +22,9 @@ const ProductCard = ({
       product={product}
       showNewBadge={showNewBadge}
       showDescription={showDescription}
+      styles={styles}
+      Image={Image}
+      Link={Link}
       onClick={handleProductClick}
     />
   );

@@ -105,12 +105,10 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-// Indexes for performance
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ orderNumber: 1 });
 orderSchema.index({ status: 1 });
 
-// Static method to generate order number (alternative approach)
 orderSchema.statics.generateOrderNumber = function () {
   return `${ORDER_NUMBER_PREFIX}${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 };

@@ -1,13 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
 import PropTypes from "prop-types";
 
-import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
-import { Button } from "@design-system/buttons";
-
-import styles from "./HeroSection.module.scss";
-
-const HeroSectionView = ({ heroData, isLoading, onCtaClick }) => {
+const HeroSectionView = ({
+  BUTTON_SIZES,
+  BUTTON_VARIANTS,
+  Button,
+  Image,
+  Link,
+  heroData,
+  isLoading,
+  onCtaClick,
+  styles,
+}) => {
   if (isLoading || !heroData) {
     return (
       <section className={styles.section}>
@@ -56,13 +59,19 @@ export default HeroSectionView;
 
 HeroSectionView.displayName = "HeroSectionView";
 HeroSectionView.propTypes = {
+  BUTTON_SIZES: PropTypes.objectOf(PropTypes.string).isRequired,
+  BUTTON_VARIANTS: PropTypes.objectOf(PropTypes.string).isRequired,
+  Button: PropTypes.elementType.isRequired,
+  Image: PropTypes.elementType.isRequired,
+  Link: PropTypes.elementType.isRequired,
   heroData: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
-    ctaText: PropTypes.string.isRequired,
-    ctaLink: PropTypes.string.isRequired,
     backgroundImage: PropTypes.string,
+    ctaLink: PropTypes.string.isRequired,
+    ctaText: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
   }),
   isLoading: PropTypes.bool.isRequired,
   onCtaClick: PropTypes.func.isRequired,
+  styles: PropTypes.objectOf(PropTypes.string).isRequired,
 };

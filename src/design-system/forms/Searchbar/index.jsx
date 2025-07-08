@@ -1,15 +1,26 @@
+import { forwardRef } from "react";
+import { Search } from "lucide-react";
 import PropTypes from "prop-types";
 
 import SearchbarView from "./SearchbarView";
 import useSearchbar from "./useSearchbar";
 
-const Searchbar = ({ isOpen }) => {
-  const { handleSubmit } = useSearchbar();
+import styles from "./Searchbar.module.scss";
 
-  return <SearchbarView isOpen={isOpen} onSubmit={handleSubmit} />;
-};
+const Searchbar = forwardRef(({ isOpen }, ref) => {
+  const { handleInputFocus, handleSubmit } = useSearchbar();
 
-export default Searchbar;
+  return (
+    <SearchbarView
+      ref={ref}
+      isOpen={isOpen}
+      SearchIcon={Search}
+      styles={styles}
+      onSubmit={handleSubmit}
+      onInputFocus={handleInputFocus}
+    />
+  );
+});
 
 Searchbar.displayName = "Searchbar";
 Searchbar.View = SearchbarView;
@@ -17,3 +28,5 @@ Searchbar.useSearchbar = useSearchbar;
 Searchbar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
 };
+
+export default Searchbar;

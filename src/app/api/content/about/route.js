@@ -1,71 +1,57 @@
-import { API_ENDPOINTS } from "@config/constants";
+import { API_ENDPOINTS, API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
+import {
+  createCorsResponse,
+  createErrorResponse,
+  createSuccessResponse,
+  fetchFromStrapi,
+  handleStrapiNotFound,
+  transformContentWithFallbacks,
+} from "@modules/core/utils/api";
+import { errorHandler } from "@utils/errorHandler";
 
+const ERROR_SOURCE = "about-content-api";
+const ABOUT_FALLBACKS = API_FALLBACK_DATA.ABOUT;
+
+/**
+ * GET /api/content/about
+ * @description Get about page content
+ * @param {Object} searchParams - Query parameters
+ * @param {string} [searchParams.section=homepage] - Content section
+ * @returns {Object} About content with mission, vision, values
+ * @example GET /api/content/about?section=company
+ */
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const section = searchParams.get("section") || "homepage";
-
-    const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-    const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN;
-
-    const response = await fetch(`${STRAPI_URL}/api/about-contents?populate=*`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Strapi API responded with status: ${response.status}`);
-    }
-
+    const response = await fetchFromStrapi("about-contents?populate=*", ERROR_SOURCE);
     const data = await response.json();
     const content = data.data?.[0];
-
-    if (!content) {
-      throw new Error("No content found");
-    }
-
-    const transformedContent = {
-      title: content.title || "About Urban Echo",
-      description: content.description || "Contemporary style and conscious living",
-      mission: content.mission || "Provide high-quality, sustainable fashion",
-      vision: content.vision || "A world where fashion is both beautiful and responsible",
-      values: content.values || ["Quality", "Sustainability", "Style"],
-      isActive: content.isActive ?? true,
-      lastUpdated: content.updatedAt || new Date().toISOString(),
+    const transformedContent = transformContentWithFallbacks(content, ABOUT_FALLBACKS);
+    const meta = {
+      endpoint: `/api/${API_ENDPOINTS.content}/about`,
+      section: section,
+      lastUpdated: transformedContent.lastUpdated,
     };
 
-    return Response.json({
-      success: true,
-      data: transformedContent,
-      meta: {
-        endpoint: `/api/${API_ENDPOINTS.content}/about`,
-        section: section,
-        lastUpdated: transformedContent.lastUpdated,
-      },
-    });
-  } catch (error) {
-    console.error("About content API error:", error.message);
+    if (!content) return handleStrapiNotFound("about", section, ERROR_SOURCE);
 
-    return Response.json(
-      {
-        success: false,
-        error: "Failed to fetch about content",
-        message: error.message,
-      },
-      { status: 500 }
-    );
+    return createSuccessResponse(transformedContent, meta);
+  } catch (error) {
+    errorHandler.handleError(error, ERROR_TYPES.SERVER_ERROR, {
+      source: ERROR_SOURCE,
+      action: "fetch-about-content",
+      endpoint: `/api/${API_ENDPOINTS.content}/about`,
+    });
+
+    return createErrorResponse("Failed to fetch about content", error.message);
   }
 }
 
+/**
+ * OPTIONS /api/content/about
+ * @description CORS preflight handler
+ */
 export async function OPTIONS() {
-  return new Response(null, {
-    status: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+  return createCorsResponse("GET_ONLY");
 }

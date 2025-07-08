@@ -1,26 +1,29 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { useHeroContent } from "@lib/hooks/useContent";
+import { BUTTON_SIZES, BUTTON_VARIANTS } from "@config/constants";
+import { Button } from "@design-system/buttons";
 
 import HeroSectionView from "./HeroSectionView";
+import { useHeroSection } from "./useHeroSection";
+
+import styles from "./HeroSection.module.scss";
 
 const HeroSection = () => {
-  const { data: heroData, error, isLoading: loading } = useHeroContent();
-
-  const handleCtaClick = () => {
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "click", {
-        event_category: "Hero",
-        event_label: "Shop Now Button",
-      });
-    }
-  };
+  const { error, handleCtaClick, heroData, isLoading } = useHeroSection();
 
   return (
     <HeroSectionView
       heroData={heroData}
-      isLoading={loading}
       error={error}
+      isLoading={isLoading}
+      BUTTON_SIZES={BUTTON_SIZES}
+      BUTTON_VARIANTS={BUTTON_VARIANTS}
+      Button={Button}
+      Link={Link}
+      styles={styles}
+      Image={Image}
       onCtaClick={handleCtaClick}
     />
   );
@@ -30,4 +33,4 @@ export default HeroSection;
 
 HeroSection.displayName = "HeroSection";
 HeroSection.View = HeroSectionView;
-HeroSection.useHeroContent = useHeroContent;
+HeroSection.useHeroSection = useHeroSection;
