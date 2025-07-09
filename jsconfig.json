@@ -1,18 +1,46 @@
 {
   "compilerOptions": {
+    // =================================================================
+    // MODULE RESOLUTION
+    // =================================================================
     "baseUrl": ".",
     "paths": {
       "@styles/*": ["src/assets/styles/*"],
       "@utils/*": ["src/modules/core/utils/*"],
+      "@design-system/*": ["src/design-system/*"],
+      "@config/*": ["src/config/*"],
+      "@lib/*": ["src/lib/*"],
+      "@modules/*": ["src/modules/*"],
+      "@assets/*": ["src/assets/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@api/*": ["src/api/*"],
       "@*": ["src/*"]
     },
+
+    // =================================================================
+    // JAVASCRIPT/REACT CONFIGURATION
+    // =================================================================
     "jsx": "preserve",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "target": "ESNext"
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "pages/**/*.js",
+    "pages/**/*.jsx",
+    "components/**/*.js",
+    "components/**/*.jsx"
+  ],
+  "exclude": ["node_modules", ".next", "build", "dist", "coverage"]
 }

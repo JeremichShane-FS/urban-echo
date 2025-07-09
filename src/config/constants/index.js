@@ -1,7 +1,12 @@
 /**
- * Single source of truth for all constants
- * src/config/constants/index.js
+ * @fileoverview Centralized constants barrel export for application-wide constant access and management
+ * Provides single source of truth for all application constants including API endpoints, UI configurations, and business rules
+ * Enables clean imports and consistent constant usage across all application modules and components
  */
+
+// =================================================================
+// APPLICATION CONSTANTS
+// =================================================================
 
 export * from "./api-constants";
 export * from "./api-utils-constants";

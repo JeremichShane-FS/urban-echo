@@ -199,7 +199,7 @@ const CategoryPageView = ({
                       />
 
                       <div className={styles.badges}>
-                        {product.isNew && <span className={styles["badge-new"]}>NEW</span>}
+                        {product.isNewArrival && <span className={styles["badge-new"]}>NEW</span>}
                         {product.onSale && <span className={styles["badge-sale"]}>SALE</span>}
                       </div>
 
@@ -344,7 +344,7 @@ CategoryPageView.propTypes = {
       id: PropTypes.string,
       image: PropTypes.string,
       images: PropTypes.arrayOf(PropTypes.string),
-      isNew: PropTypes.bool,
+      isNewArrival: PropTypes.bool,
       name: PropTypes.string.isRequired,
       onSale: PropTypes.bool,
       originalPrice: PropTypes.number,

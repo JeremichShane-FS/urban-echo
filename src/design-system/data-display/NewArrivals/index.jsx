@@ -1,3 +1,9 @@
+/**
+ * @fileoverview New arrivals display component for showcasing latest product additions
+ * Integrates with product data hooks to fetch and display recently added merchandise with filtering capabilities
+ * Provides responsive grid layout with featured product highlighting and call-to-action for full collection
+ */
+
 "use client";
 import Link from "next/link";
 
@@ -10,6 +16,11 @@ import NewArrivalsView from "./NewArrivalsView";
 
 import styles from "./NewArrivals.module.scss";
 
+/**
+ * Container component for displaying new arrivals with data fetching and state management
+ * @component
+ * @returns {JSX.Element} Rendered new arrivals section with loading and error states
+ */
 const NewArrivals = () => {
   const { error, filters, handleProductClick, handleViewAllClick, loading, pagination, products } =
     useNewArrivals();

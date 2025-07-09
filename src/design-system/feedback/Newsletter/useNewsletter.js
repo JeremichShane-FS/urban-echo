@@ -1,8 +1,27 @@
+/**
+ * @fileoverview Custom hook for managing newsletter subscription form state and API interactions
+ * Provides email validation, submission handling, analytics tracking, and user feedback management
+ * Encapsulates all newsletter signup logic including error handling and success messaging
+ */
+
 import { useState } from "react";
 
 import { API_ENDPOINTS } from "@config/constants";
 import { trackEvent } from "@modules/core/utils";
 
+/**
+ * Hook for handling newsletter subscription form state and submission logic
+ * @hook
+ * @returns {Object} Newsletter form state and handler functions
+ * @returns {string} returns.email - Current email input value
+ * @returns {boolean} returns.isSubmitting - Whether form is currently being submitted
+ * @returns {string} returns.message - Status message for user feedback
+ * @returns {string} returns.messageType - Type of message (success, error, etc.)
+ * @returns {boolean} returns.isFormValid - Whether form is valid and can be submitted
+ * @returns {Function} returns.onEmailChange - Handler for email input changes
+ * @returns {Function} returns.onSubmit - Handler for form submission
+ * @returns {Function} returns.submitNewsletter - Direct submission function for programmatic use
+ */
 export const useNewsletter = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

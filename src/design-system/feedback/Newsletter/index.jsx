@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Newsletter subscription component for email collection and marketing engagement
+ * Provides email validation, submission handling, and user feedback for newsletter signups
+ * Integrates with backend API for subscription management and analytics tracking for conversion metrics
+ */
+
 "use client";
 import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants";
 import Button from "@design-system/buttons/Button";
@@ -7,6 +13,11 @@ import { useNewsletter } from "./useNewsletter";
 
 import styles from "./Newsletter.module.scss";
 
+/**
+ * Container component for newsletter subscription with form state management and API integration
+ * @component
+ * @returns {JSX.Element} Rendered newsletter subscription section with form validation and feedback
+ */
 const Newsletter = () => {
   const { email, isFormValid, isSubmitting, message, messageType, onEmailChange, onSubmit } =
     useNewsletter();

@@ -17,7 +17,7 @@ const ProductCardView = ({
           <div className={styles.image}>
             <div className={styles.placeholder}>Image Coming Soon</div>
 
-            {showNewBadge && product.isNew && <div className={styles.badge}>New</div>}
+            {showNewBadge && product.isNewArrival && <div className={styles.badge}>New</div>}
             {!product.inStock && (
               <div className={`${styles.badge} ${styles["badge--out-of-stock"]}`}>Out of Stock</div>
             )}
@@ -47,8 +47,7 @@ const ProductCardView = ({
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
-
-          {showNewBadge && product.isNew && <div className={styles.badge}>New</div>}
+          {showNewBadge && product.isNewArrival && <div className={styles.badge}>New</div>}
           {!product.inStock && (
             <div className={`${styles.badge} ${styles["badge--out-of-stock"]}`}>Out of Stock</div>
           )}
@@ -80,7 +79,7 @@ ProductCardView.propTypes = {
     id: PropTypes.string.isRequired,
     image: PropTypes.string,
     inStock: PropTypes.bool.isRequired,
-    isNew: PropTypes.bool,
+    isNewArrival: PropTypes.bool,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     slug: PropTypes.string.isRequired,
