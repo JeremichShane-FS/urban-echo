@@ -51,6 +51,9 @@ echo "Running lint-staged on staged files..."
 echo "→  ESLint: Checking code quality and fixing auto-fixable issues"
 echo "→  Prettier: Formatting code for consistency"
 echo "→  Type checking: Validating TypeScript/JSDoc types"
+echo ""
+echo ""
+
 
 npx lint-staged --allow-empty || {
   echo ""
