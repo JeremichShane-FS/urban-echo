@@ -34,20 +34,20 @@ const FooterView = ({
       <div className={styles.container}>
         <div className={styles.backtop}>
           <button
-            className={styles.backtop__button}
             aria-label="Back to top"
+            className={styles.backtop__button}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <svg
+              aria-hidden="true"
               className={styles.backtop__arrow}
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true">
+              viewBox="0 0 24 24">
               <path
+                d="M5 10l7-7m0 0l7 7m-7-7v18"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
               />
             </svg>
             <span className={styles.backtop__text}>Back to Top</span>
@@ -57,13 +57,13 @@ const FooterView = ({
         <div
           className={`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12 ${styles.content}`}>
           <div className={`md:row-span-2 ${styles.company}`}>
-            <Link href="/" className={styles.logo}>
+            <Link className={styles.logo} href="/">
               <Image
                 fill
-                src={companyInfo.logo}
                 alt={`${companyInfo.name} Logo`}
                 className={styles.logo__image}
                 sizes="(max-width: 640px) 128px, 128px"
+                src={companyInfo.logo}
               />
             </Link>
             <div className={styles.company__info}>
@@ -81,8 +81,8 @@ const FooterView = ({
               {sections.shopSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.path}
                     className={styles.link}
+                    href={link.path}
                     onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
@@ -97,8 +97,8 @@ const FooterView = ({
               {sections.aboutSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.path}
                     className={styles.link}
+                    href={link.path}
                     onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
@@ -113,8 +113,8 @@ const FooterView = ({
               {sections.helpSection?.links.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href={link.path}
                     className={styles.link}
+                    href={link.path}
                     onClick={() => onLinkClick(link.label, link.path)}>
                     {link.label}
                   </Link>
@@ -129,10 +129,10 @@ const FooterView = ({
               {socialLinks.map((link, index) => (
                 <li key={index}>
                   <a
-                    href={link.href}
                     className={styles.link}
-                    target="_blank"
+                    href={link.href}
                     rel="noopener noreferrer"
+                    target="_blank"
                     onClick={() => onLinkClick(link.label, link.href)}>
                     {link.label}
                   </a>

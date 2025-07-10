@@ -33,17 +33,17 @@ const Footer = () => {
 
   return (
     <FooterView
+      Image={Image}
+      Link={Link}
       companyInfo={companyInfo}
       copyrightText={copyrightText}
       getNavigationSection={getNavigationSection}
-      socialLinks={socialLinks}
       legalLinks={legalLinks}
       navigationSections={navigationSections}
-      utilityLinks={utilityLinks}
-      Image={Image}
-      Link={Link}
       sections={sections}
+      socialLinks={socialLinks}
       styles={styles}
+      utilityLinks={utilityLinks}
       onLinkClick={onLinkClick}
     />
   );

@@ -50,34 +50,35 @@ const NewsletterView = ({
           </div>
 
           <div className={`${styles.form} col-span-1`}>
-            <form id="newsletter" className={styles.wrapper} onSubmit={onSubmit}>
+            <form className={styles.wrapper} id="newsletter" onSubmit={onSubmit}>
               <div className={styles.group}>
                 <input
-                  id="newsletter-email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  placeholder="Email address"
-                  className={styles.input}
-                  disabled={isSubmitting}
                   aria-label="Email address for newsletter subscription"
                   autoComplete="email"
+                  className={styles.input}
+                  disabled={isSubmitting}
+                  id="newsletter-email"
+                  name="email"
+                  placeholder="Email address"
+                  type="email"
+                  value={email}
                   onChange={onEmailChange}
                 />
 
                 <Button
-                  type="submit"
-                  variant={buttonVariant}
-                  size={buttonSize}
-                  disabled={!isFormValid}
+                  aria-label="Subscribe to newsletter"
                   className={styles.button}
-                  aria-label="Subscribe to newsletter">
+                  disabled={!isFormValid}
+                  size={buttonSize}
+                  type="submit"
+                  variant={buttonVariant}>
                   {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </Button>
               </div>
 
               {message && (
                 <div
+                  aria-live="polite"
                   className={`${styles.message} ${
                     messageType === TOAST_TYPES.SUCCESS
                       ? styles["message--success"]
@@ -87,8 +88,7 @@ const NewsletterView = ({
                           ? styles["message--warning"]
                           : styles["message--info"]
                   }`}
-                  role={messageType === TOAST_TYPES.ERROR ? "alert" : "status"}
-                  aria-live="polite">
+                  role={messageType === TOAST_TYPES.ERROR ? "alert" : "status"}>
                   {message}
                 </div>
               )}

@@ -43,7 +43,7 @@ const ProductCardView = ({
   if (!product.image || product.image === "") {
     return (
       <div className={`${styles.card} ${className}`}>
-        <Link href={`/shop/product/${product.slug}`} className={styles.link} onClick={handleClick}>
+        <Link className={styles.link} href={`/shop/product/${product.slug}`} onClick={handleClick}>
           <div className={styles.image}>
             <div className={styles.placeholder}>Image Coming Soon</div>
 
@@ -66,16 +66,16 @@ const ProductCardView = ({
   }
   return (
     <div className={`${styles.card} ${className}`}>
-      <Link href={`/shop/product/${product.slug}`} className={styles.link} onClick={handleClick}>
+      <Link className={styles.link} href={`/shop/product/${product.slug}`} onClick={handleClick}>
         <div className={styles.image}>
           <Image
             fill
-            src={product.image}
             alt={product.name}
-            className={styles.img}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            className={styles.img}
+            placeholder="blur"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            src={product.image}
           />
           {showNewBadge && product.isNewArrival && <div className={styles.badge}>New</div>}
           {!product.inStock && (

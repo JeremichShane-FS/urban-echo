@@ -55,8 +55,8 @@ const FeaturedProductsView = ({
           {featuredProducts.map((product, index) => (
             <ProductCard
               key={product.id}
-              product={product}
               className={`${styles.card} ${index === 3 ? "lg:col-start-2 xl:col-start-auto" : ""}`}
+              product={product}
               onClick={onProductClick}
             />
           ))}

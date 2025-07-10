@@ -47,32 +47,36 @@ const CategoryPage = ({ params }) => {
     totalProducts,
   } = useCategoryPage(params);
 
+  console.log("📍 CategoryPage container - products:", products);
+  console.log("📍 CategoryPage container - totalProducts:", totalProducts);
+  console.log("📍 CategoryPage container - isLoading:", isLoading);
+
   return (
     <CategoryPageView
-      products={products}
-      categories={categories}
-      totalProducts={totalProducts}
-      totalPages={totalPages}
-      currentPage={currentPage}
-      selectedCategory={selectedCategory}
-      sortBy={sortBy}
-      priceRange={priceRange}
-      searchTerm={searchTerm}
-      filters={filters}
-      category={category}
-      isLoading={isLoading}
-      error={error}
-      handleCategoryChange={handleCategoryChange}
-      handleFilterChange={handleFilterChange}
-      handleSearch={handleSearch}
-      handleSortChange={handleSortChange}
-      handlePriceRangeChange={handlePriceRangeChange}
-      handlePageChange={handlePageChange}
-      styles={styles}
       Button={Button}
       Image={Image}
       Link={Link}
+      categories={categories}
+      category={category}
+      currentPage={currentPage}
+      error={error}
+      filters={filters}
+      handleCategoryChange={handleCategoryChange}
+      handleFilterChange={handleFilterChange}
+      handlePageChange={handlePageChange}
+      handlePriceRangeChange={handlePriceRangeChange}
+      handleSearch={handleSearch}
+      handleSortChange={handleSortChange}
+      isLoading={isLoading}
+      priceRange={priceRange}
+      products={products}
       renderStars={renderStars}
+      searchTerm={searchTerm}
+      selectedCategory={selectedCategory}
+      sortBy={sortBy}
+      styles={styles}
+      totalPages={totalPages}
+      totalProducts={totalProducts}
     />
   );
 };

@@ -46,7 +46,7 @@ export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
+    <html className={`${montserrat.variable} ${openSans.variable}`} lang="en">
       <body className="min-h-screen grid grid-rows-[auto_1fr_auto]" suppressHydrationWarning={true}>
         <AppProviders>
           <header>

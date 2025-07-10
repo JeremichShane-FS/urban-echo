@@ -38,11 +38,11 @@ const Button = ({
 
   return (
     <Component
-      type={as === "button" ? type : undefined}
       className={`${styles["button"]} ${styles[`button-${variant}`]} ${
         styles[`button-${size}`]
       } ${className}`}
       disabled={disabled}
+      type={as === "button" ? type : undefined}
       onClick={onClick}
       {...props}>
       {children}

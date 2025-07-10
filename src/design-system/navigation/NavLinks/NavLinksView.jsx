@@ -36,9 +36,9 @@ const NavLinksView = ({
           return (
             <Link key={id} href={path}>
               <Button
-                variant={BUTTON_VARIANTS.accent}
+                className={styles.button}
                 size={BUTTON_SIZES.sm}
-                className={styles.button}>
+                variant={BUTTON_VARIANTS.accent}>
                 {label}
               </Button>
             </Link>
@@ -46,7 +46,7 @@ const NavLinksView = ({
         }
 
         return (
-          <Link key={id} href={path} className={baseClass}>
+          <Link key={id} className={baseClass} href={path}>
             {label}
           </Link>
         );

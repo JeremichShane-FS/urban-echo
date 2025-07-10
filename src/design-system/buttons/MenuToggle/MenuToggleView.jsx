@@ -3,16 +3,16 @@ import PropTypes from "prop-types";
 const MenuToggleView = ({ CloseIcon, MenuIcon, isOpen, onToggle, styles }) => {
   return (
     <button
-      type="button"
-      className={styles.toggle}
-      aria-expanded={isOpen}
       aria-controls="mobile-menu"
+      aria-expanded={isOpen}
       aria-label={isOpen ? "Close menu" : "Open menu"}
+      className={styles.toggle}
+      type="button"
       onClick={onToggle}>
       {isOpen ? (
-        <CloseIcon className="h-8 w-8" aria-hidden="true" />
+        <CloseIcon aria-hidden="true" className="h-8 w-8" />
       ) : (
-        <MenuIcon className="h-6 w-6" aria-hidden="true" />
+        <MenuIcon aria-hidden="true" className="h-6 w-6" />
       )}
     </button>
   );

@@ -123,9 +123,9 @@ const eslintConfig = [
         {
           callbacksLast: true,
           shorthandFirst: true,
-          noSortAlphabetically: true,
+          noSortAlphabetically: false,
           reservedFirst: true,
-          ignoreCase: true,
+          ignoreCase: false,
         },
       ],
       "react/prefer-stateless-function": "error",

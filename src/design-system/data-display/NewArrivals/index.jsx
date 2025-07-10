@@ -27,18 +27,18 @@ const NewArrivals = () => {
 
   return (
     <NewArrivalsView
-      newArrivals={products}
-      loading={loading}
+      BUTTON_SIZES={BUTTON_SIZES}
+      BUTTON_VARIANTS={BUTTON_VARIANTS}
+      Button={Button}
+      Link={Link}
+      ProductCard={ProductCard}
+      ROUTES={ROUTES}
       error={error?.message || null}
       filters={filters}
+      loading={loading}
+      newArrivals={products}
       pagination={pagination}
       styles={styles}
-      ProductCard={ProductCard}
-      Button={Button}
-      BUTTON_VARIANTS={BUTTON_VARIANTS}
-      BUTTON_SIZES={BUTTON_SIZES}
-      ROUTES={ROUTES}
-      Link={Link}
       onProductClick={handleProductClick}
       onViewAllClick={handleViewAllClick}
     />

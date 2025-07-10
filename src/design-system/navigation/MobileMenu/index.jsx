@@ -19,7 +19,7 @@ import styles from "./MobileMenu.module.scss";
  * @returns {JSX.Element} Rendered mobile menu with navigation links and responsive styling
  */
 const MobileMenu = ({ isOpen }) => {
-  return <MobileMenuView isOpen={isOpen} styles={styles} NavLinks={NavLinks} />;
+  return <MobileMenuView NavLinks={NavLinks} isOpen={isOpen} styles={styles} />;
 };
 
 export default MobileMenu;

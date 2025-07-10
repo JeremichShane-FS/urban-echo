@@ -26,17 +26,17 @@ const HomePage = () => {
 
   return (
     <HomePageView
-      isLoading={isLoading}
-      pageData={pageData}
-      error={error}
-      refetch={refetch}
-      styles={styles}
       AboutSection={AboutSection}
-      HeroSection={HeroSection}
       FeaturedProducts={FeaturedProducts}
+      HeroSection={HeroSection}
       NewArrivals={NewArrivals}
       Newsletter={Newsletter}
+      error={error}
+      isLoading={isLoading}
+      pageData={pageData}
+      refetch={refetch}
       refs={refs}
+      styles={styles}
       onSectionView={onSectionView}
     />
   );

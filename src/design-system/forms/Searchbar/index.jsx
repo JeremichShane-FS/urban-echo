@@ -26,14 +26,16 @@ const Searchbar = forwardRef(({ isOpen }, ref) => {
   return (
     <SearchbarView
       ref={ref}
-      isOpen={isOpen}
       SearchIcon={Search}
+      isOpen={isOpen}
       styles={styles}
-      onSubmit={handleSubmit}
       onInputFocus={handleInputFocus}
+      onSubmit={handleSubmit}
     />
   );
 });
+
+export default Searchbar;
 
 Searchbar.displayName = "Searchbar";
 Searchbar.View = SearchbarView;
@@ -41,5 +43,3 @@ Searchbar.useSearchbar = useSearchbar;
 Searchbar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
 };
-
-export default Searchbar;

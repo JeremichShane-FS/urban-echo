@@ -24,10 +24,10 @@ const MenuToggle = ({ isOpen, setIsOpen }) => {
 
   return (
     <MenuToggleView
+      CloseIcon={X}
+      MenuIcon={Menu}
       isOpen={isOpen}
       styles={styles}
-      MenuIcon={Menu}
-      CloseIcon={X}
       onToggle={handleToggle}
     />
   );

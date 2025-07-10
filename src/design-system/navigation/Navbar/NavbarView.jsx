@@ -45,23 +45,23 @@ const NavbarView = ({
   toggleSearch,
 }) => {
   return (
-    <nav className={styles.navbar} aria-label="Main navigation">
+    <nav aria-label="Main navigation" className={styles.navbar}>
       <div className={styles.inner}>
         <Container>
           <div className={styles.content}>
             <div className={styles.brand}>
               <MenuToggle isOpen={isMenuOpen} setIsOpen={toggleMenu} />
-              <Link href={navLink.path} className={styles.logo} aria-label={navLink["aria-label"]}>
+              <Link aria-label={navLink["aria-label"]} className={styles.logo} href={navLink.path}>
                 <UrbanEchoLogo />
               </Link>
             </div>
 
-            <div className={styles.navigation} role="navigation" aria-label="Main categories">
+            <div aria-label="Main categories" className={styles.navigation} role="navigation">
               <NavLinks />
             </div>
 
             <div className={styles.actions}>
-              <ActionIcons isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} cartCount={2} />
+              <ActionIcons cartCount={2} isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} />
             </div>
           </div>
         </Container>

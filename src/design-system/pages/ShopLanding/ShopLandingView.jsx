@@ -66,8 +66,8 @@ const ShopLandingView = ({
           {categories.map(category => (
             <Link
               key={category._id || category.id}
-              href={`/shop/${category.slug || category.id}`}
-              className={styles["category-link"]}>
+              className={styles["category-link"]}
+              href={`/shop/${category.slug || category.id}`}>
               <div className={styles["category-card"]}>
                 <div
                   className={styles["category-image"]}
@@ -94,7 +94,7 @@ const ShopLandingView = ({
                 Limited time offer on selected items. Don&lsquo;t miss out!
               </p>
               <Link href="/shop/sale">
-                <Button variant="secondary" size="large">
+                <Button size="large" variant="secondary">
                   Browse Products
                 </Button>
               </Link>
@@ -106,7 +106,7 @@ const ShopLandingView = ({
               <h3 className={styles["offer-title"]}>Other Offer</h3>
               <p className={styles["offer-text"]}>Free shipping on orders over $75</p>
               <Link href="/shop/all">
-                <Button variant="primary" size="medium">
+                <Button size="medium" variant="primary">
                   Shop Now
                 </Button>
               </Link>
@@ -116,7 +116,7 @@ const ShopLandingView = ({
               <h3 className={styles["offer-title"]}>Bestselling Products</h3>
               <p className={styles["offer-text"]}>Customer favorites flying off the shelves</p>
               <Link href="/shop/bestsellers">
-                <Button variant="primary" size="medium">
+                <Button size="medium" variant="primary">
                   Explore
                 </Button>
               </Link>
@@ -167,8 +167,8 @@ const ShopLandingView = ({
           {featuredProducts.map(product => (
             <Link
               key={product._id || product.id}
-              href={`/product/${product._id || product.id}`}
-              className={styles["product-link"]}>
+              className={styles["product-link"]}
+              href={`/product/${product._id || product.id}`}>
               <div className={styles["product-card"]}>
                 <div
                   className={styles["product-image"]}
@@ -192,7 +192,7 @@ const ShopLandingView = ({
 
         <div className={styles["view-all-container"]}>
           <Link href="/shop/all">
-            <Button variant="outline" size="large">
+            <Button size="large" variant="outline">
               View All Products
             </Button>
           </Link>
