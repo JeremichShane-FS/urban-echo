@@ -25,15 +25,15 @@ const AboutSection = () => {
 
   return (
     <AboutSectionView
-      aboutContent={aboutContent}
-      isLoading={isLoading}
-      error={error}
-      styles={styles}
-      Link={Link}
-      Button={Button}
-      BUTTON_VARIANTS={BUTTON_VARIANTS}
       BUTTON_SIZES={BUTTON_SIZES}
+      BUTTON_VARIANTS={BUTTON_VARIANTS}
+      Button={Button}
+      Link={Link}
       ROUTES={ROUTES}
+      aboutContent={aboutContent}
+      error={error}
+      isLoading={isLoading}
+      styles={styles}
       onLearnMoreClick={onLearnMoreClick}
     />
   );

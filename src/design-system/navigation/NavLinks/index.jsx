@@ -26,13 +26,13 @@ const NavLinks = ({ isMobile = false }) => {
 
   return (
     <NavLinksView
-      navItems={navItems}
-      styles={styles}
-      Link={Link}
       BUTTON_SIZES={BUTTON_SIZES}
       BUTTON_VARIANTS={BUTTON_VARIANTS}
       Button={Button}
+      Link={Link}
       baseClass={isMobile ? styles["item--mobile"] : styles.item}
+      navItems={navItems}
+      styles={styles}
     />
   );
 };

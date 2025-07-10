@@ -22,11 +22,11 @@ const FeaturedProducts = () => {
 
   return (
     <FeaturedProductsView
+      ProductCard={ProductCard}
+      error={error?.message || null}
       featuredProducts={data || []}
       isLoading={isLoading}
-      error={error?.message || null}
       styles={styles}
-      ProductCard={ProductCard}
       onProductClick={onProductClick}
     />
   );

@@ -118,10 +118,10 @@ const NewArrivalsView = ({
 
         <div className={styles.cta}>
           <Button
-            variant={BUTTON_VARIANTS["outline-accent"]}
-            size={BUTTON_SIZES.lg}
             as={Link}
             href={ROUTES.SHOP}
+            size={BUTTON_SIZES.lg}
+            variant={BUTTON_VARIANTS["outline-accent"]}
             onClick={onViewAllClick}>
             View All Products
           </Button>

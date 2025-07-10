@@ -34,24 +34,24 @@ const ActionIconsView = ({
   return (
     <>
       <button
-        type="button"
-        className={`${styles.button} ${styles["button--search"]}`}
-        aria-expanded={isSearchOpen}
         aria-controls="search-panel"
+        aria-expanded={isSearchOpen}
         aria-label="Search"
+        className={`${styles.button} ${styles["button--search"]}`}
+        type="button"
         onClick={toggleSearch}>
-        <SearchIcon className="h-6 w-6" aria-hidden="true" />
+        <SearchIcon aria-hidden="true" className="h-6 w-6" />
       </button>
 
-      <Link href={navItems[0].path} className={styles.button} aria-label={navItems[0].ariaLabel}>
-        <UserIcon className="h-6 w-6" aria-hidden="true" />
+      <Link aria-label={navItems[0].ariaLabel} className={styles.button} href={navItems[0].path}>
+        <UserIcon aria-hidden="true" className="h-6 w-6" />
       </Link>
 
       <Link
-        href={navItems[1].path}
+        aria-label={navItems[1].getAriaLabel(cartCount)}
         className={`${styles.button} ${styles["button--cart"]}`}
-        aria-label={navItems[1].getAriaLabel(cartCount)}>
-        <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" />
+        href={navItems[1].path}>
+        <ShoppingBagIcon aria-hidden="true" className="h-6 w-6" />
         {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
       </Link>
     </>

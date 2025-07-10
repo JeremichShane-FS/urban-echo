@@ -60,11 +60,11 @@ const AboutSectionView = ({
             ))}
           </div>
           <div className={styles.cta}>
-            <Link href={ROUTES.ABOUT} className={styles.link} onClick={onLearnMoreClick}>
+            <Link className={styles.link} href={ROUTES.ABOUT} onClick={onLearnMoreClick}>
               <Button
-                variant={BUTTON_VARIANTS["outline-secondary"]}
+                as="span"
                 size={BUTTON_SIZES.md}
-                as="span">
+                variant={BUTTON_VARIANTS["outline-secondary"]}>
                 Learn More About Us
               </Button>
             </Link>

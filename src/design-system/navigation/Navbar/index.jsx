@@ -33,21 +33,21 @@ const Navbar = () => {
 
   return (
     <NavbarView
-      isMenuOpen={isMenuOpen}
-      isSearchOpen={isSearchOpen}
-      toggleMenu={handleMenuToggle}
-      toggleSearch={handleSearchToggle}
-      searchbarRef={searchbarRef}
-      styles={styles}
-      NavLinks={NavLinks}
+      ActionIcons={ActionIcons}
       Container={Container}
+      Link={Link}
       MenuToggle={MenuToggle}
+      MobileMenu={MobileMenu}
+      NavLinks={NavLinks}
       Searchbar={Searchbar}
       UrbanEchoLogo={UrbanEchoLogo}
-      ActionIcons={ActionIcons}
-      MobileMenu={MobileMenu}
+      isMenuOpen={isMenuOpen}
+      isSearchOpen={isSearchOpen}
       navLink={getNavItemById("home", MAIN_NAV_ITEMS)}
-      Link={Link}
+      searchbarRef={searchbarRef}
+      styles={styles}
+      toggleMenu={handleMenuToggle}
+      toggleSearch={handleSearchToggle}
     />
   );
 };

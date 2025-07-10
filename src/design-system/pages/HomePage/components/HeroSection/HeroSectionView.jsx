@@ -50,12 +50,12 @@ const HeroSectionView = ({
               <Image
                 fill
                 priority
-                src={heroData.backgroundImage}
                 alt="Urban Echo Fashion"
-                className={styles.img}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+                className={styles.img}
+                placeholder="blur"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                src={heroData.backgroundImage}
               />
             </div>
           )}
@@ -63,8 +63,8 @@ const HeroSectionView = ({
             <h1 className={styles.title}>{heroData.title}</h1>
             <p className={styles.subtitle}>{heroData.subtitle}</p>
 
-            <Link href={heroData.ctaLink} className={styles.cta} onClick={onCtaClick}>
-              <Button variant={BUTTON_VARIANTS.accent} size={BUTTON_SIZES.lg} as="span">
+            <Link className={styles.cta} href={heroData.ctaLink} onClick={onCtaClick}>
+              <Button as="span" size={BUTTON_SIZES.lg} variant={BUTTON_VARIANTS.accent}>
                 {heroData.ctaText}
               </Button>
             </Link>

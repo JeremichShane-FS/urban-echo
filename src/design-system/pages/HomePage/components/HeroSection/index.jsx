@@ -26,15 +26,15 @@ const HeroSection = () => {
 
   return (
     <HeroSectionView
-      heroData={heroData}
-      error={error}
-      isLoading={isLoading}
       BUTTON_SIZES={BUTTON_SIZES}
       BUTTON_VARIANTS={BUTTON_VARIANTS}
       Button={Button}
-      Link={Link}
-      styles={styles}
       Image={Image}
+      Link={Link}
+      error={error}
+      heroData={heroData}
+      isLoading={isLoading}
+      styles={styles}
       onCtaClick={handleCtaClick}
     />
   );

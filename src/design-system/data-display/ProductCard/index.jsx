@@ -34,13 +34,13 @@ const ProductCard = ({
 
   return (
     <ProductCardView
-      className={className}
-      product={product}
-      showNewBadge={showNewBadge}
-      showDescription={showDescription}
-      styles={styles}
       Image={Image}
       Link={Link}
+      className={className}
+      product={product}
+      showDescription={showDescription}
+      showNewBadge={showNewBadge}
+      styles={styles}
       onClick={handleProductClick}
     />
   );

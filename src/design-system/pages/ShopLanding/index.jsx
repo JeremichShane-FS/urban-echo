@@ -24,13 +24,13 @@ const ShopLanding = () => {
 
   return (
     <ShopLandingView
-      categories={categories}
-      featuredProducts={featuredProducts}
-      newArrivals={newArrivals}
-      isLoading={isLoading}
-      error={error}
-      Link={Link}
       Button={Button}
+      Link={Link}
+      categories={categories}
+      error={error}
+      featuredProducts={featuredProducts}
+      isLoading={isLoading}
+      newArrivals={newArrivals}
       styles={styles}
     />
   );

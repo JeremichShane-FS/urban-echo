@@ -26,15 +26,15 @@ import styles from "./ActionIcons.module.scss";
 const ActionIcons = ({ cartCount = 0, isSearchOpen, toggleSearch }) => {
   return (
     <ActionIconsView
-      isSearchOpen={isSearchOpen}
-      toggleSearch={toggleSearch}
-      cartCount={cartCount}
-      styles={styles}
+      Link={Link}
       SearchIcon={Search}
       ShoppingBagIcon={ShoppingBag}
       UserIcon={User}
+      cartCount={cartCount}
+      isSearchOpen={isSearchOpen}
       navItems={getNavItemsByIds(["account", "cart"], ACCOUNT_NAV_ITEMS)}
-      Link={Link}
+      styles={styles}
+      toggleSearch={toggleSearch}
     />
   );
 };

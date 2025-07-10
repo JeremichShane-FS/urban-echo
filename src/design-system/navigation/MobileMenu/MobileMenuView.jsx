@@ -17,9 +17,9 @@ import PropTypes from "prop-types";
 const MobileMenuView = ({ NavLinks, isOpen, styles }) => {
   return (
     <div
-      id="mobile-menu"
+      aria-hidden={!isOpen}
       className={isOpen ? styles.menu : `${styles.menu} ${styles["menu--hidden"]}`}
-      aria-hidden={!isOpen}>
+      id="mobile-menu">
       <div className={styles.inner}>
         <NavLinks isMobile />
       </div>

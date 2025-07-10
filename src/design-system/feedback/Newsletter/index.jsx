@@ -24,16 +24,16 @@ const Newsletter = () => {
 
   return (
     <NewsletterView
+      Button={Button}
+      TOAST_TYPES={TOAST_TYPES}
+      buttonSize={BUTTON_SIZES.md}
+      buttonVariant={BUTTON_VARIANTS.primary}
       email={email}
+      isFormValid={isFormValid}
       isSubmitting={isSubmitting}
       message={message}
       messageType={messageType}
-      isFormValid={isFormValid}
       styles={styles}
-      buttonVariant={BUTTON_VARIANTS.primary}
-      buttonSize={BUTTON_SIZES.md}
-      Button={Button}
-      TOAST_TYPES={TOAST_TYPES}
       onEmailChange={onEmailChange}
       onSubmit={onSubmit}
     />

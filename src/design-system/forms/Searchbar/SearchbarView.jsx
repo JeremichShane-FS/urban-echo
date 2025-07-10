@@ -22,23 +22,23 @@ const SearchbarView = forwardRef(({ SearchIcon, isOpen, onInputFocus, onSubmit, 
   return (
     <div
       ref={ref}
-      id="searchbar"
+      aria-hidden={!isOpen}
       className={styles.searchbar}
       data-open={isOpen}
-      aria-hidden={!isOpen}>
-      <form id="search-form" className={styles.form} onSubmit={onSubmit}>
+      id="searchbar">
+      <form className={styles.form} id="search-form" onSubmit={onSubmit}>
         <div className={styles.container}>
           <input
-            id="search-input"
-            type="search"
-            name="search"
-            className={styles.input}
-            placeholder="Search for products..."
             aria-label="Search for products"
+            className={styles.input}
+            id="search-input"
+            name="search"
+            placeholder="Search for products..."
+            type="search"
             onFocus={onInputFocus}
           />
-          <button type="submit" className={styles.button} aria-label="Submit search">
-            <SearchIcon className="h-5 w-5" aria-hidden="true" />
+          <button aria-label="Submit search" className={styles.button} type="submit">
+            <SearchIcon aria-hidden="true" className="h-5 w-5" />
           </button>
         </div>
       </form>
