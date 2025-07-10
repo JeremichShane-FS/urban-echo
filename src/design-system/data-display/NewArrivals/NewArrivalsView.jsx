@@ -1,5 +1,30 @@
+/**
+ * @fileoverview Presentational component for new arrivals grid layout with featured product display
+ * Handles responsive grid rendering with special layout for featured items and new arrival badges
+ * Provides loading states, error handling, and call-to-action integration for product discovery
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering new arrivals in a responsive grid with featured product layout
+ * @component
+ * @param {Object} BUTTON_SIZES - Button size constants for consistent styling
+ * @param {Object} BUTTON_VARIANTS - Button variant constants for consistent styling
+ * @param {React.ComponentType} Button - Button component for call-to-action elements
+ * @param {React.ComponentType} Link - Link component for navigation
+ * @param {React.ComponentType} ProductCard - Product card component for rendering individual products
+ * @param {Object} ROUTES - Route constants for navigation paths
+ * @param {string|null} error - Error message to display if product loading fails
+ * @param {Object} filters - Product filtering options and current filter state
+ * @param {boolean} loading - Loading state indicator for showing loading UI
+ * @param {Array<Object>} newArrivals - Array of new arrival product objects to display
+ * @param {Function} onProductClick - Click handler for product interactions
+ * @param {Function} onViewAllClick - Click handler for view all products action
+ * @param {Object} pagination - Pagination state and controls for product display
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered new arrivals section with responsive grid and featured layout
+ */
 const NewArrivalsView = ({
   BUTTON_SIZES,
   BUTTON_VARIANTS,

@@ -1,5 +1,22 @@
+/**
+ * @fileoverview Presentational component for featured products grid layout and display
+ * Handles responsive grid rendering, loading states, and error display for featured product collections
+ * Provides flexible product card integration with custom styling and interaction handling
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering featured products in a responsive grid layout
+ * @component
+ * @param {React.ComponentType} ProductCard - Product card component for rendering individual products
+ * @param {string|null} error - Error message to display if product loading fails
+ * @param {Array<Object>} featuredProducts - Array of featured product objects to display
+ * @param {boolean} isLoading - Loading state indicator for showing loading UI
+ * @param {Function} onProductClick - Click handler for product interactions
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered featured products section with responsive grid
+ */
 const FeaturedProductsView = ({
   ProductCard,
   error,

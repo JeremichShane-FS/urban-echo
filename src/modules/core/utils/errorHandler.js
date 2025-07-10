@@ -1,6 +1,49 @@
+/**
+ * @fileoverview Comprehensive error handling utility for production-ready error management and user experience
+ * Provides centralized error logging, user notifications, API error reporting, and visual error feedback
+ * Handles both client-side and server-side errors with proper categorization and context tracking
+ * Includes user-friendly notifications, external service integration, and development debugging tools
+ */
+
 import { ERROR_TYPES } from "@config/constants";
 
+/**
+ * Error handler utility object providing comprehensive error management functionality
+ * @namespace errorHandler
+ * @description
+ * Centralized error handling system that provides:
+ * - Structured error logging with context and metadata
+ * - User-friendly notification system with categorized messaging
+ * - External error reporting for production monitoring
+ * - Visual debugging tools for development environments
+ * - API error handling with proper HTTP status code interpretation
+ */
 export const errorHandler = {
+  /**
+   * Main error handling function that processes, logs, and reports errors
+   * @function handleError
+   * @param {Error|string} error - Error object or error message string
+   * @param {string} [errorType=ERROR_TYPES.UNKNOWN_ERROR] - Categorized error type from ERROR_TYPES constants
+   * @param {Object} [context={}] - Additional context information for debugging and tracking
+   * @param {string} [context.source] - Source component or module where error occurred
+   * @param {string} [context.action] - Specific action being performed when error occurred
+   * @param {string} [context.endpoint] - API endpoint related to the error
+   * @param {string} [context.userId] - User ID associated with the error
+   * @param {Object} [context.metadata] - Additional metadata for error analysis
+   * @returns {void}
+   *
+   * @example
+   * errorHandler.handleError(
+   *   new Error('API request failed'),
+   *   ERROR_TYPES.API_ERROR,
+   *   {
+   *     source: 'product-service',
+   *     action: 'fetchProducts',
+   *     endpoint: '/api/products',
+   *     userId: 'user123'
+   *   }
+   * );
+   */
   handleError: (error, errorType = ERROR_TYPES.UNKNOWN_ERROR, context = {}) => {
     const errorInfo = {
       timestamp: new Date().toISOString(),
@@ -26,7 +69,15 @@ export const errorHandler = {
 
   /**
    * Logs error information with proper formatting - completely avoids console
+   * @function logError
    * @param {Object} errorInfo - Structured error information
+   * @param {string} errorInfo.timestamp - ISO timestamp of error occurrence
+   * @param {string} errorInfo.type - Categorized error type
+   * @param {string} errorInfo.message - Error message
+   * @param {string} [errorInfo.stack] - Error stack trace for debugging
+   * @param {Object} errorInfo.context - Additional context and metadata
+   * @param {string} errorInfo.userAgent - Browser user agent string
+   * @param {string} errorInfo.url - Current page URL where error occurred
    * @returns {void}
    */
   logError: errorInfo => {
@@ -138,9 +189,10 @@ export const errorHandler = {
   },
 
   /**
-   * Determines appropriate log level based on error type
-   * @param {string} errorType - Error type from ERROR_TYPES
-   * @returns {string} Log level
+   * Determines appropriate log level based on error type for proper categorization
+   * @function getLogLevel
+   * @param {string} errorType - Error type from ERROR_TYPES constants
+   * @returns {string} Log level (error, warn, info, log) for display styling and priority
    */
   getLogLevel: errorType => {
     const criticalErrors = ["SERVER_ERROR", "AUTHENTICATION_ERROR", "AUTHORIZATION_ERROR"];
@@ -152,9 +204,10 @@ export const errorHandler = {
   },
 
   /**
-   * Shows user-friendly notifications based on error type
-   * @param {string} errorType - Error type from ERROR_TYPES
-   * @param {string} originalMessage - Original error message
+   * Shows user-friendly notifications based on error type with appropriate messaging
+   * @function notifyUser
+   * @param {string} errorType - Error type from ERROR_TYPES constants for message selection
+   * @param {string} originalMessage - Original error message (used for context but not directly shown)
    * @returns {void}
    */
   notifyUser: (errorType, _originalMessage) => {
@@ -176,9 +229,10 @@ export const errorHandler = {
   },
 
   /**
-   * Shows modern user notifications (toast, banner, etc.)
-   * @param {string} message - User-friendly message
-   * @param {string} errorType - Error type for styling
+   * Shows modern user notifications (toast, banner, etc.) with proper styling and auto-dismiss
+   * @function showNotification
+   * @param {string} message - User-friendly message to display
+   * @param {string} errorType - Error type for styling and visual categorization
    * @returns {void}
    */
   showNotification: (message, errorType) => {
@@ -222,8 +276,9 @@ export const errorHandler = {
   },
 
   /**
-   * Reports errors to API endpoint
-   * @param {Object} errorInfo - Structured error information
+   * Reports errors to external API endpoint for production monitoring and analysis
+   * @function reportError
+   * @param {Object} errorInfo - Structured error information to send to external service
    * @returns {void}
    */
   reportError: errorInfo => {
@@ -245,12 +300,21 @@ export const errorHandler = {
   },
 
   /**
-   * Creates an error object with proper structure
-   * @param {string} message - Error message
-   * @param {string} type - Error type
-   * @param {number} statusCode - HTTP status code
-   * @param {Object} details - Additional error details
-   * @returns {Object} Structured error object
+   * Creates a standardized error object with proper structure and metadata
+   * @function createError
+   * @param {string} message - Descriptive error message
+   * @param {string} [type="UNKNOWN_ERROR"] - Error type from ERROR_TYPES constants
+   * @param {number} [statusCode=500] - HTTP status code associated with the error
+   * @param {Object} [details={}] - Additional error details and context
+   * @returns {Object} Structured error object with consistent format
+   *
+   * @example
+   * const error = errorHandler.createError(
+   *   'Product not found',
+   *   'NOT_FOUND_ERROR',
+   *   404,
+   *   { productId: 'abc123', searchQuery: 'blue shirt' }
+   * );
    */
   createError: (message, type = "UNKNOWN_ERROR", statusCode = 500, details = {}) => {
     return {
@@ -263,10 +327,19 @@ export const errorHandler = {
   },
 
   /**
-   * Handles API response errors
-   * @param {Response} response - Fetch response object
-   * @param {string} context - Context where error occurred
-   * @returns {Promise<void>}
+   * Handles API response errors with proper HTTP status code interpretation
+   * @async
+   * @function handleApiError
+   * @param {Response} response - Fetch response object with error status
+   * @param {string} [context=""] - Context description where the API error occurred
+   * @returns {Promise<void>} Promise that resolves after error handling is complete
+   *
+   * @example
+   * const response = await fetch('/api/products');
+   * if (!response.ok) {
+   *   await errorHandler.handleApiError(response, 'fetching products');
+   *   return;
+   * }
    */
   handleApiError: async (response, context = "") => {
     let errorType = "API_ERROR";

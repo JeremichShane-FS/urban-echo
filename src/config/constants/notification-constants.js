@@ -1,9 +1,18 @@
 /**
- * @fileoverview This file contains constants related to notifications, including types, priorities, durations, and events.
- * It serves as a centralized location for managing all notification-related constants used in the application.
+ * @fileoverview Notification system constants for multi-channel messaging, user preferences, and delivery management
+ * Defines comprehensive notification types, delivery methods, event templates, and scheduling configurations
+ * Supports in-app notifications, email campaigns, SMS alerts, and push notifications with user preference controls
  */
 
-// Notification types
+// =================================================================
+// NOTIFICATION TYPE AND PRIORITY SYSTEM
+// =================================================================
+
+/**
+ * Notification classification and priority levels for proper handling and display
+ * @constant {Object} NOTIFICATION_TYPES - Available notification type categories
+ * @constant {Object} NOTIFICATION_PRIORITIES - Notification urgency levels
+ */
 export const NOTIFICATION_TYPES = {
   SUCCESS: "success",
   ERROR: "error",
@@ -11,7 +20,6 @@ export const NOTIFICATION_TYPES = {
   INFO: "info",
 };
 
-// Notification priorities
 export const NOTIFICATION_PRIORITIES = {
   LOW: "low",
   MEDIUM: "medium",
@@ -19,7 +27,33 @@ export const NOTIFICATION_PRIORITIES = {
   URGENT: "urgent",
 };
 
-// Notification display durations (ms)
+// =================================================================
+// DISPLAY AND TIMING CONFIGURATION
+// =================================================================
+
+/**
+ * Notification display duration and UI configuration settings
+ * @constant {Object} NOTIFICATION_DURATION - Display durations for different notification types
+ * @constant {number} DEFAULT_NOTIFICATION_DURATION - Default notification display time
+ * @constant {string} DEFAULT_NOTIFICATION_PRIORITY - Default notification priority level
+ * @constant {number} MAX_NOTIFICATIONS_DISPLAYED - Maximum concurrent notifications
+ * @constant {string} NOTIFICATION_STACK_POSITION - Screen position for notification stack
+ *
+ * @example
+ * // Show notification with custom duration
+ * const showNotification = (type, message, options = {}) => {
+ *   const duration = options.duration || NOTIFICATION_DURATION.MEDIUM;
+ *   const priority = options.priority || DEFAULT_NOTIFICATION_PRIORITY;
+ *
+ *   notificationService.show({
+ *     type,
+ *     message,
+ *     duration,
+ *     priority,
+ *     position: NOTIFICATION_STACK_POSITION
+ *   });
+ * };
+ */
 export const NOTIFICATION_DURATION = {
   SHORT: 3000, // 3 seconds
   MEDIUM: 5000, // 5 seconds
@@ -27,13 +61,19 @@ export const NOTIFICATION_DURATION = {
   PERSISTENT: null, // Stays until dismissed
 };
 
-// Default notification settings
 export const DEFAULT_NOTIFICATION_DURATION = NOTIFICATION_DURATION.MEDIUM;
 export const DEFAULT_NOTIFICATION_PRIORITY = NOTIFICATION_PRIORITIES.MEDIUM;
 export const MAX_NOTIFICATIONS_DISPLAYED = 3;
 export const NOTIFICATION_STACK_POSITION = "bottom-right";
 
-// Delivery methods
+// =================================================================
+// DELIVERY METHODS AND USER PREFERENCES
+// =================================================================
+
+/**
+ * Available notification delivery channels for multi-platform messaging
+ * @constant {Object} NOTIFICATION_DELIVERY_METHODS - Supported delivery channels
+ */
 export const NOTIFICATION_DELIVERY_METHODS = {
   IN_APP: "in_app",
   EMAIL: "email",
@@ -41,7 +81,41 @@ export const NOTIFICATION_DELIVERY_METHODS = {
   PUSH: "push",
 };
 
-// User configurable notification preferences
+/**
+ * Default user notification preferences by category and delivery method
+ * @constant {Object} DEFAULT_NOTIFICATION_PREFERENCES - User preference defaults
+ *
+ * @example
+ * // Apply user preferences to notification sending
+ * const shouldSendNotification = (userId, notificationType, deliveryMethod) => {
+ *   const userPrefs = getUserNotificationPreferences(userId);
+ *   const defaults = DEFAULT_NOTIFICATION_PREFERENCES[notificationType];
+ *   const prefs = { ...defaults, ...userPrefs[notificationType] };
+ *   return prefs[deliveryMethod] === true;
+ * };
+ *
+ * @example
+ * // Notification preferences UI component
+ * const NotificationPreferences = ({ preferences, onUpdate }) => (
+ *   <form>
+ *     {Object.entries(DEFAULT_NOTIFICATION_PREFERENCES).map(([category, methods]) => (
+ *       <div key={category} className="preference-category">
+ *         <h3>{category.replace(/([A-Z])/g, ' $1').trim()}</h3>
+ *         {Object.entries(methods).map(([method, defaultValue]) => (
+ *           <label key={method}>
+ *             <input
+ *               type="checkbox"
+ *               checked={preferences[category]?.[method] ?? defaultValue}
+ *               onChange={(e) => onUpdate(category, method, e.target.checked)}
+ *             />
+ *             {method.replace(/([A-Z])/g, ' $1').trim()}
+ *           </label>
+ *         ))}
+ *       </div>
+ *     ))}
+ *   </form>
+ * );
+ */
 export const DEFAULT_NOTIFICATION_PREFERENCES = {
   orderUpdates: {
     inApp: true,
@@ -81,7 +155,49 @@ export const DEFAULT_NOTIFICATION_PREFERENCES = {
   },
 };
 
-// Notification events
+// =================================================================
+// NOTIFICATION EVENT TEMPLATES
+// =================================================================
+
+/**
+ * Predefined notification event configurations with templates and delivery settings
+ * @constant {Object} NOTIFICATION_EVENTS - Event-specific notification configurations
+ *
+ * @example
+ * // Send order confirmation notification
+ * const sendOrderConfirmation = async (orderId, userId) => {
+ *   const event = NOTIFICATION_EVENTS.ORDER_PLACED;
+ *   const message = event.template.replace('{orderId}', orderId);
+ *
+ *   await notificationService.send({
+ *     userId,
+ *     type: event.type,
+ *     priority: event.priority,
+ *     title: event.title,
+ *     message,
+ *     deliveryMethods: event.deliveryMethods
+ *   });
+ * };
+ *
+ * @example
+ * // Product restock notification
+ * const notifyProductRestock = async (productId, productName) => {
+ *   const event = NOTIFICATION_EVENTS.PRODUCT_RESTOCKED;
+ *   const message = event.template.replace('{productName}', productName);
+ *
+ *   const interestedUsers = await getInterestedUsers(productId);
+ *
+ *   for (const user of interestedUsers) {
+ *     if (shouldSendNotification(user.id, 'productRestocks', 'email')) {
+ *       await emailService.send({
+ *         to: user.email,
+ *         subject: event.title,
+ *         message
+ *       });
+ *     }
+ *   }
+ * };
+ */
 export const NOTIFICATION_EVENTS = {
   // Order related
   ORDER_PLACED: {
@@ -189,7 +305,14 @@ export const NOTIFICATION_EVENTS = {
   },
 };
 
-// Email template IDs
+// =================================================================
+// EMAIL AND PUSH NOTIFICATION CONFIGURATION
+// =================================================================
+
+/**
+ * Email template identifiers for consistent messaging across campaigns
+ * @constant {Object} EMAIL_TEMPLATES - Available email template IDs
+ */
 export const EMAIL_TEMPLATES = {
   ORDER_CONFIRMATION: "order-confirmation",
   SHIPPING_CONFIRMATION: "shipping-confirmation",
@@ -203,14 +326,38 @@ export const EMAIL_TEMPLATES = {
   REVIEW_REQUEST: "review-request",
 };
 
-// Push notification settings
+/**
+ * Push notification service configuration for web push functionality
+ * @constant {Object} PUSH_NOTIFICATION_SETTINGS - Push notification service settings
+ */
 export const PUSH_NOTIFICATION_SETTINGS = {
   vapidPublicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
   serviceWorkerPath: "/service-worker.js",
   applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY,
 };
 
-// Notification scheduling
+// =================================================================
+// NOTIFICATION SCHEDULING
+// =================================================================
+
+/**
+ * Automated notification scheduling and timing configuration
+ * @constant {Object} NOTIFICATION_SCHEDULING - Scheduling settings for automated notifications
+ *
+ * @example
+ * // Schedule abandoned cart reminder
+ * const scheduleAbandonedCartReminder = (cartId, userEmail) => {
+ *   const delay = NOTIFICATION_SCHEDULING.abandonedCartDelay;
+ *
+ *   setTimeout(() => {
+ *     emailService.send({
+ *       to: userEmail,
+ *       template: EMAIL_TEMPLATES.ABANDONED_CART,
+ *       data: { cartId }
+ *     });
+ *   }, delay);
+ * };
+ */
 export const NOTIFICATION_SCHEDULING = {
   abandonedCartDelay: 24 * 60 * 60 * 1000, // 24 hours
   reviewRequestDelay: 7 * 24 * 60 * 60 * 1000, // 7 days after delivery

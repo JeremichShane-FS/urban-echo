@@ -1,6 +1,23 @@
+/**
+ * @fileoverview Presentational component for searchbar form layout and accessibility features
+ * Handles search input field, submit button, and proper ARIA attributes for screen readers
+ * Provides responsive design with icon integration and form submission handling
+ */
+
 import { forwardRef } from "react";
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering searchbar form with accessibility and responsive design
+ * @component
+ * @param {React.ComponentType} SearchIcon - Lucide React search icon component
+ * @param {boolean} isOpen - Whether the searchbar is visible/expanded
+ * @param {Function} onInputFocus - Handler for search input focus events
+ * @param {Function} onSubmit - Handler for form submission
+ * @param {Object} styles - CSS module styles object for component styling
+ * @param {React.Ref} ref - Forwarded ref for component positioning and animations
+ * @returns {JSX.Element} Rendered searchbar form with input field and submit button
+ */
 const SearchbarView = forwardRef(({ SearchIcon, isOpen, onInputFocus, onSubmit, styles }, ref) => {
   return (
     <div

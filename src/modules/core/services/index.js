@@ -1,40 +1,50 @@
 /**
- * @fileoverview Barrel export file for core service modules
- * This file centralizes exports for all service modules in the project
- * making imports cleaner and more organized across components and hooks.
+ * @fileoverview Centralized barrel export for core service modules
+ * Provides clean, organized access to all service objects
+ * Maintains separation of concerns while enabling convenient imports
  *
- * @example
- * Instead of multiple imports:
- * import authService from '@module/core/services/auth-service';
- * import productService from '@module/core/services/product-service';
- * import contentService from '@module/core/services/content-service';
+ * @example - Instead of multiple imports:
+ * import authService, { login, register } from './auth-service';
+ * import productService, { getProducts, getProduct } from './product-service';
  *
  * You can now import from a single location:
- * import { authService, productService, contentService } from '@module/core/services';
+ * import { authService, login, productService, getProducts } from '@modules/core/services';
  */
 
 // Authentication Services
-export { default as authService } from "./auth-service";
-export { getUserProfile, login, register, updateUserProfile } from "./auth-service";
+export {
+  default as authService,
+  getUserProfile,
+  login,
+  register,
+  updateUserProfile,
+} from "./auth-service";
 
 // Content Management Services
-export { default as contentService } from "./content-service";
-export { getAboutContent, getHeroContent, getPageConfig } from "./content-service";
+export {
+  default as contentService,
+  getAboutContent,
+  getHeroContent,
+  getPageConfig,
+} from "./content-service";
 
 // HTTP Client Services
-export { del, delete, get, post, put } from "./http-client";
+export { del, get, post, put } from "./http-client";
 
 // Newsletter Services
-export { default as newsletterService } from "./newsletter-service";
-export { subscribeNewsletter, unsubscribeNewsletter } from "./newsletter-service";
+export {
+  default as newsletterService,
+  subscribeNewsletter,
+  unsubscribeNewsletter,
+} from "./newsletter-service";
 
 // Product Services
-export { default as productService } from "./product-service";
 export {
   getFeaturedProducts,
   getNewArrivals,
   getProduct,
   getProducts,
   getRelatedProducts,
+  default as productService,
   searchProducts,
 } from "./product-service";

@@ -1,10 +1,10 @@
 /**
- * @fileoverview Barrel export file for Zustand stores
- * This file centralizes exports for all state management stores in the project
- * making imports cleaner and more organized across components.
+ * @fileoverview Centralized barrel export file for Zustand state management stores
+ * Provides unified access to cart store, user store, and all their associated hooks and utilities
+ * Simplifies import statements across components and maintains clean project architecture
+ * Exports both store instances and specialized hooks for granular state access and performance optimization
  *
- * @example
- * Instead of multiple imports:
+ * @example - Instead of multiple imports:
  * import useCartStore, { useCartItems, useCartActions } from './cart-store';
  * import useUserStore, { useUser, useUserActions } from './user-store';
  *
@@ -16,7 +16,7 @@
  *   useUserStore,
  *   useUser,
  *   useUserActions
- * } from './stores';
+ * } from '@modules/core/stores';
  */
 
 // Cart Store Exports

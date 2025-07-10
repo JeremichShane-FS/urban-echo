@@ -1,5 +1,40 @@
+/**
+ * @fileoverview Presentational component for category page layout with product grid and filtering interface
+ * Handles responsive layout with sidebar filters, product grid display, and pagination controls
+ * Provides comprehensive e-commerce browsing experience with search, sorting, and filtering capabilities
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering category page with product grid, filters, and pagination
+ * @component
+ * @param {React.ComponentType} Button - Button component for interactive elements
+ * @param {React.ComponentType} Image - Next.js Image component for optimized product images
+ * @param {React.ComponentType} Link - Next.js Link component for product navigation
+ * @param {Array<Object>} categories - Available product categories with counts
+ * @param {string} category - Current active category slug
+ * @param {number} currentPage - Current pagination page number
+ * @param {Object|null} error - Error object if product loading fails
+ * @param {Object} filters - Active filter states (onSale, newArrivals, freeShipping)
+ * @param {Function} handleCategoryChange - Handler for category selection changes
+ * @param {Function} handleFilterChange - Handler for filter state changes
+ * @param {Function} handlePageChange - Handler for pagination navigation
+ * @param {Function} handlePriceRangeChange - Handler for price range filter changes
+ * @param {Function} handleSearch - Handler for search input changes
+ * @param {Function} handleSortChange - Handler for sort option changes
+ * @param {boolean} isLoading - Loading state indicator for product fetching
+ * @param {Array<number>} priceRange - Current price range filter values
+ * @param {Array<Object>} products - Product data array for grid display
+ * @param {Function} renderStars - Utility function for rendering star ratings
+ * @param {string} searchTerm - Current search query string
+ * @param {string} selectedCategory - Currently selected category identifier
+ * @param {string} sortBy - Current sort option selection
+ * @param {Object} styles - CSS module styles object for component styling
+ * @param {number} totalPages - Total number of pagination pages
+ * @param {number} totalProducts - Total count of products matching current filters
+ * @returns {JSX.Element} Rendered category page with comprehensive product browsing interface
+ */
 const CategoryPageView = ({
   Button,
   Image,
@@ -199,7 +234,7 @@ const CategoryPageView = ({
                       />
 
                       <div className={styles.badges}>
-                        {product.isNew && <span className={styles["badge-new"]}>NEW</span>}
+                        {product.isNewArrival && <span className={styles["badge-new"]}>NEW</span>}
                         {product.onSale && <span className={styles["badge-sale"]}>SALE</span>}
                       </div>
 
@@ -344,7 +379,7 @@ CategoryPageView.propTypes = {
       id: PropTypes.string,
       image: PropTypes.string,
       images: PropTypes.arrayOf(PropTypes.string),
-      isNew: PropTypes.bool,
+      isNewArrival: PropTypes.bool,
       name: PropTypes.string.isRequired,
       onSale: PropTypes.bool,
       originalPrice: PropTypes.number,

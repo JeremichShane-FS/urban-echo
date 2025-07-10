@@ -1,11 +1,20 @@
-import { CACHE_DURATION, ERROR_TYPES } from "@config/constants";
-import { queryKeys } from "@modules/core/providers/query-provider";
-import { errorHandler } from "@modules/core/utils/errorHandler";
-import { featuredProductsService } from "@modules/product/services";
+/**
+ * @fileoverview Custom hooks for fetching and managing featured products with data caching
+ * Provides optimized data fetching with TanStack Query for performance, caching, and background updates
+ * Handles analytics tracking, error management, and automatic retries for network failures
+ * Includes prefetching capabilities for improved user experience and perceived performance
+ */
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { CACHE_DURATION, ERROR_TYPES } from "@config/constants";
+import { queryKeys } from "@modules/core/providers";
+import { errorHandler } from "@modules/core/utils";
+import { featuredProductsService } from "@modules/product/services";
 
 /**
  * Custom hook for managing featured products data using TanStack Query
+ * @function useFeaturedProducts
  * @description Fetches and manages featured products from the API with automatic
  * caching, background updates, error handling, and retry logic. Uses TanStack Query
  * for optimal performance and data synchronization.
@@ -22,14 +31,17 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
  * @returns {Function} returns.onProductClick - Analytics tracking function for product clicks
  * @returns {boolean} returns.isStale - Whether data is considered stale
  * @returns {string} returns.status - Query status: 'pending', 'error', 'success'
+ *
  * @example
- * Basic usage
+ * // Basic usage
  * const { data: featuredProducts, isLoading, error, onProductClick } = useFeaturedProducts();
  *
- * With custom limit
+ * @example
+ * // With custom limit
  * const { data: featuredProducts, refetch } = useFeaturedProducts({ limit: 12 });
  *
- * Conditional fetching
+ * @example
+ * // Conditional fetching
  * const { data, isLoading } = useFeaturedProducts({
  *   limit: 6,
  *   enabled: shouldFetch
@@ -45,15 +57,14 @@ export const useFeaturedProducts = (options = {}) => {
     queryKey: queryKeys.products.featured(),
     queryFn: () => featuredProductsService.getFeaturedProducts(limit),
     enabled,
-    staleTime: CACHE_DURATION.medium, // 30 minutes
-    gcTime: CACHE_DURATION.long, // 24 hours
+    staleTime: CACHE_DURATION.medium,
+    gcTime: CACHE_DURATION.long,
     retry: 3,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
     select: data => {
       // The featuredProductsService already returns just the products array
-      // So we don't need to extract from data.data or data.products
       return Array.isArray(data) ? data : [];
     },
     meta: {
@@ -64,12 +75,27 @@ export const useFeaturedProducts = (options = {}) => {
 
   /**
    * Handles product click events with analytics tracking
+   * @function handleProductClick
    * @description Tracks user interactions with featured products for analytics
    * and conversion optimization. Integrates with Google Analytics if available.
    * @param {string} productId - The ID of the clicked product
    * @param {string} productName - The name of the clicked product
    * @param {Object} [additionalData={}] - Additional tracking data
+   * @param {string} [additionalData.category] - Product category for analytics segmentation
+   * @param {number} [additionalData.price] - Product price for conversion tracking
+   * @param {number} [additionalData.position] - Product position in the featured list
    * @returns {void}
+   *
+   * @example
+   * onProductClick("prod-123", "Blue Cotton Shirt");
+   *
+   * @example
+   * // With additional tracking data
+   * onProductClick("prod-456", "Red Dress", {
+   *   category: "women",
+   *   price: 89.99,
+   *   position: 3
+   * });
    */
   const handleProductClick = (productId, productName, additionalData = {}) => {
     if (!productId || !productName) {
@@ -88,7 +114,6 @@ export const useFeaturedProducts = (options = {}) => {
       return;
     }
 
-    // Track analytics event for product click
     try {
       if (typeof window !== "undefined" && window.gtag) {
         window.gtag("event", "select_content", {
@@ -131,12 +156,31 @@ export const useFeaturedProducts = (options = {}) => {
 
 /**
  * Hook for prefetching featured products
+ * @function usePrefetchFeaturedProducts
  * @description Prefetches featured products data without subscribing to updates.
  * Useful for optimizing user experience by loading data before it's needed.
+ * Implements strategies like hover-intent prefetching and navigation prefetching.
  * @param {number} [limit=8] - Number of products to prefetch
+ * @returns {Function} Function that triggers prefetching when called
+ *
  * @example
- * Prefetch featured products on component mount
- * usePrefetchFeaturedProducts(12);
+ * // Prefetch featured products on component mount
+ * const prefetchFeatured = usePrefetchFeaturedProducts(12);
+ * useEffect(() => {
+ *   prefetchFeatured();
+ * }, [prefetchFeatured]);
+ *
+ * @example
+ * // Prefetch on hover intent
+ * const prefetchFeatured = usePrefetchFeaturedProducts();
+ * return (
+ *   <button
+ *     onMouseEnter={prefetchFeatured}
+ *     onClick={navigateToFeatured}
+ *   >
+ *     View Featured Products
+ *   </button>
+ * );
  */
 export const usePrefetchFeaturedProducts = (limit = 8) => {
   const queryClient = useQueryClient();
