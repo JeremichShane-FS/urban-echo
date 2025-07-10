@@ -50,11 +50,12 @@ jobs:
           node-version: "18"
           cache: "npm"
 
-        # =================================================================
-        # SECURITY SCANNING GATE
-        # =================================================================
-        # Scans codebase for security vulnerabilities and sensitive data
-        # Prevents commits containing secrets, API keys, or dangerous patterns
+      # =================================================================
+      # SECURITY SCANNING GATE
+      # =================================================================
+      # Scans codebase for security vulnerabilities and sensitive data
+      # Prevents commits containing secrets, API keys, or dangerous patterns
+
       - name: "Security Scanning"
         run: |
           echo "🔒 Starting comprehensive security scan..."
@@ -111,6 +112,12 @@ jobs:
       - name: "Install Dependencies"
         run: npm ci
 
+      # =================================================================
+      # CODE QUALITY GATE
+      # =================================================================
+      # Enforces code quality standards through ESLint
+      # Prevents commits that don't meet established coding standards
+
       - name: "Code Quality Gate"
         run: |
           echo "🧹 Starting code quality validation..."
@@ -130,6 +137,12 @@ jobs:
 
           echo "✅ Code quality checks passed"
           echo "🎉 All code meets established quality standards"
+
+      # =================================================================
+      # BUILD VERIFICATION GATE
+      # =================================================================
+      # Ensures code can be built successfully for production deployment
+      # Prevents deployment of code that would fail in production
 
       - name: "Build Verification"
         run: |
@@ -164,6 +177,7 @@ jobs:
       # =================================================================
       # Scans for high-severity vulnerabilities in project dependencies
       # Prevents deployment with known security vulnerabilities
+
       - name: "Dependency Vulnerability Check"
         run: |
           echo "🔍 Starting dependency vulnerability scan..."
@@ -214,6 +228,7 @@ jobs:
       # =================================================================
       # Validates that all TODO and FIX comments follow project standards
       # Ensures proper template usage and prevents malformed comments
+
       - name: "Enforce TODO Standards"
         run: |
           echo "📝 Starting TODO/FIX comment validation..."
