@@ -23,6 +23,7 @@ on:
     branches: ["**"]
   pull_request:
     branches: ["**"]
+  workflow_dispatch:
 
 permissions:
   security-events: write
@@ -35,7 +36,7 @@ jobs:
   # Primary enforcement job that validates security, quality, and buildability
   # This job must pass for any code to be merged or deployed
 
-  security-quality:
+  build:
     name: "Security & Quality Gate"
     runs-on: ubuntu-latest
     steps:
@@ -118,12 +119,6 @@ jobs:
       # Enforces code quality standards through ESLint
       # Prevents commits that don't meet established coding standards
 
-      # =================================================================
-      # CODE QUALITY GATE
-      # =================================================================
-      # Enforces code quality standards through ESLint
-      # Prevents commits that don't meet established coding standards
-
       - name: "Code Quality Gate"
         run: |
           echo "🧹 Starting code quality validation..."
@@ -143,12 +138,6 @@ jobs:
 
           echo "✅ Code quality checks passed"
           echo "🎉 All code meets established quality standards"
-
-      # =================================================================
-      # BUILD VERIFICATION GATE
-      # =================================================================
-      # Ensures code can be built successfully for production deployment
-      # Prevents deployment of code that would fail in production
 
       # =================================================================
       # BUILD VERIFICATION GATE
@@ -219,7 +208,7 @@ jobs:
   # Enforces development standards and comment conventions
   # Ensures consistency in code documentation and TODO management
 
-  standards-validation:
+  enforce-standards:
     name: "TODO Standards Enforcement"
     runs-on: ubuntu-latest
     steps:
@@ -236,7 +225,7 @@ jobs:
         run: npm ci
 
       # =================================================================
-      # TODO/FIX COMMENT STANDARDS ENFORCEMENT
+      # COMMENT STANDARDS ENFORCEMENT
       # =================================================================
       # Validates that all TODO and FIX comments follow project standards
       # Ensures proper template usage and prevents malformed comments
