@@ -12,8 +12,8 @@
 # across the entire e-commerce development team.
 # =================================================================
 
-echo "🔍 Starting pre-commit quality checks..."
-echo "📋 Validating staged files for code standards..."
+echo "Starting pre-commit quality checks..."
+echo "Validating staged files for code standards..."
 
 # =================================================================
 # PRETTIER CONFIGURATION SETUP
@@ -25,7 +25,7 @@ echo "📋 Validating staged files for code standards..."
 # NOTE: Ensure .prettier.temp.json is in .gitignore to prevent
 # accidental commits of this temporary configuration file
 
-echo "⚙️  Setting up Prettier configuration..."
+echo "Setting up Prettier configuration..."
 
 node --input-type=module -e "
 import fs from 'fs';
@@ -47,10 +47,10 @@ echo "✅ Prettier configuration loaded successfully"
 # This includes: ESLint fixes, Prettier formatting, type checking
 # --allow-empty: Prevents failure when no files are staged
 
-echo "🧹 Running lint-staged on staged files..."
-echo "   → ESLint: Checking code quality and fixing auto-fixable issues"
-echo "   → Prettier: Formatting code for consistency"
-echo "   → Type checking: Validating TypeScript/JSDoc types"
+echo "Running lint-staged on staged files..."
+echo "→ ESLint: Checking code quality and fixing auto-fixable issues"
+echo "→ Prettier: Formatting code for consistency"
+echo "→ Type checking: Validating TypeScript/JSDoc types"
 
 npx lint-staged --allow-empty || {
   echo ""
@@ -73,6 +73,6 @@ rm -f .prettier.temp.json
 
 echo ""
 echo "✅ All pre-commit checks passed successfully!"
-echo "🚀 Your code meets quality standards and is ready for commit"
-echo "📦 Staged files have been formatted and validated"
+echo "✅ Your code meets quality standards and is ready for commit"
+echo " → Staged files have been formatted and validated"
 echo ""
