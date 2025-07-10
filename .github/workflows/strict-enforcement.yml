@@ -35,7 +35,7 @@ jobs:
   # Primary enforcement job that validates security, quality, and buildability
   # This job must pass for any code to be merged or deployed
 
-  build:
+  security-quality:
     name: "Security & Quality Gate"
     runs-on: ubuntu-latest
     steps:
@@ -219,7 +219,7 @@ jobs:
   # Enforces development standards and comment conventions
   # Ensures consistency in code documentation and TODO management
 
-  enforce-standards:
+  standards-validation:
     name: "TODO Standards Enforcement"
     runs-on: ubuntu-latest
     steps:
