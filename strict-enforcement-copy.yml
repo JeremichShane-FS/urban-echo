@@ -232,13 +232,39 @@ jobs:
 
       - name: "Enforce TODO Standards"
         run: |
+          echo "📝 Starting TODO/FIX comment validation..."
+          echo "🔍 Checking all JavaScript/TypeScript files for comment standards..."
+          echo ""
 
-          echo "🔍 Validating TODO/FIX comments..."
+          # Find all relevant source files and validate TODO/FIX comments
+          # Excludes node_modules and other non-source directories
+          echo "📁 Scanning source files for TODO/FIX comments..."
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
           grep -v node_modules | \
           xargs node scripts/check-todos.js || {
-            echo "❌ TODO validation failed"
+            echo ""
+            echo "❌ TODO/FIX STANDARDS VALIDATION FAILED"
+            echo "🚨 One or more TODO/FIX comments don't meet project standards"
+            echo ""
+            echo "📋 Required TODO/FIX comment format:"
+            echo "   // TODO: [TEMPLATE] Brief description (≥10 chars)"
+            echo "   // Detailed explanation of what needs to be done"
+            echo ""
+            echo "✅ Approved templates:"
+            echo "   [COMPONENT] [UI/UX] [ROUTES] [DATA] [SECURITY] [BUG]"
+            echo "   [PERF] [REFACTOR] [TEST] [DOCS] [DEPENDENCY] [FEATURE]"
+            echo "   [I18N] [A11Y] [ONBOARDING] [RESEARCH] [STATE] [CI]"
+            echo "   [CD] [WORKFLOW] [AUTOMATION] [ACTIONS] [DEPLOY] [BUILD]"
+            echo ""
+            echo "🔧 To fix TODO/FIX standard violations:"
+            echo "   1. Review the validation errors above"
+            echo "   2. Update comments to use approved template format"
+            echo "   3. Ensure descriptions are descriptive (≥10 characters)"
+            echo "   4. Add detailed explanations on following lines"
+            echo "   5. Run validation locally: npm run check:todos"
             exit 1
           }
 
-          echo "✅ TODO/FIX standards enforced"
+          echo "✅ TODO/FIX comment standards validation passed"
+          echo "📝 All TODO/FIX comments follow project conventions"
+          echo "🎉 Development standards enforcement completed successfully"
