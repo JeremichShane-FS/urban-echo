@@ -16,6 +16,8 @@
 # =================================================================
 
 name: "Branch Policy Enforcement"
+permissions:
+  contents: read
 
 # Only runs on pull requests targeting the main branch
 # This prevents accidental direct commits to production
