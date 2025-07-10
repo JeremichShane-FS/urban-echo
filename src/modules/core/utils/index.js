@@ -1,15 +1,16 @@
 /**
- * @fileoverview Barrel export file for utility functions
- * This file centralizes exports for all utility functions in the project
- * making imports cleaner and more organized across components.
+ * @fileoverview Centralized barrel export file for comprehensive utility functions and development tools
+ * Provides unified access to analytics tracking, validation, formatting, image handling, and UI utilities
+ * Simplifies import statements across components and maintains clean project architecture
+ * Exports specialized functions for e-commerce operations, user experience enhancements, and data management
  *
  * @example - Instead of multiple imports:
- * import { trackEvent } from './analytics';
- * import { formatCurrency } from './formatters';
- * import { isValidEmail } from './validators';
+ * import { trackEvent } from '@modules/core/utils/analytics';
+ * import { formatCurrency } from '@modules/core/utils/formatters';
+ * import { isValidEmail } from '@modules/core/utils/validators';
  *
  * You can now import from a single location:
- * import { trackEvent, formatCurrency, isValidEmail } from './utils';
+ * import { trackEvent, formatCurrency, isValidEmail } from '@modules/core/utils';
  */
 
 // Analytics Utilities

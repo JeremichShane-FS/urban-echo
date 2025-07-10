@@ -1,17 +1,24 @@
 /**
- * @fileoverview React Query provider setup for data fetching
- * Handles API caching, background updates, and error management using existing error handler
+ * @fileoverview React Query provider setup for comprehensive data fetching and state management
+ * Handles API caching, background updates, error management, and query invalidation strategies
+ * Provides centralized configuration for retry logic, cache duration, and error handling integration
+ * Includes query key factories, prefetch utilities, and error recovery mechanisms for production use
  */
 
 "use client";
 import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import PropTypes from "prop-types";
 
 import { API_TIMEOUT, CACHE_DURATION, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/utils";
 
+/**
+ * Creates a configured QueryClient instance with optimized default options
+ * @function createQueryClient
+ * @returns {QueryClient} Configured QueryClient with retry logic, caching, and error handling
+ */
 const createQueryClient = () =>
   new QueryClient({
     defaultOptions: {
@@ -62,6 +69,12 @@ const createQueryClient = () =>
     },
   });
 
+/**
+ * Determines error type based on HTTP status code and error characteristics
+ * @function getErrorType
+ * @param {Error|Object} error - Error object with status code or response
+ * @returns {string} Categorized error type from ERROR_TYPES constants
+ */
 const getErrorType = error => {
   if (!error) return ERROR_TYPES.UNKNOWN_ERROR;
 
@@ -92,7 +105,14 @@ const getErrorType = error => {
   }
 };
 
-export function QueryProvider({ children }) {
+/**
+ * React Query provider component that wraps the application with data fetching capabilities
+ * @component
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to wrap with query client
+ * @returns {JSX.Element} QueryClientProvider with optional development tools
+ */
+export const QueryProvider = ({ children }) => {
   const [queryClient] = useState(() => createQueryClient());
 
   return (
@@ -103,12 +123,20 @@ export function QueryProvider({ children }) {
       )}
     </QueryClientProvider>
   );
-}
+};
 
 QueryProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+/**
+ * Hierarchical query key factory for consistent cache management and invalidation
+ * @namespace queryKeys
+ * @description
+ * Provides structured query keys for different data domains (content, products, user, etc.)
+ * Each domain has specific key generators that create hierarchical cache keys
+ * for efficient invalidation and cache management strategies
+ */
 export const queryKeys = {
   content: {
     all: ["content"],
@@ -174,11 +202,17 @@ export const queryKeys = {
 };
 
 /**
- * Prefetch content data
- * @param {QueryClient} queryClient - React Query client
- * @param {string} contentType - Content type to prefetch
+ * Utility functions for prefetching data to improve perceived performance
+ * @namespace prefetchUtils
  */
 export const prefetchUtils = {
+  /**
+   * Prefetch content data for improved page load performance
+   * @function prefetchContent
+   * @param {QueryClient} queryClient - React Query client instance
+   * @param {string} contentType - Content type to prefetch (hero, about, etc.)
+   * @returns {Promise} Promise that resolves when prefetch completes
+   */
   prefetchContent: (queryClient, contentType) => {
     return queryClient.prefetchQuery({
       queryKey: queryKeys.content[contentType](),
@@ -198,9 +232,11 @@ export const prefetchUtils = {
   },
 
   /**
-   * Prefetch page config
-   * @param {QueryClient} queryClient - React Query client
-   * @param {string} pageName - Page name to prefetch
+   * Prefetch page configuration data
+   * @function prefetchPageConfig
+   * @param {QueryClient} queryClient - React Query client instance
+   * @param {string} pageName - Page name to prefetch configuration for
+   * @returns {Promise} Promise that resolves when prefetch completes
    */
   prefetchPageConfig: (queryClient, pageName) => {
     return queryClient.prefetchQuery({
@@ -214,10 +250,15 @@ export const prefetchUtils = {
   },
 };
 
+/**
+ * Error recovery utilities for handling failed queries and cache invalidation
+ * @namespace errorRecovery
+ */
 export const errorRecovery = {
   /**
-   * Clear all queries and refetch
-   * @param {QueryClient} queryClient - React Query client
+   * Clear all cached queries and trigger refetch for fresh data
+   * @function clearAndRefetch
+   * @param {QueryClient} queryClient - React Query client instance
    */
   clearAndRefetch: queryClient => {
     queryClient.clear();
@@ -225,8 +266,9 @@ export const errorRecovery = {
   },
 
   /**
-   * Invalidate specific query patterns
-   * @param {QueryClient} queryClient - React Query client
+   * Invalidate specific query patterns to force refetch of related data
+   * @function invalidatePattern
+   * @param {QueryClient} queryClient - React Query client instance
    * @param {Array} queryKey - Query key pattern to invalidate
    */
   invalidatePattern: (queryClient, queryKey) => {
@@ -234,12 +276,11 @@ export const errorRecovery = {
   },
 
   /**
-   * Invalidate content queries (useful after CMS updates)
-   * @param {QueryClient} queryClient - React Query client
+   * Invalidate all content queries (useful after CMS updates)
+   * @function invalidateContent
+   * @param {QueryClient} queryClient - React Query client instance
    */
   invalidateContent: queryClient => {
     queryClient.invalidateQueries({ queryKey: queryKeys.content.all });
   },
 };
-
-export default QueryProvider;

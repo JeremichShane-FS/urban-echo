@@ -4,9 +4,5 @@
  * Enables clean imports and consistent button component usage across the application
  */
 
-// =================================================================
-// BUTTON COMPONENTS
-// =================================================================
-
 export { default as Button } from "./Button";
 export { default as MenuToggle } from "./MenuToggle";

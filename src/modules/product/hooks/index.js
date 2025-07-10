@@ -1,7 +1,8 @@
 /**
  * @fileoverview Barrel export file for product-related custom hooks
- * This file centralizes exports for all product hooks in the project
- * making imports cleaner and more organized across components.
+ * Provides unified access to product data hooks for listings, details, filtering, and user interactions
+ * Simplifies import statements across components and maintains clean project architecture
+ * Centralizes advanced React hooks for product data management across the Urban Echo application
  *
  * @example - Instead of multiple imports:
  * import { useFeaturedProducts } from '@modules/product/hooks/useFeaturedProducts';

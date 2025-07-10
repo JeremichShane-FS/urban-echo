@@ -1,5 +1,24 @@
+/**
+ * @fileoverview Presentational component for shop landing page layout with category grid and product sections
+ * Handles responsive layout with category cards, promotional banners, inspiration grid, and product recommendations
+ * Provides comprehensive shopping experience with visual category navigation and curated product discovery
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering shop landing page with category navigation and product sections
+ * @component
+ * @param {React.ComponentType} Button - Button component for call-to-action elements
+ * @param {React.ComponentType} Link - Next.js Link component for navigation
+ * @param {Array<Object>} categories - Product categories with images and descriptions for navigation
+ * @param {string|null} error - Error message if data loading fails
+ * @param {Array<Object>} featuredProducts - Featured products for recommendations section
+ * @param {boolean} isLoading - Loading state indicator for data fetching
+ * @param {Array<Object>} newArrivals - New arrival products for inspiration section
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered shop landing page with comprehensive e-commerce layout
+ */
 const ShopLandingView = ({
   Button,
   Link,

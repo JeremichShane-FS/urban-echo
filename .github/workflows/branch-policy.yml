@@ -1,16 +1,70 @@
-name: Branch Policy
+# =================================================================
+# BRANCH POLICY ENFORCEMENT WORKFLOW
+# =================================================================
+# Purpose: Enforces Git workflow standards for production deployments
+# Trigger: Pull requests targeting the main (production) branch
+# Policy: Only staging branch can merge into main branch
+#
+# This workflow ensures proper deployment flow:
+# feature/dev → staging → main (production)
+#
+# Benefits:
+# - Prevents direct commits to production
+# - Ensures all changes go through staging testing
+# - Maintains stable production environment
+# - Enforces proper code review process
+# =================================================================
+
+name: "Branch Policy Enforcement"
+
+# Only runs on pull requests targeting the main branch
+# This prevents accidental direct commits to production
 on:
   pull_request:
     branches: [main]
 
 jobs:
+  # =================================================================
+  # VALIDATE PULL REQUEST SOURCE BRANCH
+  # =================================================================
+  # Ensures that only the staging branch can create PRs to main
+  # This enforces the proper deployment pipeline and prevents
+  # feature branches from accidentally deploying to production
+
   check-source-branch:
+    name: "Validate PR Source Branch"
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check if PR is from staging
+      - name: "Enforce Staging-to-Main Policy"
         run: |
+          echo "🔍 Checking pull request source branch..."
+          echo "📋 Current PR: ${{ github.head_ref }} → ${{ github.base_ref }}"
+          echo ""
+
+          # Verify that the source branch is 'staging'
           if [[ "${{ github.head_ref }}" != "staging" ]]; then
-            echo "❌ PRs to main must come from staging branch only"
+            echo "❌ BRANCH POLICY VIOLATION"
+            echo ""
+            echo "🚫 Pull requests to 'main' branch must originate from 'staging' branch only"
+            echo "📝 Current source branch: '${{ github.head_ref }}'"
+            echo "✅ Required source branch: 'staging'"
+            echo ""
+            echo "🔧 To fix this issue:"
+            echo "   1. Merge your changes into the 'staging' branch first"
+            echo "   2. Test thoroughly in staging environment"
+            echo "   3. Create a new PR from 'staging' to 'main'"
+            echo ""
+            echo "📖 Deployment flow: feature → staging → main"
+            echo ""
             exit 1
           fi
-          echo "✅ PR is from staging branch"
+
+          echo "✅ BRANCH POLICY COMPLIANCE"
+          echo "🎉 Pull request source branch 'staging' is valid"
+          echo "🚀 This PR follows proper deployment workflow"
+          echo ""
+          echo "📋 Deployment Pipeline Status:"
+          echo "   ✅ Feature development completed"
+          echo "   ✅ Staging branch testing completed"
+          echo "   🔄 Ready for production deployment review"

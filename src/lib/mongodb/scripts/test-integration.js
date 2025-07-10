@@ -1,8 +1,19 @@
+/**
+ * @fileoverview Integration test script for verifying hybrid Strapi + MongoDB setup functionality
+ * Provides comprehensive testing of database connections, model integrity, data relationships, and API endpoints
+ * Includes environment validation, performance checks, and troubleshooting guidance for development setup
+ */
+
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import dbConnect from "../client.js";
 
 const ERROR_SOURCE = "integration-test";
 
+/**
+ * Logs error messages with context information for debugging
+ * @param {Error} error - Error object to log
+ * @param {Object} [context={}] - Additional context information for debugging
+ */
 const logError = (error, context = {}) => {
   console.error(`❌ [${ERROR_SOURCE}] ${error.message}`);
   if (Object.keys(context).length > 0) {
@@ -10,14 +21,25 @@ const logError = (error, context = {}) => {
   }
 };
 
-// Helper function to test database connection
+/**
+ * Tests MongoDB database connection and logs connection status
+ * @async
+ * @function testDatabaseConnection
+ * @throws {Error} If database connection fails
+ */
 async function testDatabaseConnection() {
   console.log("1. Testing MongoDB connection...");
   await dbConnect();
   console.log("✅ MongoDB connected\n");
 }
 
-// Helper function to import models
+/**
+ * Imports and validates MongoDB model modules for testing
+ * @async
+ * @function importModels
+ * @returns {Promise<Object>} Object containing imported Product, User, and Order models
+ * @throws {Error} If model import fails
+ */
 async function importModels() {
   console.log("2. Testing MongoDB models...");
   const Product = (await import("../utils/models/product.js")).default;
@@ -28,7 +50,15 @@ async function importModels() {
   return { Product, User, Order };
 }
 
-// Helper function to check collections
+/**
+ * Checks database collections and returns document counts for each model
+ * @async
+ * @function checkCollections
+ * @param {Model} Product - Product mongoose model
+ * @param {Model} User - User mongoose model
+ * @param {Model} Order - Order mongoose model
+ * @returns {Promise<Object>} Object containing document counts for each collection
+ */
 async function checkCollections(Product, User, Order) {
   console.log("3. Checking database collections...");
   const productCount = await Product.countDocuments();
@@ -43,7 +73,13 @@ async function checkCollections(Product, User, Order) {
   return { productCount, userCount, orderCount };
 }
 
-// Helper function to test product queries
+/**
+ * Tests product query functionality including featured products, new arrivals, and active products
+ * @async
+ * @function testProductQueries
+ * @param {Model} Product - Product mongoose model
+ * @param {number} productCount - Total number of products in database
+ */
 async function testProductQueries(Product, productCount) {
   if (productCount === 0) {
     console.log("4. ⚠️ No products found - run seed script first\n");
@@ -62,7 +98,11 @@ async function testProductQueries(Product, productCount) {
   displaySampleProduct(activeProducts);
 }
 
-// Helper function to display sample product
+/**
+ * Displays sample product information for testing verification
+ * @function displaySampleProduct
+ * @param {Array<Object>} activeProducts - Array of active product documents
+ */
 function displaySampleProduct(activeProducts) {
   if (activeProducts.length === 0) return;
 
@@ -76,7 +116,13 @@ function displaySampleProduct(activeProducts) {
   );
 }
 
-// Helper function to test user functionality
+/**
+ * Tests user functionality including virtual properties and data structure
+ * @async
+ * @function testUserFunctionality
+ * @param {Model} User - User mongoose model
+ * @param {number} userCount - Total number of users in database
+ */
 async function testUserFunctionality(User, userCount) {
   if (userCount === 0) {
     console.log("5. ⚠️ No users found - run seed script first\n");
@@ -95,7 +141,15 @@ async function testUserFunctionality(User, userCount) {
   console.log(`   Addresses: ${sampleUser.addresses?.length || 0}\n`);
 }
 
-// Helper function to test data relationships
+/**
+ * Tests data relationships between models including product variants and user wishlists
+ * @async
+ * @function testDataRelationships
+ * @param {Model} Product - Product mongoose model
+ * @param {Model} User - User mongoose model
+ * @param {number} productCount - Total number of products in database
+ * @param {number} userCount - Total number of users in database
+ */
 async function testDataRelationships(Product, User, productCount, userCount) {
   console.log("6. Testing data relationships...");
 
@@ -109,7 +163,12 @@ async function testDataRelationships(Product, User, productCount, userCount) {
   console.log("");
 }
 
-// Helper function to test product variants
+/**
+ * Tests product variants functionality and data integrity
+ * @async
+ * @function testProductVariants
+ * @param {Model} Product - Product mongoose model
+ */
 async function testProductVariants(Product) {
   const productWithVariants = await Product.findOne({ "variants.0": { $exists: true } });
   if (productWithVariants) {
@@ -119,7 +178,12 @@ async function testProductVariants(Product) {
   }
 }
 
-// Helper function to test user wishlist
+/**
+ * Tests user wishlist functionality and data relationships
+ * @async
+ * @function testUserWishlist
+ * @param {Model} User - User mongoose model
+ */
 async function testUserWishlist(User) {
   const userWithWishlist = await User.findOne({ "wishlist.0": { $exists: true } });
   if (userWithWishlist) {
@@ -127,7 +191,11 @@ async function testUserWishlist(User) {
   }
 }
 
-// Helper function to test Strapi connection
+/**
+ * Tests Strapi CMS connection and API availability
+ * @async
+ * @function testStrapiConnection
+ */
 async function testStrapiConnection() {
   console.log("7. Testing Strapi connection...");
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
@@ -152,7 +220,10 @@ async function testStrapiConnection() {
   console.log("");
 }
 
-// Helper function for environment check
+/**
+ * Checks and displays environment configuration status
+ * @function checkEnvironment
+ */
 function checkEnvironment() {
   console.log("8. Environment check...");
   console.log(`   Node environment: ${process.env.NODE_ENV || "development"}`);
@@ -161,7 +232,10 @@ function checkEnvironment() {
   console.log(`   Strapi token configured: ${!!process.env.NEXT_PUBLIC_STRAPI_TOKEN}\n`);
 }
 
-// Helper function to display API endpoints
+/**
+ * Displays available API endpoints for manual testing
+ * @function displayAPIEndpoints
+ */
 function displayAPIEndpoints() {
   console.log("9. API endpoints (test these in browser after seeding):");
   console.log("   • http://localhost:3000/api/products");
@@ -170,7 +244,15 @@ function displayAPIEndpoints() {
   console.log("   • http://localhost:3000/api/cart?items=PRODUCT_ID\n");
 }
 
-// Helper function to check database indexes
+/**
+ * Checks database indexes for performance optimization verification
+ * @async
+ * @function checkDatabaseIndexes
+ * @param {Model} Product - Product mongoose model
+ * @param {Model} User - User mongoose model
+ * @param {number} productCount - Total number of products in database
+ * @param {number} userCount - Total number of users in database
+ */
 async function checkDatabaseIndexes(Product, User, productCount, userCount) {
   console.log("10. Checking database indexes...");
 
@@ -185,13 +267,19 @@ async function checkDatabaseIndexes(Product, User, productCount, userCount) {
   }
 }
 
-// Helper function to display completion messages
+/**
+ * Displays test completion success messages
+ * @function displayCompletionMessages
+ */
 function displayCompletionMessages() {
   console.log("🎉 Hybrid setup test completed successfully!");
   console.log("✨ MongoDB + Strapi integration is ready for development!");
 }
 
-// Helper function to display troubleshooting tips
+/**
+ * Displays troubleshooting tips for common setup issues
+ * @function displayTroubleshootingTips
+ */
 function displayTroubleshootingTips() {
   console.error("\n🔧 Troubleshooting:");
   console.error("   1. MongoDB Atlas is running");
@@ -201,7 +289,12 @@ function displayTroubleshootingTips() {
   console.error("   5. Verify internet connection for MongoDB Atlas access");
 }
 
-// Main function with reduced complexity
+/**
+ * Main integration test function that orchestrates all testing procedures
+ * @async
+ * @function testHybridSetup
+ * @throws {Error} If any part of the integration test fails
+ */
 async function testHybridSetup() {
   console.log("🧪 Testing Hybrid Strapi + MongoDB Setup...\n");
 

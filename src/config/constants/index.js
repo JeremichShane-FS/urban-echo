@@ -4,10 +4,6 @@
  * Enables clean imports and consistent constant usage across all application modules and components
  */
 
-// =================================================================
-// APPLICATION CONSTANTS
-// =================================================================
-
 export * from "./api-constants";
 export * from "./api-utils-constants";
 export * from "./category-constants";

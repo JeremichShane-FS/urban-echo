@@ -13,7 +13,7 @@ import { useCallback } from "react";
  * @param {Object} product - Product data object containing id and name for tracking
  * @returns {Object} Object containing memoized click handler function
  */
-export const useProductCard = ({ onClick, product }) => {
+const useProductCard = ({ onClick, product }) => {
   const handleProductClick = useCallback(() => {
     if (onClick) {
       onClick(product.id, product.name);
@@ -24,3 +24,5 @@ export const useProductCard = ({ onClick, product }) => {
     handleProductClick,
   };
 };
+
+export default useProductCard;

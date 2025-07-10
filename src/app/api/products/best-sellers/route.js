@@ -18,19 +18,7 @@ import {
   validatePagination,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Best sellers API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "best-sellers-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/products/best-sellers - Retrieve best-selling products by sales performance

@@ -13,19 +13,7 @@ import {
   createSuccessResponse,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Categories API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "categories-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/products/categories - Retrieve product categories with hierarchy and metadata

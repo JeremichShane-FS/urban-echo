@@ -1,5 +1,30 @@
+/**
+ * @fileoverview Order model schema for MongoDB with comprehensive e-commerce order management functionality
+ * Node.js version specifically designed for database seeding operations and npm script integration
+ * Provides order processing including items, addresses, pricing, status tracking, and payment integration
+ * Includes automatic order number generation, status management, and Stripe payment integration
+ */
+
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema definition for order documents with comprehensive e-commerce functionality
+ * @typedef {Object} OrderSchema
+ * @property {string} orderNumber - Unique order identifier with UE prefix (auto-generated)
+ * @property {ObjectId} user - Reference to user who placed the order (required)
+ * @property {Array<Object>} items - Order items with product references, variants, quantities, and pricing
+ * @property {Object} shippingAddress - Customer's shipping address information
+ * @property {Object} billingAddress - Customer's billing address information
+ * @property {number} subtotal - Order subtotal before shipping and tax (required)
+ * @property {number} shipping - Shipping cost (default: 0)
+ * @property {number} tax - Tax amount (default: 0)
+ * @property {number} total - Order total including all charges (required)
+ * @property {string} status - Order status (pending, processing, shipped, delivered, cancelled)
+ * @property {string} paymentStatus - Payment status (pending, paid, failed, refunded)
+ * @property {string} stripePaymentIntentId - Stripe payment intent ID for payment tracking
+ * @property {string} trackingNumber - Shipping tracking number
+ * @property {string} notes - Additional order notes
+ */
 const orderSchema = new mongoose.Schema(
   {
     orderNumber: {
@@ -103,6 +128,7 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
+// Database indexes for optimized query performance
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ status: 1 });
 

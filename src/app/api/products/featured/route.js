@@ -18,19 +18,7 @@ import {
   validatePagination,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Featured products API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "featured-products-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/products/featured - Retrieve manually curated featured products

@@ -1,5 +1,24 @@
+/**
+ * @fileoverview Presentational component for footer layout with responsive grid and navigation sections
+ * Handles company branding, navigation links, social media links, and back-to-top functionality
+ * Provides accessibility features with proper ARIA labels and semantic HTML structure
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering footer layout with responsive navigation grid and company information
+ * @component
+ * @param {React.ComponentType} Image - Next.js Image component for optimized logo rendering
+ * @param {React.ComponentType} Link - Next.js Link component for client-side navigation
+ * @param {Object} companyInfo - Company information including name, address, and logo
+ * @param {string} copyrightText - Dynamic copyright text with current year
+ * @param {Function} onLinkClick - Handler for link click analytics tracking
+ * @param {Object} sections - Pre-organized navigation sections (shop, about, help)
+ * @param {Array<Object>} socialLinks - Social media platform links and labels
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered footer with responsive grid layout and interactive elements
+ */
 const FooterView = ({
   Image,
   Link,

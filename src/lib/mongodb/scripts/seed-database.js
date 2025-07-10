@@ -1,6 +1,16 @@
+/**
+ * @fileoverview Main database seeding script for Urban Echo e-commerce application
+ * Provides comprehensive data initialization including products, users, and validation
+ * Supports development environment setup with sample data and model verification
+ */
+
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import dbConnect from "../client.js";
 
+/**
+ * Sample product data for seeding the database with realistic e-commerce inventory
+ * @type {Array<Object>}
+ */
 const seedProducts = [
   {
     name: "Urban Casual Jacket",
@@ -163,6 +173,14 @@ const seedProducts = [
   },
 ];
 
+/**
+ * Main database seeding function that initializes all required collections with sample data
+ * Performs comprehensive setup including data clearing, model validation, and data insertion
+ * @async
+ * @function seedDatabase
+ * @returns {Promise<void>} Completes when seeding is finished or exits on error
+ * @throws {Error} When database connection fails or model validation errors occur
+ */
 async function seedDatabase() {
   try {
     console.log("🌱 Starting database seeding...\n");

@@ -10,11 +10,6 @@ import {
   createSuccessResponse,
   validateRequiredFields,
 } from "@modules/core/utils/api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
-
 /**
  * POST /api/errors - Log client-side errors for monitoring and debugging
  * @param {Request} request - Next.js API request object with error data

@@ -15,23 +15,8 @@ import {
   processImageUrl,
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
-
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Hero content API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- * @constant {Object} HERO_FALLBACKS - Fallback data for content failures
- */
 const ERROR_SOURCE = "hero-content-api";
 const HERO_FALLBACKS = API_FALLBACK_DATA.HERO;
-
-// =================================================================
-// UTILITY FUNCTIONS
-// =================================================================
-
 /**
  * Builds Strapi endpoint URL based on variant and request type
  * @param {string} variant - Content variant (default, holiday, sale, seasonal)
@@ -98,11 +83,6 @@ function transformSingleHeroContent(content, strapiUrl) {
   transformed.backgroundImage = processImageUrl(content.backgroundImage, strapiUrl);
   return transformed;
 }
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
-
 /**
  * GET /api/content/hero - Retrieve hero section content with variant support
  * @param {Request} request - Next.js API request object with URL search parameters

@@ -1,16 +1,20 @@
 /**
- * @fileoverview Barrel export file for core service modules
- * This file centralizes exports for all service modules in the project
- * making imports cleaner and more organized across components and hooks.
+ * @fileoverview Barrel export file for product service modules and API integration
+ * Provides unified access to product data services across the Urban Echo application
+ * Simplifies import statements across services with centralized exports
+ * Includes services for product listings, details, search, filtering, and recommendations
  *
- * @example
- * Instead of multiple imports:
- * import { bestSellersService } from './best-sellers';
- * import { featuredProductsService } from './featured-products';
- * import { newArrivalsService } from './new-arrivals';
+ * @example - Instead of multiple imports:
+ * import { bestSellersService } from '@modules/product/services/best-sellers';
+ * import { featuredProductsService } from '@modules/product/services/featured-products';
+ * import { newArrivalsService } from '@modules/product/services/new-arrivals';
  *
  * You can now import from a single location:
- * import { bestSellersService, featuredProductsService, newArrivalsService } from './services';
+ * import {
+ *   bestSellersService,
+ *   featuredProductsService,
+ *   newArrivalsService
+ * } from '@modules/product/services';
  */
 
 // Product Services

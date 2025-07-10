@@ -1,26 +1,56 @@
+# =================================================================
+# AUTO ISSUE CREATION WORKFLOW
+# =================================================================
+# Purpose: Automatically converts TODO/FIX comments into GitHub issues
+# Triggers: On push to dev branch or manual workflow dispatch
+# Features: Smart labeling, project assignment, and template validation
+#
+# This workflow streamlines development by:
+# - Converting code comments into trackable GitHub issues
+# - Applying intelligent labels based on content and templates
+# - Assigning issues to project boards for better organization
+# - Enforcing TODO/FIX comment standards across the codebase
+# =================================================================
+
 name: "Auto Issue Creation"
+
+# Workflow triggers - runs on dev branch pushes and manual dispatch
 on:
   push:
-    branches: [dev]
-  workflow_dispatch:
+    branches: [dev] # Only process dev branch to avoid main branch noise
+  workflow_dispatch: # Allow manual triggering for testing
 
 jobs:
+  # =================================================================
+  # JOB 1: CONVERT TODO COMMENTS TO GITHUB ISSUES
+  # =================================================================
+  # Uses alstr/todo-to-issue-action to scan code for TODO/FIX comments
+  # Creates GitHub issues with appropriate labels and templates
+  # Assigns issues to project boards using PROJECTS_SECRET
+
   todo-to-issue:
+    name: "Convert TODO/FIX Comments to Issues"
     runs-on: ubuntu-latest
     permissions:
-      issues: write
-      contents: read
+      issues: write # Required to create and modify GitHub issues
+      contents: read # Required to read repository code for scanning
+
     steps:
-      - uses: actions/checkout@v4
-      - name: "TODO to Issue"
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+
+      - name: "Scan Code and Create Issues"
         uses: alstr/todo-to-issue-action@v5
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          # CLOSE_ISSUES: "true"
-          AUTO_P: "false"
-          PROJECT: "user/JeremichShane-FS/urban-echo"
-          PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}"
+          # CLOSE_ISSUES: "true"  # Uncomment to auto-close resolved TODOs
+          AUTO_P: "false" # Disable auto-assignment to prevent noise
+          PROJECT: "user/JeremichShane-FS/urban-echo" # Project board for issue organization
+          PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}" # Project access token
+
+          # Comment type identifiers with automatic label application
+          # Each identifier maps to specific labels for better issue categorization
           IDENTIFIERS: >
             [
               {"name": "TODO:", "labels": ["auto-generated", "type: enhancement"]},
@@ -30,44 +60,77 @@ jobs:
               {"name": "NOTE:", "labels": ["auto-generated", "type: documentation"]},
               {"name": "REVIEW:", "labels": ["auto-generated", "needs-review"]}
             ]
+
+          # Issue template with file reference and code snippet
+          # Provides context for developers working on the issue
           ISSUE_TEMPLATE: "{{ body }}\n\n---\n**File:** [{{ url }}]({{ url }})\n\n{{ snippet }}\n"
 
+  # =================================================================
+  # JOB 2: APPLY INTELLIGENT LABELS AND CATEGORIZATION
+  # =================================================================
+  # Analyzes newly created issues and applies smart labels based on:
+  # - Template patterns (COMPONENT, API, SECURITY, etc.)
+  # - Content analysis (technology mentions, performance keywords)
+  # - Priority assignment based on comment type and template
+
   apply-smart-labels:
-    needs: [todo-to-issue]
+    name: "Apply Smart Labels and Project Assignment"
+    needs: [todo-to-issue] # Wait for issues to be created first
     runs-on: ubuntu-latest
     permissions:
-      issues: write
-      contents: read
+      issues: write # Required to modify issue labels and assignments
+      contents: read # Required for repository access
+
     steps:
-      - uses: actions/checkout@v4
-      - name: "Apply Smart Labels (No Validation Needed)"
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+
+      - name: "Process Recent Issues with Smart Labeling"
         run: |
-          echo "🏷️ Applying smart labels to recent TODO/FIX issues..."
-          echo "ℹ️ Validation already handled by pre-commit hook"
+          echo "🏷️  Starting smart label application for recent TODO/FIX issues..."
+          echo "ℹ️  Comment validation already handled by pre-commit hook"
+
+          # Wait for issue creation to complete and propagate
+          echo "⏱️  Waiting 30 seconds for issue creation to complete..."
           sleep 30
 
+          # Calculate cutoff time for recent issues (last 5 minutes)
           CUTOFF_TIME=$(date -d '5 minutes ago' --iso-8601=seconds)
+          echo "🕐 Processing issues created after: $CUTOFF_TIME"
 
-          gh issue list --limit 20 --json number,title,body,createdAt | jq -r --arg cutoff "$CUTOFF_TIME" '.[] | select(.createdAt > $cutoff) | "\(.number)|\(.title)"' | while IFS='|' read -r number title; do
+          # Fetch and process recent issues created by the todo-to-issue action
+          gh issue list --limit 20 --json number,title,body,createdAt | \
+          jq -r --arg cutoff "$CUTOFF_TIME" \
+          '.[] | select(.createdAt > $cutoff) | "\(.number)|\(.title)"' | \
+          while IFS='|' read -r number title; do
+            
             if [[ -n "$number" && -n "$title" ]]; then
+              echo ""
               echo "📝 Processing validated issue #$number: $title"
               
+              # Fetch issue body for content analysis
               ISSUE_BODY=$(gh issue view "$number" --json body --jq '.body' 2>/dev/null || echo "")
               
+              # Verify this is a todo-to-issue generated issue
               if [[ "$ISSUE_BODY" =~ \*\*File:\*\* ]]; then
-                # Extract template (guaranteed valid from pre-commit validation)
+                
+                # Extract template from title (guaranteed valid from pre-commit validation)
                 TEMPLATE=$(echo "$title" | grep -o '^\[[^]]*\]' | tr '[:lower:]' '[:upper:]')
                 TEMPLATE_NAME=$(echo "$TEMPLATE" | sed 's/\[//g' | sed 's/\]//g')
                 
                 echo "   🎯 Processing validated template: [$TEMPLATE_NAME]"
                 
-                # Assign to author (project assignment handled by todo-to-issue action with PROJECTS_SECRET)
+                # Assign issue to the commit author
                 gh issue edit "$number" --add-assignee "$GITHUB_ACTOR" 2>/dev/null || true
                 
-                # Template-based labeling (simplified - no validation checks needed!)
+                # =================================================================
+                # TEMPLATE-BASED LABEL ASSIGNMENT
+                # =================================================================
+                # Apply labels based on template patterns with appropriate priorities
+                
                 case "$TEMPLATE_NAME" in
                   "CI"|"CD"|"WORKFLOW"|"AUTOMATION"|"ACTIONS"|"DEPLOY"|"BUILD")
-                    echo "     🔧 CI/CD template"
+                    echo "     🔧 CI/CD infrastructure template detected"
                     gh issue edit "$number" --add-label "ci/cd" 2>/dev/null || true
                     if [[ "$TEMPLATE_NAME" =~ ^(CI|CD|DEPLOY|BUILD)$ ]]; then
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
@@ -75,27 +138,31 @@ jobs:
                       gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     fi
                     ;;
+                    
                   "COMPONENT"|"UI/UX")
-                    echo "     🎨 Frontend template"
+                    echo "     🎨 Frontend component template detected"
                     gh issue edit "$number" --add-label "area: frontend,priority: medium" 2>/dev/null || true
                     ;;
+                    
                   "ROUTES"|"DATA")
-                    echo "     🔌 API/Backend template"
+                    echo "     🔌 API/Backend template detected"
                     gh issue edit "$number" --add-label "area: api,area: backend,priority: medium" 2>/dev/null || true
                     ;;
+                    
                   "SECURITY")
-                    echo "     🔒 Security template"
+                    echo "     🔒 Security template detected"
                     gh issue edit "$number" --add-label "area: security,priority: high" 2>/dev/null || true
-                    # FIX vs TODO type logic
+                    # Security FIX comments are treated as vulnerabilities (bugs)
                     if [[ "$ISSUE_BODY" =~ FIX: ]]; then
                       echo "     🐛 Security FIX = vulnerability = bug type"
                       gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug" 2>/dev/null || true
                     fi
                     ;;
+                    
                   "BUG")
-                    echo "     🐛 Bug template"
+                    echo "     🐛 Bug template detected"
                     gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: bug" 2>/dev/null || true
-                    # FIX vs TODO priority logic
+                    # Priority assignment based on comment type
                     if [[ "$ISSUE_BODY" =~ FIX: ]]; then
                       echo "     🚨 FIX + [BUG] = HIGH priority"
                       gh issue edit "$number" --add-label "priority: high" 2>/dev/null || true
@@ -104,24 +171,29 @@ jobs:
                       gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     fi
                     ;;
+                    
                   "PERF")
-                    echo "     ⚡ Performance template"
+                    echo "     ⚡ Performance optimization template detected"
                     gh issue edit "$number" --add-label "performance,priority: medium" 2>/dev/null || true
                     ;;
+                    
                   "REFACTOR")
-                    echo "     🔧 Refactor template"
+                    echo "     🔧 Code refactoring template detected"
                     gh issue edit "$number" --add-label "tech-debt,priority: medium" 2>/dev/null || true
                     ;;
+                    
                   "TEST")
-                    echo "     🧪 Test template"
+                    echo "     🧪 Testing template detected"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     ;;
+                    
                   "DOCS")
-                    echo "     📚 Documentation template"
+                    echo "     📚 Documentation template detected"
                     gh issue edit "$number" --remove-label "type: enhancement" --add-label "type: documentation,priority: low" 2>/dev/null || true
                     ;;
+                    
                   "I18N"|"A11Y"|"ONBOARDING"|"RESEARCH"|"STATE"|"DEPENDENCY")
-                    echo "     📋 Special template: $TEMPLATE_NAME"
+                    echo "     📋 Special template detected: $TEMPLATE_NAME"
                     LABEL_NAME=$(echo "$TEMPLATE_NAME" | tr '[:upper:]' '[:lower:]')
                     gh issue edit "$number" --add-label "$LABEL_NAME" 2>/dev/null || true
                     if [[ "$TEMPLATE_NAME" == "DEPENDENCY" ]]; then
@@ -130,54 +202,68 @@ jobs:
                       gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     fi
                     ;;
+                    
                   "FEATURE")
-                    echo "     ✨ Feature template"
+                    echo "     ✨ Feature template detected"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     ;;
+                    
                   *)
-                    echo "     📋 Other template: $TEMPLATE_NAME"
+                    echo "     📋 Generic template detected: $TEMPLATE_NAME"
                     gh issue edit "$number" --add-label "priority: medium" 2>/dev/null || true
                     ;;
                 esac
                 
-                # Smart content detection (only analyze comment text)
+                # =================================================================
+                # CONTENT-BASED SMART LABELING
+                # =================================================================
+                # Analyze TODO comment content for technology and pattern detection
+                
+                # Extract TODO comment lines from code snippet for analysis
                 TODO_COMMENT_LINES=$(echo "$ISSUE_BODY" | sed -n '/```/,/```/p' | grep -E '^\s*//\s*(TODO|FIX):' | head -3)
                 ANALYSIS_TEXT="$title $TODO_COMMENT_LINES"
                 
-                # Technology detection
+                # Technology stack detection
                 if [[ "$ANALYSIS_TEXT" =~ (Next\.js|NextJS|Next) ]]; then
+                  echo "     ⚛️  Next.js technology detected"
                   gh issue edit "$number" --add-label "nextjs" 2>/dev/null || true
                 fi
                 
                 if [[ "$ANALYSIS_TEXT" =~ (MongoDB|mongo) ]]; then
+                  echo "     🍃 MongoDB database detected"
                   gh issue edit "$number" --add-label "mongodb" 2>/dev/null || true
                 fi
                 
                 if [[ "$ANALYSIS_TEXT" =~ (Stripe|stripe) ]]; then
+                  echo "     💳 Stripe payment integration detected"
                   gh issue edit "$number" --add-label "stripe" 2>/dev/null || true
                 fi
                 
                 if [[ "$ANALYSIS_TEXT" =~ (Auth0|auth0) ]]; then
+                  echo "     🔐 Auth0 authentication detected"
                   gh issue edit "$number" --add-label "auth0" 2>/dev/null || true
                 fi
                 
-                # Content-based labeling
+                # Pattern-based labeling
                 if [[ "$ANALYSIS_TEXT" =~ (console\.log|console\s+log|alert\(|debugger) ]]; then
-                  echo "     🧹 Debug code mentioned - adding cleanup"
+                  echo "     🧹 Debug code detected - adding cleanup label"
                   gh issue edit "$number" --add-label "cleanup" 2>/dev/null || true
                 fi
                 
                 if [[ "$ANALYSIS_TEXT" =~ (performance|optimize|optimization|speed|slow|bottleneck) ]] && [[ ! "$TEMPLATE_NAME" == "PERF" ]]; then
-                  echo "     ⚡ Performance keywords - adding performance"
+                  echo "     ⚡ Performance keywords detected - adding performance label"
                   gh issue edit "$number" --add-label "performance" 2>/dev/null || true
                 fi
                 
-                echo "   ✅ Smart labels applied to #$number"
+                echo "   ✅ Smart labels successfully applied to issue #$number"
               fi
             fi
           done
 
-          echo "🎉 Smart labeling complete!"
+          echo ""
+          echo "🎉 Smart labeling process completed successfully!"
+          echo "📊 All recent TODO/FIX issues have been processed and labeled"
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}

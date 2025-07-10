@@ -1,13 +1,42 @@
+/**
+ * @fileoverview Content management system (CMS) integration utilities for Strapi headless CMS
+ * Provides comprehensive Strapi API integration with authentication, error handling, and fallback strategies
+ * Handles content fetching, transformation, and error recovery for headless CMS architecture
+ * Includes image processing, content validation, and production-ready error management
+ */
+
 import { API_RESPONSE_MESSAGES, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
-import { errorHandler } from "@utils/errorHandler";
+import { errorHandler } from "@modules/core/utils";
 
 /**
- * Makes a request to Strapi CMS with authentication
- * @param {string} endpoint - Strapi endpoint (without base URL)
- * @param {string} source - Error source identifier
- * @returns {Promise<Response>} Fetch response object
+ * Makes authenticated requests to Strapi CMS with comprehensive error handling
+ * @async
+ * @function fetchFromStrapi
+ * @param {string} endpoint - Strapi endpoint path (without base URL, e.g., "hero-contents")
+ * @param {string} source - Error source identifier for debugging and logging
+ * @returns {Promise<Response>} Fetch response object for further processing
+ * @throws {Error} Enhanced error with status code when Strapi request fails
+ *
+ * @description
+ * Handles Strapi CMS integration with:
+ * - Environment-based URL configuration (local dev vs production)
+ * - Bearer token authentication for protected content
+ * - Comprehensive error handling and logging
+ * - Status code preservation for proper error categorization
+ *
+ * @example
+ * const response = await fetchFromStrapi("hero-contents", "hero-content-service");
+ * const data = await response.json();
+ * // Returns Strapi response with authentication headers
+ *
+ * @example
+ * try {
+ *   const response = await fetchFromStrapi("about-contents", "about-service");
+ * } catch (error) {
+ *   // Error includes status code and detailed context for fallback handling
+ * }
  */
-export async function fetchFromStrapi(endpoint, source) {
+export const fetchFromStrapi = async (endpoint, source) => {
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
   const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN;
 
@@ -34,16 +63,40 @@ export async function fetchFromStrapi(endpoint, source) {
   }
 
   return response;
-}
+};
 
 /**
- * Creates a fallback response when Strapi is unavailable
- * @param {Object} fallbackData - Default data to return
- * @param {Object} meta - Response metadata
- * @param {string} errorMessage - Error message that caused fallback
- * @returns {Response} JSON response with fallback data
+ * Creates standardized fallback responses when Strapi CMS is unavailable
+ * @function createFallbackResponse
+ * @param {Object} fallbackData - Default/static data to return when CMS is unavailable
+ * @param {Object} meta - Response metadata for tracking and debugging
+ * @param {string} errorMessage - Original error message that triggered fallback
+ * @returns {Response} JSON response with fallback data and metadata
+ *
+ * @description
+ * Provides graceful degradation when CMS is unavailable:
+ * - Returns structured fallback content with consistent API format
+ * - Includes metadata indicating fallback status and reason
+ * - Maintains successful HTTP status for frontend compatibility
+ * - Logs fallback usage for monitoring and debugging
+ *
+ * @example
+ * const fallbackResponse = createFallbackResponse(
+ *   { title: "Default Hero Title", subtitle: "Default subtitle" },
+ *   { contentType: "hero", version: "1.0" },
+ *   "Strapi server timeout"
+ * );
+ * // Returns Response with fallback data and metadata
+ *
+ * @example
+ * const aboutFallback = createFallbackResponse(
+ *   STATIC_ABOUT_CONTENT,
+ *   { contentType: "about" },
+ *   "Authentication failed"
+ * );
+ * // Provides static content when CMS authentication fails
  */
-export function createFallbackResponse(fallbackData, meta, errorMessage) {
+export const createFallbackResponse = (fallbackData, meta, errorMessage) => {
   console.warn("Using fallback content due to error:", errorMessage);
 
   return Response.json(
@@ -60,16 +113,32 @@ export function createFallbackResponse(fallbackData, meta, errorMessage) {
     },
     { status: HTTP_STATUS.OK }
   );
-}
+};
 
 /**
- * Handles Strapi content not found scenarios
- * @param {string} contentType - Type of content (hero, about, etc.)
- * @param {string} identifier - Content identifier
- * @param {string} source - Error source
- * @returns {Response} Not found response
+ * Handles Strapi content not found scenarios with proper error responses
+ * @function handleStrapiNotFound
+ * @param {string} contentType - Type of content that was not found (hero, about, etc.)
+ * @param {string} identifier - Content identifier or slug that was requested
+ * @param {string} source - Error source for logging and debugging
+ * @returns {Response} Standardized 404 response for missing content
+ *
+ * @description
+ * Handles missing content scenarios with:
+ * - Structured error logging for monitoring
+ * - Consistent 404 response format
+ * - Detailed error context for debugging
+ * - User-friendly error messages
+ *
+ * @example
+ * const notFoundResponse = handleStrapiNotFound("hero", "homepage-hero", "hero-service");
+ * // Returns 404 response with detailed error information
+ *
+ * @example
+ * const pageNotFound = handleStrapiNotFound("page-config", "checkout-page", "config-service");
+ * // Handles missing page configuration with proper error response
  */
-export function handleStrapiNotFound(contentType, identifier, source) {
+export const handleStrapiNotFound = (contentType, identifier, source) => {
   const noContentError = new Error(`No ${contentType} content found in CMS`);
   noContentError.status = HTTP_STATUS.NOT_FOUND;
 
@@ -88,15 +157,43 @@ export function handleStrapiNotFound(contentType, identifier, source) {
     },
     { status: HTTP_STATUS.NOT_FOUND }
   );
-}
+};
 
 /**
- * Common transformations for content with fallbacks
- * @param {Object} content - Raw content from Strapi
- * @param {Object} fallbacks - Default values for missing fields
- * @returns {Object} Transformed content with fallbacks applied
+ * Transforms raw CMS content with intelligent fallbacks for missing or empty fields
+ * @function transformContentWithFallbacks
+ * @param {Object} content - Raw content object from Strapi CMS
+ * @param {Object} fallbacks - Default values for missing or empty fields
+ * @param {string} [fallbacks.fieldName] - Default string value for text fields
+ * @param {boolean} [fallbacks.fieldName] - Default boolean value for flag fields
+ * @param {Array} [fallbacks.fieldName] - Default array value for list fields
+ * @returns {Object} Transformed content with fallbacks applied and standard fields
+ *
+ * @description
+ * Provides robust content transformation with:
+ * - Type-aware fallback application (string, boolean, array)
+ * - String trimming and empty string handling
+ * - Boolean null coalescing for proper flag handling
+ * - Array fallbacks for missing list content
+ * - Standard metadata fields (isActive, lastUpdated)
+ *
+ * @example
+ * const transformedContent = transformContentWithFallbacks(
+ *   { title: "", description: "Content here", isActive: null },
+ *   { title: "Default Title", description: "Default description", isActive: true }
+ * );
+ * // Returns: { title: "Default Title", description: "Content here", isActive: true, ... }
+ *
+ * @example
+ * const heroContent = transformContentWithFallbacks(rawHeroData, {
+ *   title: "Urban Echo Fashion",
+ *   subtitle: "Discover Your Style",
+ *   ctaText: "Shop Now",
+ *   features: []
+ * });
+ * // Applies fallbacks for missing hero content fields
  */
-export function transformContentWithFallbacks(content, fallbacks) {
+export const transformContentWithFallbacks = (content, fallbacks) => {
   const transformed = {};
 
   for (const [key, fallbackValue] of Object.entries(fallbacks)) {
@@ -116,16 +213,43 @@ export function transformContentWithFallbacks(content, fallbacks) {
   transformed.lastUpdated = content.updatedAt || new Date().toISOString();
 
   return transformed;
-}
+};
 
 /**
- * Processes image URLs from Strapi
- * @param {Object} image - Strapi image object
- * @param {string} strapiUrl - Base Strapi URL
- * @returns {string|null} Full image URL or null
+ * Processes and normalizes image URLs from Strapi CMS with proper URL handling
+ * @function processImageUrl
+ * @param {Object} image - Strapi image object with URL and metadata
+ * @param {string} [image.url] - Image URL (relative or absolute)
+ * @param {string} strapiUrl - Base Strapi URL for resolving relative paths
+ * @returns {string|null} Complete image URL or null if image unavailable
+ *
+ * @description
+ * Handles Strapi image URL processing:
+ * - Validates image object and URL existence
+ * - Detects absolute URLs (external images)
+ * - Resolves relative URLs with Strapi base URL
+ * - Returns null for missing or invalid images
+ *
+ * @example
+ * const imageUrl = processImageUrl(
+ *   { url: "/uploads/hero-image.jpg" },
+ *   "https://cms.urbanecho.com"
+ * );
+ * // Returns: "https://cms.urbanecho.com/uploads/hero-image.jpg"
+ *
+ * @example
+ * const externalImage = processImageUrl(
+ *   { url: "https://cdn.example.com/image.jpg" },
+ *   "https://cms.urbanecho.com"
+ * );
+ * // Returns: "https://cdn.example.com/image.jpg" (absolute URL unchanged)
+ *
+ * @example
+ * const missingImage = processImageUrl(null, "https://cms.urbanecho.com");
+ * // Returns: null (graceful handling of missing images)
  */
-export function processImageUrl(image, strapiUrl) {
+export const processImageUrl = (image, strapiUrl) => {
   if (!image?.url) return null;
   if (image.url.startsWith("http")) return image.url;
   return `${strapiUrl}${image.url}`;
-}
+};

@@ -1,5 +1,25 @@
+/**
+ * @fileoverview Presentational component for hero section layout with optimized image rendering
+ * Handles responsive image display with blur placeholder and accessibility features
+ * Provides semantic HTML structure with proper heading hierarchy and call-to-action integration
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering hero section with background image, content, and call-to-action
+ * @component
+ * @param {Object} BUTTON_SIZES - Button size constants for consistent styling
+ * @param {Object} BUTTON_VARIANTS - Button variant constants for consistent styling
+ * @param {React.ComponentType} Button - Button component for call-to-action elements
+ * @param {React.ComponentType} Image - Next.js Image component for optimized image rendering
+ * @param {React.ComponentType} Link - Next.js Link component for navigation
+ * @param {Object} heroData - Hero content data with title, subtitle, CTA text, and background image
+ * @param {boolean} isLoading - Loading state indicator for content fetching
+ * @param {Function} onCtaClick - Analytics handler for call-to-action button clicks
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered hero section with responsive layout and interactive elements
+ */
 const HeroSectionView = ({
   BUTTON_SIZES,
   BUTTON_VARIANTS,

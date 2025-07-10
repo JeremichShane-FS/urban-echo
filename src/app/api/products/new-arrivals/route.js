@@ -27,19 +27,7 @@ import {
   validateSort,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * New arrivals API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "new-arrivals-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/products/new-arrivals - Get new arrival products with pagination and sorting

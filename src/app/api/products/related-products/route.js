@@ -20,19 +20,7 @@ import {
 } from "@modules/core/utils/api";
 import { relatedProductsService } from "@modules/product/services";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Related products API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "related-products-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/products/related-products - Get products related to a specific product using intelligent matching

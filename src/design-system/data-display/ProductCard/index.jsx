@@ -9,7 +9,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 
 import ProductCardView from "./ProductCardView";
-import { useProductCard } from "./useProductCard";
+import useProductCard from "./useProductCard";
 
 import styles from "./ProductCard.module.scss";
 

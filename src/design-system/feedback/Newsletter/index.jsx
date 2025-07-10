@@ -6,10 +6,10 @@
 
 "use client";
 import { BUTTON_SIZES, BUTTON_VARIANTS, TOAST_TYPES } from "@config/constants";
-import Button from "@design-system/buttons/Button";
+import { Button } from "@design-system/buttons";
 
 import NewsletterView from "./NewsletterView";
-import { useNewsletter } from "./useNewsletter";
+import useNewsletter from "./useNewsletter";
 
 import styles from "./Newsletter.module.scss";
 

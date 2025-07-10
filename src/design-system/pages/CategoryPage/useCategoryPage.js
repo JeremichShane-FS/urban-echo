@@ -1,14 +1,47 @@
+/**
+ * @fileoverview Custom hook for managing category page state including filtering, sorting, and pagination
+ * Provides comprehensive e-commerce browsing functionality with React Query integration for data fetching
+ * Handles URL synchronization, filter state management, and optimized caching for enhanced user experience
+ */
+
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION } from "@config/constants";
 import { queryKeys } from "@modules/core/providers/query-provider";
 import { categoriesService } from "@modules/product/services/categories";
 import { productSearchService } from "@modules/product/services/product-search";
 import { productsService } from "@modules/product/services/products";
-import { useQuery } from "@tanstack/react-query";
 
-export function useCategoryPage(params) {
+/**
+ * Hook for managing category page state including products, filters, pagination, and URL synchronization
+ * @hook
+ * @param {Object} params - URL parameters object containing category information
+ * @param {string} [params.category] - Category slug from URL for filtering products
+ * @returns {Object} Category page state management and interaction handlers
+ * @returns {Array<Object>} returns.products - Filtered product data array for display
+ * @returns {Array<Object>} returns.categories - Available categories with product counts
+ * @returns {number} returns.totalProducts - Total count of products matching current filters
+ * @returns {number} returns.totalPages - Total number of pagination pages
+ * @returns {number} returns.currentPage - Current pagination page number
+ * @returns {string} returns.selectedCategory - Currently selected category identifier
+ * @returns {string} returns.sortBy - Current sort option selection
+ * @returns {Array<number>} returns.priceRange - Current price range filter values
+ * @returns {string} returns.searchTerm - Current search query string
+ * @returns {Object} returns.filters - Active filter states (onSale, newArrivals, freeShipping)
+ * @returns {string} returns.category - Original category parameter from URL
+ * @returns {boolean} returns.isLoading - Loading state indicator for product fetching
+ * @returns {Object|null} returns.error - Error object if data fetching fails
+ * @returns {Function} returns.handleCategoryChange - Handler for category selection changes with URL updates
+ * @returns {Function} returns.handleFilterChange - Handler for filter state changes with pagination reset
+ * @returns {Function} returns.handleSearch - Handler for search input changes with pagination reset
+ * @returns {Function} returns.handleSortChange - Handler for sort option changes with pagination reset
+ * @returns {Function} returns.handlePriceRangeChange - Handler for price range filter changes with pagination reset
+ * @returns {Function} returns.handlePageChange - Handler for pagination navigation with scroll behavior
+ */
+
+const useCategoryPage = params => {
   const router = useRouter();
   const category = params?.category || "all";
 
@@ -32,8 +65,8 @@ export function useCategoryPage(params) {
         includeProductCount: true,
         status: "active",
       }),
-    staleTime: CACHE_DURATION.long, // 24 hours
-    gcTime: CACHE_DURATION.veryLong, // 1 week
+    staleTime: CACHE_DURATION.long,
+    gcTime: CACHE_DURATION.veryLong,
     retry: 3,
   });
 
@@ -70,8 +103,8 @@ export function useCategoryPage(params) {
 
       return productsService.getProductsByCategory(selectedCategory, queryParams);
     },
-    staleTime: CACHE_DURATION.short, // 5 minutes
-    gcTime: CACHE_DURATION.medium, // 30 minutes
+    staleTime: CACHE_DURATION.short,
+    gcTime: CACHE_DURATION.medium,
     retry: 3,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     // Refetch when filters change
@@ -161,4 +194,6 @@ export function useCategoryPage(params) {
     handlePriceRangeChange,
     handlePageChange,
   };
-}
+};
+
+export default useCategoryPage;

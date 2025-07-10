@@ -15,21 +15,8 @@ import {
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Page configuration API settings
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- * @constant {Object} PAGE_CONFIG_FALLBACKS - Fallback data for content failures
- */
 const ERROR_SOURCE = "page-config-api";
 const PAGE_CONFIG_FALLBACKS = API_FALLBACK_DATA.PAGE_CONFIG;
-
-// =================================================================
-// UTILITY FUNCTIONS
-// =================================================================
 
 /**
  * Builds Strapi endpoint URL for page configuration retrieval
@@ -47,7 +34,7 @@ const PAGE_CONFIG_FALLBACKS = API_FALLBACK_DATA.PAGE_CONFIG;
  * const endpoint = buildStrapiEndpoint('shop', 'staging');
  * // Returns filtered endpoint for staging shop configuration
  */
-function buildStrapiEndpoint(pageName, environment) {
+function buildStrapiEndpoint(pageName, _environment) {
   return `page-configs?populate=*&filters[pageName][$eq]=${pageName}`;
 }
 
@@ -81,10 +68,6 @@ function transformPageConfig(config, pageName) {
     lastUpdated: transformed.updatedAt || new Date().toISOString(),
   };
 }
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/content/page-config - Retrieve page configuration with SEO and feature toggles

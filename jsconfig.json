@@ -1,3 +1,9 @@
+/**
+ * @fileoverview JavaScript configuration for Next.js project with TypeScript-like features and path mapping
+ * Provides module resolution, IntelliSense support, and import path aliases for improved developer experience
+ * Configures compilation targets, library support, and file inclusion patterns for optimal IDE integration
+ */
+
 {
   "compilerOptions": {
     // =================================================================

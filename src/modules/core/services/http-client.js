@@ -1,16 +1,19 @@
 /**
- * @fileoverview Base HTTP client for API requests
- * Handles error management, timeouts, and request/response processing
+ * @fileoverview Base HTTP client for comprehensive API request management with error handling and timeouts
+ * Provides RESTful HTTP methods with automatic request/response processing, error categorization, and timeout management
+ * Handles both client-side and server-side requests with environment-specific URL resolution
+ * Integrates with error handling system for consistent error reporting and recovery strategies
  */
 
 import { API_TIMEOUT, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
 import { errorHandler } from "@modules/core/utils";
 
 /**
- * Creates a status-specific error
- * @param {string} message - Error message
- * @param {number} status - HTTP status code
- * @returns {Error} Error with status property
+ * Creates a status-specific error with HTTP status code for proper error categorization
+ * @function createStatusError
+ * @param {string} message - Descriptive error message
+ * @param {number} status - HTTP status code for error categorization
+ * @returns {Error} Enhanced error object with status property for error handling
  */
 const createStatusError = (message, status) => {
   const error = new Error(message);
@@ -19,10 +22,22 @@ const createStatusError = (message, status) => {
 };
 
 /**
- * Base HTTP request function with comprehensive error handling
- * @param {string} endpoint - API endpoint
- * @param {Object} options - Fetch options
- * @returns {Promise<any>} Response data
+ * Base HTTP request function with comprehensive error handling, timeout management, and response processing
+ * @async
+ * @function request
+ * @param {string} endpoint - API endpoint path or full URL
+ * @param {Object} [options={}] - Fetch options including method, headers, body, etc.
+ * @returns {Promise<any>} Parsed response data from successful API call
+ * @throws {Error} Enhanced error with status code and error type for proper handling
+ *
+ * @description
+ * This function handles:
+ * - Automatic timeout management with AbortController
+ * - Environment-specific URL resolution (client vs server-side)
+ * - Standard JSON headers and response parsing
+ * - Comprehensive error categorization and logging
+ * - Rate limiting detection and handling
+ * - Network error detection and retry strategies
  */
 const request = async (endpoint, options = {}) => {
   const controller = new AbortController();
@@ -105,10 +120,16 @@ const request = async (endpoint, options = {}) => {
 };
 
 /**
- * GET request
- * @param {string} endpoint - API endpoint
- * @param {Object} params - URL parameters
- * @returns {Promise<any>} API response data
+ * Performs HTTP GET request with query parameter support
+ * @async
+ * @function get
+ * @param {string} endpoint - API endpoint path
+ * @param {Object} [params={}] - URL query parameters to append to the request
+ * @returns {Promise<any>} Parsed API response data
+ *
+ * @example
+ * const products = await get('products', { category: 'men', limit: 10 });
+ * // Makes request to: /api/products?category=men&limit=10
  */
 export const get = async (endpoint, params = {}) => {
   const searchParams = new URLSearchParams(params);
@@ -117,10 +138,16 @@ export const get = async (endpoint, params = {}) => {
 };
 
 /**
- * POST request
- * @param {string} endpoint - API endpoint
- * @param {Object} data - Request body data
- * @returns {Promise<any>} API response data
+ * Performs HTTP POST request with JSON body serialization
+ * @async
+ * @function post
+ * @param {string} endpoint - API endpoint path
+ * @param {Object} [data={}] - Request body data to be JSON serialized
+ * @returns {Promise<any>} Parsed API response data
+ *
+ * @example
+ * const newUser = await post('users', { name: 'John', email: 'john@example.com' });
+ * // Makes POST request with JSON body to: /api/users
  */
 export const post = async (endpoint, data = {}) => {
   return request(endpoint, {
@@ -130,10 +157,16 @@ export const post = async (endpoint, data = {}) => {
 };
 
 /**
- * PUT request
- * @param {string} endpoint - API endpoint
- * @param {Object} data - Request body data
- * @returns {Promise<any>} API response data
+ * Performs HTTP PUT request with JSON body serialization for resource updates
+ * @async
+ * @function put
+ * @param {string} endpoint - API endpoint path
+ * @param {Object} [data={}] - Request body data to be JSON serialized
+ * @returns {Promise<any>} Parsed API response data
+ *
+ * @example
+ * const updatedUser = await put('users/123', { name: 'John Updated' });
+ * // Makes PUT request with JSON body to: /api/users/123
  */
 export const put = async (endpoint, data = {}) => {
   return request(endpoint, {
@@ -143,13 +176,17 @@ export const put = async (endpoint, data = {}) => {
 };
 
 /**
- * DELETE request
- * @param {string} endpoint - API endpoint
- * @returns {Promise<any>} API response data
- * @description  Since delete is a reserved keyword in JavaScript, I'm exporting it as `del` to avoid conflicts.
+ * Performs HTTP DELETE request for resource removal
+ * @async
+ * @function del
+ * @param {string} endpoint - API endpoint path
+ * @returns {Promise<any>} Parsed API response data
+ * @description Since delete is a reserved keyword in JavaScript, this function is exported as `del` to avoid conflicts.
+ *
+ * @example
+ * await del('users/123');
+ * // Makes DELETE request to: /api/users/123
  */
 export const del = async endpoint => {
   return request(endpoint, { method: "DELETE" });
 };
-
-export { del as delete };

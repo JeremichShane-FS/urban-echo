@@ -1,11 +1,9 @@
 /**
- * @fileoverview ESLint configuration for a professional e-commerce application
- * This configuration is designed to enforce best practices, maintainability, and performance for a modern React-based e-commerce platform.
- * It includes rules for React, accessibility, code quality, and modern JavaScript features.
- * The configuration is tailored for Next.js applications and integrates with various plugins to ensure a high-quality
- * codebase that adheres to industry standards.
- * It also includes rules for import sorting, destructuring, and organization to promote clean and efficient code practices.
- * The configuration is compatible with the latest ECMAScript features and is designed to work seamlessly with modern development tools.
+ * @fileoverview Comprehensive ESLint configuration for professional e-commerce React/Next.js application
+ * Enforces industry-standard best practices for code quality, accessibility, performance, and maintainability
+ * Integrates multiple specialized plugins for React, accessibility, imports, code quality, and modern JavaScript
+ * Provides tailored rule sets for different file types including special handling for test files
+ * Configured for Next.js applications with path aliases, modern ECMAScript features, and production-ready standards
  */
 
 import { dirname } from "path";
@@ -82,13 +80,13 @@ const eslintConfig = [
         },
         alias: {
           map: [
-            ["@styles", "./src/assets/styles"],
-            ["@utils", "./src/modules/core/utils"],
-            ["@design-system", "./src/design-system"],
+            ["@assets", "./src/assets"],
             ["@config", "./src/config"],
+            ["@design-system", "./src/design-system"],
             ["@lib", "./src/lib"],
             ["@modules", "./src/modules"],
-            ["@assets", "./src/assets"],
+            ["@styles", "./src/assets/styles"],
+            ["@utils", "./src/modules/core/utils"],
           ],
           extensions: [".js", ".jsx", ".ts", ".tsx"],
         },
@@ -173,18 +171,30 @@ const eslintConfig = [
         "error",
         {
           groups: [
-            // React, Next.js and external packages (npm/node_modules)
-            ["^react", "^next", "^(?!@|\\.)\\w+"],
-            // Internal imports
-            ["^@"],
+            // React, Next.js, and ALL external packages (including scoped ones)
+            [
+              "^react",
+              "^next",
+              "^(@(?!assets|config|design-system|lib|modules|styles|utils)[a-z0-9-]+/[a-z0-9-]+|[a-z0-9-]+)",
+            ],
+            // Internal aliases (your project-specific imports)
+            [
+              "^@assets",
+              "^@config",
+              "^@design-system",
+              "^@lib",
+              "^@modules",
+              "^@styles",
+              "^@utils",
+            ],
             // Relative imports
             ["^\\."],
-            // Side effect imports and type imports
-            ["^\\u0000", "^.+\\u0000$"],
+            // Side effect imports
+            ["^\\u0000"],
             // Style and asset imports
             [
-              "\\.(css|scss|sass|less|styl|module.css|module.scss)$",
               "\\.(svg|png|jpg|jpeg|gif|webp|ico|mp4|webm|mp3|wav)$",
+              "\\.(css|scss|sass|less|styl|module.css|module.scss)$",
             ],
           ],
         },

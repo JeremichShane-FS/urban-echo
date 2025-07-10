@@ -15,22 +15,8 @@ import {
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
 
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * About content API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- * @constant {Object} ABOUT_FALLBACKS - Fallback data for content failures
- */
 const ERROR_SOURCE = "about-content-api";
 const ABOUT_FALLBACKS = API_FALLBACK_DATA.ABOUT;
-
-// =================================================================
-// UTILITY FUNCTIONS
-// =================================================================
-
 /**
  * Builds Strapi endpoint URL for about content retrieval
  * @param {string} section - Content section (mission, vision, team, history)
@@ -78,10 +64,6 @@ function transformAboutContent(content, section) {
     lastUpdated: transformed.updatedAt || new Date().toISOString(),
   };
 }
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
 
 /**
  * GET /api/content/about - Retrieve about page content with section filtering

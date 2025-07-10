@@ -1,19 +1,49 @@
+/**
+ * @fileoverview MongoDB query building utilities for product search and filtering operations
+ * Provides comprehensive query construction for product searches, sorting, pagination, and field selection
+ * Handles complex search criteria including text search, price ranges, category filters, and boolean flags
+ * Includes validation and sanitization for pagination parameters and MongoDB-specific query optimization
+ */
+
 import { API_VALIDATION_LIMITS, DEFAULT_PAGINATION, FIELD_SELECTIONS } from "@config/constants";
 
 /**
- * Builds a MongoDB query for product searches
- * @param {Object} params - Search parameters
- * @param {string} params.query - Text search query
- * @param {string} params.category - Category filter
- * @param {number} params.minPrice - Minimum price filter
- * @param {number} params.maxPrice - Maximum price filter
- * @param {boolean} params.isActive - Filter for active products (default: true)
- * @param {boolean} params.isFeatured - Filter for featured products
- * @param {boolean} params.isNewArrival - Filter for new arrivals
- * @param {boolean} params.isBestSeller - Filter for best sellers
- * @returns {Object} MongoDB query object
+ * Builds a comprehensive MongoDB query for product searches with multiple filter criteria
+ * @function buildProductQuery
+ * @param {Object} [params={}] - Search parameters for filtering products
+ * @param {string} [params.query] - Text search query for name, description, tags, and brand
+ * @param {string} [params.category] - Category filter for product categorization
+ * @param {number} [params.minPrice] - Minimum price filter for price range queries
+ * @param {number} [params.maxPrice] - Maximum price filter for price range queries
+ * @param {boolean} [params.isActive=true] - Filter for active products (default: true)
+ * @param {boolean} [params.isFeatured] - Filter for featured products
+ * @param {boolean} [params.isNewArrival] - Filter for new arrival products
+ * @param {boolean} [params.isBestSeller] - Filter for best-selling products
+ * @returns {Object} MongoDB query object with structured filter conditions
+ *
+ * @description
+ * Creates complex MongoDB queries supporting:
+ * - Full-text search across multiple fields with case-insensitive regex
+ * - Price range filtering with flexible min/max bounds
+ * - Category-based filtering for product organization
+ * - Boolean flag filtering for featured, new arrivals, and best sellers
+ * - Active/inactive product state management
+ *
+ * @example
+ * const query = buildProductQuery({
+ *   query: "blue shirt",
+ *   category: "men",
+ *   minPrice: 25,
+ *   maxPrice: 100,
+ *   isFeatured: true
+ * });
+ * // Returns MongoDB query for featured men's products containing "blue shirt" between $25-$100
+ *
+ * @example
+ * const simpleQuery = buildProductQuery({ category: "women" });
+ * // Returns query for all active women's products
  */
-export function buildProductQuery(params = {}) {
+export const buildProductQuery = (params = {}) => {
   const {
     category,
     isActive = true,
@@ -56,15 +86,36 @@ export function buildProductQuery(params = {}) {
   if (isBestSeller !== undefined) mongoQuery.isBestSeller = isBestSeller;
 
   return mongoQuery;
-}
+};
 
 /**
- * Builds sort options for product queries
- * @param {string} sortBy - Sort field (price-low, price-high, rating, newest, oldest, relevance)
- * @param {string} query - Text query (affects relevance sorting)
- * @returns {Object} MongoDB sort object
+ * Builds MongoDB sort options for product queries with comprehensive sorting strategies
+ * @function buildSortOptions
+ * @param {string} [sortBy="newest"] - Sort field identifier (price-low, price-high, rating, newest, oldest, relevance, popularity)
+ * @param {string} [query=""] - Text query string (affects relevance sorting with text score)
+ * @returns {Object} MongoDB sort object with appropriate field ordering
+ *
+ * @description
+ * Provides multiple sorting strategies:
+ * - Price sorting (ascending/descending)
+ * - Rating-based sorting with review count secondary sort
+ * - Date-based sorting (newest/oldest)
+ * - Popularity sorting based on sales and ratings
+ * - Relevance sorting using MongoDB text search scores
+ *
+ * @example
+ * const sortOptions = buildSortOptions("price-low");
+ * // Returns: { price: 1 } (ascending price sort)
+ *
+ * @example
+ * const relevanceSort = buildSortOptions("relevance", "blue shirt");
+ * // Returns: { score: { $meta: "textScore" } } (text search relevance)
+ *
+ * @example
+ * const popularitySort = buildSortOptions("popularity");
+ * // Returns: { salesCount: -1, averageRating: -1 } (multi-field popularity sort)
  */
-export function buildSortOptions(sortBy = "newest", query = "") {
+export const buildSortOptions = (sortBy = "newest", query = "") => {
   const sortOptionsMap = {
     "price-low": { price: 1 },
     "price-high": { price: -1 },
@@ -85,17 +136,40 @@ export function buildSortOptions(sortBy = "newest", query = "") {
 
   // Default to newest
   return sortOptionsMap.newest;
-}
+};
 
 /**
- * Builds pagination parameters
- * @param {Object} params - Pagination parameters
- * @param {number} params.page - Current page number
- * @param {number} params.limit - Items per page
- * @param {number} params.maxLimit - Maximum allowed limit (default: 100)
- * @returns {Object} Pagination object with skip, limit, page
+ * Builds validated pagination parameters with safety limits and sanitization
+ * @function buildPagination
+ * @param {Object} [params={}] - Pagination parameters from request
+ * @param {number} [params.page] - Current page number (1-based indexing)
+ * @param {number} [params.limit] - Items per page requested
+ * @param {number} [params.maxLimit] - Maximum allowed limit override (default from constants)
+ * @returns {Object} Sanitized pagination object with skip, limit, and page values
+ * @returns {number} returns.page - Validated page number (minimum 1)
+ * @returns {number} returns.limit - Validated limit (within allowed bounds)
+ * @returns {number} returns.skip - Calculated skip value for MongoDB
+ *
+ * @description
+ * Provides secure pagination with:
+ * - Input sanitization and validation
+ * - Maximum limit enforcement for performance
+ * - Minimum value constraints (page >= 1, limit >= 1)
+ * - Skip calculation for MongoDB offset-based pagination
+ *
+ * @example
+ * const pagination = buildPagination({ page: 2, limit: 20 });
+ * // Returns: { page: 2, limit: 20, skip: 20 }
+ *
+ * @example
+ * const safePagination = buildPagination({ page: -1, limit: 1000 });
+ * // Returns: { page: 1, limit: 100, skip: 0 } (sanitized to safe values)
+ *
+ * @example
+ * const defaultPagination = buildPagination({});
+ * // Returns default pagination from constants
  */
-export function buildPagination(params = {}) {
+export const buildPagination = (params = {}) => {
   const {
     limit = DEFAULT_PAGINATION.limit,
     maxLimit = API_VALIDATION_LIMITS.MAX_PRODUCTS_PER_REQUEST,
@@ -111,13 +185,33 @@ export function buildPagination(params = {}) {
     limit: sanitizedLimit,
     skip,
   };
-}
+};
 
 /**
- * Builds field selection for MongoDB queries
- * @param {string} type - Query type (listing, detail, minimal)
- * @returns {Object} MongoDB field selection object
+ * Builds MongoDB field selection objects for optimized query performance
+ * @function buildFieldSelection
+ * @param {string} [type="listing"] - Query type for field selection (listing, detail, minimal)
+ * @returns {Object} MongoDB field selection object for projection
+ *
+ * @description
+ * Optimizes database queries by selecting only required fields:
+ * - "listing": Fields needed for product lists and cards
+ * - "detail": Full product data for detail pages
+ * - "minimal": Minimal fields for search suggestions and autocomplete
+ * - Falls back to listing selection for unknown types
+ *
+ * @example
+ * const listingFields = buildFieldSelection("listing");
+ * // Returns optimized field selection for product listing pages
+ *
+ * @example
+ * const detailFields = buildFieldSelection("detail");
+ * // Returns full field selection for product detail pages
+ *
+ * @example
+ * const minimalFields = buildFieldSelection("minimal");
+ * // Returns minimal field selection for search autocomplete
  */
-export function buildFieldSelection(type = "listing") {
+export const buildFieldSelection = (type = "listing") => {
   return FIELD_SELECTIONS[type.toUpperCase()] || FIELD_SELECTIONS.LISTING;
-}
+};

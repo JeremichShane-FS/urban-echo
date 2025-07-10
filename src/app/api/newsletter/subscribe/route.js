@@ -18,21 +18,7 @@ import {
   createSuccessResponse,
   validateRequiredFields,
 } from "@modules/core/utils/api";
-
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Newsletter API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "newsletter-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
-
 /**
  * POST /api/newsletter/subscribe - Subscribe email to newsletter with preferences
  * @param {Request} request - Next.js API request object with subscription data

@@ -1,8 +1,79 @@
-import { CACHE_DURATION, DEFAULT_PAGINATION } from "@config/constants";
-import { queryKeys } from "@modules/core/providers/query-provider";
-import { getNewArrivals } from "@modules/core/services";
+/**
+ * @fileoverview Custom hook for fetching and managing new arrival products with advanced filtering
+ * Provides optimized data fetching with TanStack Query for performance, caching, and pagination
+ * Handles category filtering, pagination, sorting, and analytics tracking for user interactions
+ * Includes standardized data transformation and error handling for consistent component integration
+ */
+
 import { useQuery } from "@tanstack/react-query";
 
+import { CACHE_DURATION, DEFAULT_PAGINATION } from "@config/constants";
+import { queryKeys } from "@modules/core/providers";
+import { getNewArrivals } from "@modules/core/services";
+
+/**
+ * Custom hook for fetching and managing new arrival products with filtering and pagination
+ * @function useNewArrivals
+ * @param {Object} [options={}] - Configuration options for the hook
+ * @param {string} [options.category] - Optional category filter for new arrivals
+ * @param {boolean} [options.enabled=true] - Whether the query should run automatically
+ * @param {number} [options.limit=DEFAULT_PAGINATION.limit] - Number of products per page
+ * @param {number} [options.page=DEFAULT_PAGINATION.page] - Current page number (1-based)
+ * @param {string} [options.sortBy="createdAt"] - Field to sort results by
+ * @param {string} [options.sortOrder="desc"] - Sort direction ("asc" or "desc")
+ * @returns {Object} Hook result object with products, pagination, and handler functions
+ * @returns {Array} returns.products - Array of new arrival product objects
+ * @returns {Object} returns.pagination - Pagination metadata and navigation helpers
+ * @returns {Object} returns.filters - Current active filters applied to results
+ * @returns {boolean} returns.loading - Loading state indicator
+ * @returns {Error|null} returns.error - Error object if request fails
+ * @returns {Function} returns.handleProductClick - Analytics tracking for product clicks
+ * @returns {Function} returns.handleViewAllClick - Analytics tracking for "View All" clicks
+ * @returns {boolean} returns.isRefetching - Background refetch indicator
+ * @returns {Function} returns.refetch - Function to manually trigger data refresh
+ *
+ * @example
+ * // Basic usage with default options
+ * const { products, loading, error } = useNewArrivals();
+ *
+ * @example
+ * // With category filtering and custom pagination
+ * const {
+ *   products,
+ *   pagination,
+ *   handleProductClick
+ * } = useNewArrivals({
+ *   category: 'women',
+ *   limit: 12,
+ *   page: 2
+ * });
+ *
+ * @example
+ * // With custom sorting and analytics handlers
+ * const {
+ *   products,
+ *   loading,
+ *   handleProductClick,
+ *   handleViewAllClick
+ * } = useNewArrivals({
+ *   sortBy: 'price',
+ *   sortOrder: 'asc'
+ * });
+ *
+ * // Use in rendering
+ * return (
+ *   <div>
+ *     {products.map(product => (
+ *       <ProductCard
+ *         key={product.id}
+ *         product={product}
+ *         onClick={() => handleProductClick(product.id, product.name)}
+ *       />
+ *     ))}
+ *     <Button onClick={handleViewAllClick}>View All New Arrivals</Button>
+ *   </div>
+ * );
+ */
 export const useNewArrivals = (options = {}) => {
   const {
     category,
@@ -63,7 +134,16 @@ export const useNewArrivals = (options = {}) => {
   const pagination = data?.pagination || {};
   const filters = data?.filters || {};
 
-  // Business logic handlers
+  /**
+   * Tracks product click events in analytics
+   * @function handleProductClick
+   * @param {string} productId - ID of the clicked product
+   * @param {string} productName - Name of the clicked product
+   * @returns {void}
+   *
+   * @example
+   * handleProductClick('prod_123', 'Blue Denim Jacket');
+   */
   const handleProductClick = (productId, productName) => {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "select_content", {
@@ -75,6 +155,14 @@ export const useNewArrivals = (options = {}) => {
     }
   };
 
+  /**
+   * Tracks "View All" button clicks in analytics
+   * @function handleViewAllClick
+   * @returns {void}
+   *
+   * @example
+   * <Button onClick={handleViewAllClick}>View All New Arrivals</Button>
+   */
   const handleViewAllClick = () => {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "click", {

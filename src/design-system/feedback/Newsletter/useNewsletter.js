@@ -22,7 +22,7 @@ import { trackEvent } from "@modules/core/utils";
  * @returns {Function} returns.onSubmit - Handler for form submission
  * @returns {Function} returns.submitNewsletter - Direct submission function for programmatic use
  */
-export const useNewsletter = () => {
+const useNewsletter = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -111,3 +111,5 @@ export const useNewsletter = () => {
     submitNewsletter,
   };
 };
+
+export default useNewsletter;

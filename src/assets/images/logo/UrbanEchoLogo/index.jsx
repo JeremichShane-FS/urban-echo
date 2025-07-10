@@ -2,13 +2,7 @@
  * @fileoverview Urban Echo brand logo SVG component with urban skyline and sound wave elements
  * Renders the complete Urban Echo logo featuring an urban skyline silhouette with sound wave patterns
  * Provides scalable vector graphics for brand identity across all application interfaces and marketing materials
- */
-
-// =================================================================
-// LOGO COMPONENT
-// =================================================================
-
-/**
+ *
  * Urban Echo brand logo component with urban cityscape and sound wave design
  * @component
  * @returns {JSX.Element} SVG logo with urban skyline, sound waves, and brand text
@@ -16,18 +10,6 @@
  * @example
  * // Display logo in header navigation
  * <UrbanEchoLogo />
- *
- * @example
- * // Use logo with custom styling
- * <div className="w-32 h-12">
- *   <UrbanEchoLogo />
- * </div>
- *
- * @example
- * // Logo in footer with specific dimensions
- * <div style={{ width: '120px', height: '40px' }}>
- *   <UrbanEchoLogo />
- * </div>
  */
 const UrbanEchoLogo = () => {
   return (

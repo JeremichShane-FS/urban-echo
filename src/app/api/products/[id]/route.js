@@ -16,21 +16,7 @@ import {
   transformProductForDetail,
   validateRequiredFields,
 } from "@modules/core/utils/api";
-
-// =================================================================
-// CONFIGURATION CONSTANTS
-// =================================================================
-
-/**
- * Product detail API configuration
- * @constant {string} ERROR_SOURCE - Error tracking source identifier
- */
 const ERROR_SOURCE = "product-detail-api";
-
-// =================================================================
-// API ROUTE HANDLERS
-// =================================================================
-
 /**
  * GET /api/products/[id] - Retrieve complete product details by ID or slug
  * @param {Request} request - Next.js API request object
