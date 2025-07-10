@@ -48,9 +48,9 @@ echo "✅ Prettier configuration loaded successfully"
 # --allow-empty: Prevents failure when no files are staged
 
 echo "Running lint-staged on staged files..."
-echo "→ ESLint: Checking code quality and fixing auto-fixable issues"
-echo "→ Prettier: Formatting code for consistency"
-echo "→ Type checking: Validating TypeScript/JSDoc types"
+echo "→   ESLint: Checking code quality and fixing auto-fixable issues"
+echo "→   Prettier: Formatting code for consistency"
+echo "→   Type checking: Validating TypeScript/JSDoc types"
 
 npx lint-staged --allow-empty || {
   echo ""
@@ -74,5 +74,5 @@ rm -f .prettier.temp.json
 echo ""
 echo "✅ All pre-commit checks passed successfully!"
 echo "✅ Your code meets quality standards and is ready for commit"
-echo " → Staged files have been formatted and validated"
+echo "→  Staged files have been formatted and validated"
 echo ""
