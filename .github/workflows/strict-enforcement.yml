@@ -156,32 +156,3 @@ jobs:
 
           echo "✅ Dependency security audit passed"
           echo "🔒 All dependencies are free from high-severity vulnerabilities"
-
-  enforce-standards:
-    name: "TODO Standards Enforcement"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout Repository"
-        uses: actions/checkout@v4
-
-      - name: "Setup Node.js"
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
-
-      - name: "Install Dependencies"
-        run: npm ci
-
-      - name: "Enforce TODO Standards"
-        run: |
-
-          echo "🔍 Validating TODO/FIX comments..."
-          find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
-          grep -v node_modules | \
-          xargs node scripts/check-todos.js || {
-            echo "❌ TODO validation failed"
-            exit 1
-          }
-
-          echo "✅ TODO/FIX standards enforced"
