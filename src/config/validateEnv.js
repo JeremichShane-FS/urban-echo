@@ -1,12 +1,7 @@
 export function validateEnvironment() {
   const criticalVars = {
     development: ["MONGODB_URI", "NEXT_PUBLIC_STRAPI_URL"],
-    production: [
-      "MONGODB_URI",
-      "NEXT_PUBLIC_SITE_URL",
-      "NEXT_PUBLIC_STRAPI_URL",
-      "NEXT_PUBLIC_STRAPI_TOKEN",
-    ],
+    production: ["MONGODB_URI", "NEXT_PUBLIC_SITE_URL", "NEXT_PUBLIC_STRAPI_URL", "STRAPI_TOKEN"],
   };
 
   const env = process.env.NODE_ENV || "development";

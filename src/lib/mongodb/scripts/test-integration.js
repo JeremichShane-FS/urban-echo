@@ -229,7 +229,7 @@ function checkEnvironment() {
   console.log(`   Node environment: ${process.env.NODE_ENV || "development"}`);
   console.log(`   MongoDB URI configured: ${!!process.env.MONGODB_URI}`);
   console.log(`   Strapi URL configured: ${!!process.env.NEXT_PUBLIC_STRAPI_URL}`);
-  console.log(`   Strapi token configured: ${!!process.env.NEXT_PUBLIC_STRAPI_TOKEN}\n`);
+  console.log(`   Strapi token configured: ${!!process.env.STRAPI_TOKEN}\n`);
 }
 
 /**
