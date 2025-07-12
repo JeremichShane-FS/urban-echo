@@ -1,6 +1,41 @@
+/**
+ * @fileoverview Presentational component for category page layout with product grid and filtering interface
+ * Handles responsive layout with sidebar filters, product grid display, and pagination controls
+ * Provides comprehensive e-commerce browsing experience with search, sorting, and filtering capabilities
+ */
+
 import PropTypes from "prop-types";
 
-export default function CategoryPageView({
+/**
+ * View component for rendering category page with product grid, filters, and pagination
+ * @component
+ * @param {React.ComponentType} Button - Button component for interactive elements
+ * @param {React.ComponentType} Image - Next.js Image component for optimized product images
+ * @param {React.ComponentType} Link - Next.js Link component for product navigation
+ * @param {Array<Object>} categories - Available product categories with counts
+ * @param {string} category - Current active category slug
+ * @param {number} currentPage - Current pagination page number
+ * @param {Object|null} error - Error object if product loading fails
+ * @param {Object} filters - Active filter states (onSale, newArrivals, freeShipping)
+ * @param {Function} handleCategoryChange - Handler for category selection changes
+ * @param {Function} handleFilterChange - Handler for filter state changes
+ * @param {Function} handlePageChange - Handler for pagination navigation
+ * @param {Function} handlePriceRangeChange - Handler for price range filter changes
+ * @param {Function} handleSearch - Handler for search input changes
+ * @param {Function} handleSortChange - Handler for sort option changes
+ * @param {boolean} isLoading - Loading state indicator for product fetching
+ * @param {Array<number>} priceRange - Current price range filter values
+ * @param {Array<Object>} products - Product data array for grid display
+ * @param {Function} renderStars - Utility function for rendering star ratings
+ * @param {string} searchTerm - Current search query string
+ * @param {string} selectedCategory - Currently selected category identifier
+ * @param {string} sortBy - Current sort option selection
+ * @param {Object} styles - CSS module styles object for component styling
+ * @param {number} totalPages - Total number of pagination pages
+ * @param {number} totalProducts - Total count of products matching current filters
+ * @returns {JSX.Element} Rendered category page with comprehensive product browsing interface
+ */
+const CategoryPageView = ({
   Button,
   Image,
   Link,
@@ -25,7 +60,10 @@ export default function CategoryPageView({
   styles,
   totalPages,
   totalProducts,
-}) {
+}) => {
+  const safeProducts = Array.isArray(products) ? products : [];
+  const safeCategories = Array.isArray(categories) ? categories : [];
+
   if (error) {
     return (
       <div className={styles.error}>
@@ -43,7 +81,7 @@ export default function CategoryPageView({
       <section className={styles.header}>
         <div className={styles["header-content"]}>
           <div className={styles.breadcrumbs}>
-            <Link href="/shop" className={styles["breadcrumb-link"]}>
+            <Link className={styles["breadcrumb-link"]} href="/shop">
               Shop
             </Link>
             <span className={styles["breadcrumb-separator"]}>›</span>
@@ -63,29 +101,31 @@ export default function CategoryPageView({
               ? "Discover our complete collection of premium fashion"
               : `Explore our ${category} collection`}
           </p>
-          <div className={styles["results-count"]}>{totalProducts} products found</div>
+          <div className={styles["results-count"]}>
+            {isLoading ? "Loading..." : `${totalProducts} products found`}
+          </div>
         </div>
       </section>
 
       <div className={styles["content-grid"]}>
         <aside className={styles.sidebar}>
           <div className={styles["filter-group"]}>
-            <label htmlFor="product-search" className={styles["filter-label"]}>
+            <label className={styles["filter-label"]} htmlFor="product-search">
               Search Products
             </label>
             <input
-              id="product-search"
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
               className={styles["search-input"]}
+              id="product-search"
+              placeholder="Search..."
+              type="text"
+              value={searchTerm}
               onChange={e => handleSearch(e.target.value)}
             />
           </div>
 
           <div className={styles["filter-group"]}>
             <h3 className={styles["filter-title"]}>Categories</h3>
-            {categories.map(categoryItem => (
+            {safeCategories.map(categoryItem => (
               <Button
                 key={categoryItem.id}
                 className={`${styles["category-button"]} ${
@@ -104,11 +144,11 @@ export default function CategoryPageView({
             <h3 className={styles["filter-title"]}>Price Range</h3>
             <div className={styles["price-range-container"]}>
               <input
-                type="range"
-                min="0"
-                max="500"
-                value={priceRange[1]}
                 className={styles["price-range"]}
+                max="500"
+                min="0"
+                type="range"
+                value={priceRange[1]}
                 onChange={e => handlePriceRangeChange([0, parseInt(e.target.value)])}
               />
               <div className={styles["price-labels"]}>
@@ -123,27 +163,27 @@ export default function CategoryPageView({
             <div className={styles["checkbox-group"]}>
               <label className={styles["checkbox-label"]}>
                 <input
-                  type="checkbox"
                   checked={filters.onSale}
                   className={styles.checkbox}
+                  type="checkbox"
                   onChange={e => handleFilterChange("onSale", e.target.checked)}
                 />
                 On Sale
               </label>
               <label className={styles["checkbox-label"]}>
                 <input
-                  type="checkbox"
                   checked={filters.newArrivals}
                   className={styles.checkbox}
+                  type="checkbox"
                   onChange={e => handleFilterChange("newArrivals", e.target.checked)}
                 />
                 New Arrivals
               </label>
               <label className={styles["checkbox-label"]}>
                 <input
-                  type="checkbox"
                   checked={filters.freeShipping}
                   className={styles.checkbox}
+                  type="checkbox"
                   onChange={e => handleFilterChange("freeShipping", e.target.checked)}
                 />
                 Free Shipping
@@ -154,15 +194,18 @@ export default function CategoryPageView({
 
         <main className={styles["main-content"]}>
           <div className={styles["sort-controls"]}>
-            <div className={styles["product-count"]}>{totalProducts} Products</div>
+            <div className={styles["product-count"]}>
+              {isLoading ? "Loading..." : `${totalProducts} Products`}
+            </div>
             <div className={styles["sort-container"]}>
-              <label htmlFor="sort-select" className={styles["sort-label"]}>
+              <label className={styles["sort-label"]} htmlFor="sort-select">
                 Sort by:
               </label>
               <select
+                className={styles["sort-select"]}
+                disabled={isLoading}
                 id="sort-select"
                 value={sortBy}
-                className={styles["sort-select"]}
                 onChange={e => handleSortChange(e.target.value)}>
                 <option value="featured">Featured</option>
                 <option value="newest">Newest</option>
@@ -181,80 +224,92 @@ export default function CategoryPageView({
             </div>
           )}
 
-          {!isLoading && (
+          {!isLoading && safeProducts.length > 0 && (
             <div className={styles["products-grid"]}>
-              {products.map(product => (
-                <Link
-                  key={product._id || product.id}
-                  href={`/product/${product._id || product.id}`}
-                  className={styles["product-link"]}>
-                  <div className={styles["product-card"]}>
-                    <div className={styles["product-image-container"]}>
-                      <Image
-                        src={
-                          product.images?.[0] || product.image || "/images/placeholder-product.jpg"
-                        }
-                        alt={product.name}
-                        className={styles["product-image"]}
-                      />
+              {safeProducts.map(product => {
+                const productId = product._id || product.id;
+                const productImage =
+                  product.images?.[0] || product.image || "/images/placeholder-product.jpg";
+                const productName = product.name || "Unnamed Product";
+                const productPrice = product.price || 0;
+                const productOriginalPrice = product.originalPrice;
 
-                      <div className={styles.badges}>
-                        {product.isNew && <span className={styles["badge-new"]}>NEW</span>}
-                        {product.onSale && <span className={styles["badge-sale"]}>SALE</span>}
-                      </div>
+                return (
+                  <Link
+                    key={productId}
+                    className={styles["product-link"]}
+                    href={`/product/${productId}`}>
+                    <div className={styles["product-card"]}>
+                      <div className={styles["product-image-container"]}>
+                        <Image
+                          alt={productName}
+                          className={styles["product-image"]}
+                          height={400}
+                          priority={false}
+                          src={productImage}
+                          width={300}
+                        />
 
-                      <div className={styles["quick-actions"]}>
-                        <Button
-                          className={styles["wishlist-button"]}
-                          onClick={e => {
-                            e.preventDefault();
-                            // wishlist logic
-                          }}>
-                          ♡
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className={styles["product-info"]}>
-                      <h3 className={styles["product-name"]}>{product.name}</h3>
-
-                      {product.rating && (
-                        <div className={styles["product-rating"]}>
-                          <div className={styles.stars}>{renderStars(product.rating)}</div>
-                          <span className={styles["review-count"]}>
-                            ({product.reviewCount || 0} reviews)
-                          </span>
+                        <div className={styles.badges}>
+                          {product.isNewArrival && <span className={styles["badge-new"]}>NEW</span>}
+                          {product.onSale && <span className={styles["badge-sale"]}>SALE</span>}
                         </div>
-                      )}
 
-                      <div className={styles["product-footer"]}>
-                        <div className={styles.pricing}>
-                          <span className={styles["current-price"]}>${product.price}</span>
-                          {product.originalPrice && product.originalPrice > product.price && (
-                            <span className={styles["original-price"]}>
-                              ${product.originalPrice}
+                        <div className={styles["quick-actions"]}>
+                          <Button
+                            className={styles["wishlist-button"]}
+                            onClick={e => {
+                              e.preventDefault();
+                              // wishlist logic
+                            }}>
+                            ♡
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className={styles["product-info"]}>
+                        <h3 className={styles["product-name"]}>{productName}</h3>
+
+                        {product.rating && (
+                          <div className={styles["product-rating"]}>
+                            <div className={styles.stars}>{renderStars(product.rating)}</div>
+                            <span className={styles["review-count"]}>
+                              ({product.reviewCount || 0} reviews)
                             </span>
-                          )}
-                        </div>
+                          </div>
+                        )}
 
-                        <Button
-                          variant="primary"
-                          size="small"
-                          onClick={e => {
-                            e.preventDefault();
-                            // cart logic
-                          }}>
-                          Add to Cart
-                        </Button>
+                        <div className={styles["product-footer"]}>
+                          <div className={styles.pricing}>
+                            <span className={styles["current-price"]}>
+                              ${productPrice.toFixed(2)}
+                            </span>
+                            {productOriginalPrice && productOriginalPrice > productPrice && (
+                              <span className={styles["original-price"]}>
+                                ${productOriginalPrice.toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+
+                          <Button
+                            size="small"
+                            variant="primary"
+                            onClick={e => {
+                              e.preventDefault();
+                              // cart logic
+                            }}>
+                            Add to Cart
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           )}
 
-          {!isLoading && products.length === 0 && (
+          {!isLoading && safeProducts.length === 0 && (
             <div className={styles["no-products"]}>
               <h3>No products found</h3>
               <p>Try adjusting your filters or search terms.</p>
@@ -272,8 +327,8 @@ export default function CategoryPageView({
           {!isLoading && totalPages > 1 && (
             <div className={styles.pagination}>
               <Button
-                disabled={currentPage === 1}
                 className={styles["pagination-button"]}
+                disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}>
                 Previous
               </Button>
@@ -295,8 +350,8 @@ export default function CategoryPageView({
               </div>
 
               <Button
-                disabled={currentPage === totalPages}
                 className={styles["pagination-button"]}
+                disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}>
                 Next
               </Button>
@@ -306,10 +361,11 @@ export default function CategoryPageView({
       </div>
     </div>
   );
-}
+};
+
+export default CategoryPageView;
 
 CategoryPageView.displayName = "CategoryPageView";
-
 CategoryPageView.propTypes = {
   Button: PropTypes.elementType.isRequired,
   Image: PropTypes.elementType.isRequired,
@@ -343,7 +399,7 @@ CategoryPageView.propTypes = {
       id: PropTypes.string,
       image: PropTypes.string,
       images: PropTypes.arrayOf(PropTypes.string),
-      isNew: PropTypes.bool,
+      isNewArrival: PropTypes.bool,
       name: PropTypes.string.isRequired,
       onSale: PropTypes.bool,
       originalPrice: PropTypes.number,

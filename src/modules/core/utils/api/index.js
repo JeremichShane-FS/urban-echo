@@ -1,18 +1,21 @@
 /**
- * @fileoverview Barrel export file for core utility api functions
- * This file centralizes exports for all core utility api functions in the project
- * making imports cleaner and more organized across components.
+ * @fileoverview Centralized barrel export file for comprehensive API utility functions and helpers
+ * Provides unified access to product transformers, query builders, validation helpers, response builders, and CMS integration
+ * Simplifies import statements across API routes and maintains clean project architecture
+ * Exports specialized functions for MongoDB operations, Strapi CMS integration, and production-ready API development
  *
  * @example - Instead of multiple imports:
- * import { trackEvent } from '@modules/core/utils/api/analytics';
- * import { formatCurrency } from '@modules/core/utils/api/formatters';
- * import { isValidEmail } from '@modules/core/utils/api/validators';
+ * import { transformProduct } from '@modules/core/utils/api/productTransformers';
+ * import { buildProductQuery } from '@modules/core/utils/api/queryBuilders';
+ * import { createSuccessResponse } from '@modules/core/utils/api/responseBuilders';
+ * import { validatePagination } from '@modules/core/utils/api/validation';
  *
  * You can now import from a single location:
  * import {
- *   trackEvent,
- *   formatCurrency,
- *   isValidEmail
+ *   transformProduct,
+ *   buildProductQuery,
+ *   createSuccessResponse,
+ *   validatePagination
  * } from '@modules/core/utils/api';
  */
 

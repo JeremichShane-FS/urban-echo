@@ -1,7 +1,17 @@
+/**
+ * @fileoverview Database seeding script for Urban Echo beta demo with comprehensive test data
+ * Provides realistic e-commerce data including products, users, orders, and relationships for development and testing
+ * Creates demo data with proper variants, inventory levels, user profiles, and order history for full application testing
+ */
+
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable no-relative-import-paths/no-relative-import-paths */
 import dbConnect from "../client.js";
 
+/**
+ * Demo product data array with comprehensive e-commerce product information
+ * @type {Array<Object>} Array of product objects with variants, pricing, and metadata
+ */
 const demoProducts = [
   {
     name: "Urban Casual Jacket",
@@ -690,8 +700,15 @@ const createDemoOrders = (users, products) => {
   return orders;
 };
 
+/**
+ * Main seeding function that orchestrates the complete database setup
+ * Connects to MongoDB, clears existing data, and seeds with demo data
+ * @async
+ * @function seedBetaDemo
+ * @returns {Promise<void>} Resolves when seeding is complete
+ */
 async function seedBetaDemo() {
-  console.log("🎬 Starting Beta Demo Database Seeding...\n");
+  console.log("🌱 Starting Urban Echo Beta Demo Seeding...\n");
 
   try {
     await dbConnect();

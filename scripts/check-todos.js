@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
 /**
+ * @fileoverview TODO/FIX comment validation script for code quality enforcement in lint-staged integration
+ * Validates that TODO and FIX comments follow project standards with proper templates and content requirements
+ * Provides detailed error reporting for non-compliant comments and integrates with pre-commit hooks
+ */
+
+/**
  * TODO/FIX validation for lint-staged integration
  * Works with specific files passed as arguments
  */
@@ -8,6 +14,10 @@
 import fs from "fs";
 import process from "process";
 
+/**
+ * Valid template prefixes for TODO/FIX comments
+ * @constant {Array<string>}
+ */
 const VALID_TEMPLATES = [
   "COMPONENT",
   "UI/UX",
@@ -35,6 +45,13 @@ const VALID_TEMPLATES = [
   "BUILD",
 ];
 
+/**
+ * Validates a TODO/FIX comment against project standards
+ * @param {string} line - The source code line containing the comment
+ * @param {number} _lineNumber - Line number in the file (unused but kept for API consistency)
+ * @param {string} _fileName - File name (unused but kept for API consistency)
+ * @returns {Array<string>} Array of validation error messages, empty if valid
+ */
 function validateTodoComment(line, _lineNumber, _fileName) {
   const match = line.match(/\/\/\s*(TODO|FIX|FIXME|HACK|NOTE|REVIEW):\s*(.+)/);
   if (!match) return [];
@@ -85,6 +102,11 @@ function validateTodoComment(line, _lineNumber, _fileName) {
   return errors;
 }
 
+/**
+ * Checks a single file for TODO/FIX comment compliance
+ * @param {string} filePath - Path to the file to check
+ * @returns {boolean} True if all comments are valid, false if any errors found
+ */
 function checkFile(filePath) {
   if (!fs.existsSync(filePath)) return true;
 
@@ -107,6 +129,10 @@ function checkFile(filePath) {
   return !hasErrors;
 }
 
+/**
+ * Main function that orchestrates the TODO/FIX comment validation process
+ * Processes command-line arguments and validates specified files
+ */
 function main() {
   const files = process.argv.slice(2);
 

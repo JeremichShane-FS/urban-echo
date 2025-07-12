@@ -79,7 +79,6 @@
   }
 }
 
-// Sidebar Styles
 .sidebar {
   background-color: var(--color-background-primary);
   padding: var(--spacing-lg);
@@ -199,7 +198,6 @@
   margin-right: var(--spacing-sm);
 }
 
-// Main Content Styles
 .main-content {
   @include breakpoint(lg) {
     order: 1;
@@ -247,7 +245,6 @@
   font-size: var(--font-size-sm);
 }
 
-// Products Grid
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -394,7 +391,6 @@
   text-decoration: line-through;
 }
 
-// Loading State
 .loading {
   display: flex;
   flex-direction: column;
@@ -423,7 +419,6 @@
   }
 }
 
-// No Products
 .no-products {
   text-align: center;
   padding: var(--spacing-xxl);
@@ -439,7 +434,6 @@
   }
 }
 
-// Pagination
 .pagination {
   display: flex;
   justify-content: center;
@@ -492,7 +486,6 @@
   }
 }
 
-// Error State
 .error {
   min-height: 50vh;
   display: flex;

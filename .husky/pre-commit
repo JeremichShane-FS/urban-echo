@@ -1,14 +1,81 @@
 #!/bin/sh
 
-# Create a temporary Prettier configuration file using the project config
+# =================================================================
+# HUSKY PRE-COMMIT HOOK - E-COMMERCE PLATFORM
+# =================================================================
+# Purpose: Enforces code quality standards before each commit
+# Runs: ESLint, Prettier formatting, and lint-staged checks
+# Prevents: Commits that don't meet project quality standards
+# 
+# This hook ensures all code meets professional standards before
+# being committed to the repository, maintaining code consistency
+# across the entire e-commerce development team.
+# =================================================================
+
+echo "Starting pre-commit quality checks..."
+echo "Validating staged files for code standards..."
+
+# =================================================================
+# PRETTIER CONFIGURATION SETUP
+# =================================================================
+# Create temporary Prettier config from project configuration
+# This ensures consistent formatting across all staged files
+# Uses the centralized prettier-config.js for consistency
+#
+# NOTE: Ensure .prettier.temp.json is in .gitignore to prevent
+# accidental commits of this temporary configuration file
+
+echo "Setting up Prettier configuration..."
+
 node --input-type=module -e "
 import fs from 'fs';
 import { prettierConfig } from './scripts/prettier-config.js';
 fs.writeFileSync('.prettier.temp.json', JSON.stringify(prettierConfig, null, 2));
-" || { echo 'Failed to create temporary Prettier config'; exit 1; }
+" || { 
+  echo '❌ Failed to create temporary Prettier config'
+  echo '💡 Ensure scripts/prettier-config.js exists and is valid'
+  echo '💡 Verify .prettier.temp.json is in .gitignore'
+  exit 1
+}
 
-# Run lint-staged
-npx lint-staged --allow-empty
+echo "✅ Prettier configuration loaded successfully"
 
-# Remove the temporary configuration file
-rm .prettier.temp.json
+# =================================================================
+# LINT-STAGED EXECUTION
+# =================================================================
+# Run lint-staged to process only staged files
+# This includes: ESLint fixes, Prettier formatting, type checking
+# --allow-empty: Prevents failure when no files are staged
+
+echo "Running lint-staged on staged files..."
+echo "→  ESLint: Checking code quality and fixing auto-fixable issues"
+echo "→  Prettier: Formatting code for consistency"
+echo "→  Type checking: Validating TypeScript/JSDoc types"
+echo ""
+echo ""
+
+
+npx lint-staged --allow-empty || {
+  echo ""
+  echo "❌ Lint-staged checks failed!"
+  echo "💡 Fix the issues above before committing"
+  echo "💡 Run 'npm run lint:fix' to auto-fix some issues"
+  echo "💡 Run 'npm run format' to fix formatting issues"
+  echo "💡 Temporary config will be cleaned up automatically"
+  exit 1
+}
+
+# =================================================================
+# CLEANUP AND SUCCESS
+# =================================================================
+# Remove temporary Prettier configuration file
+# Report successful completion of all quality checks
+
+echo "🧹 Cleaning up temporary Prettier configuration..."
+rm -f .prettier.temp.json
+
+echo ""
+echo "✅ All pre-commit checks passed successfully!"
+echo "✅ Your code meets quality standards and is ready for commit"
+echo "→  Staged files have been formatted and validated"
+echo ""

@@ -1,17 +1,30 @@
+/**
+ * @fileoverview Category page component for e-commerce product browsing with filtering and pagination
+ * Provides comprehensive product discovery interface with search, filtering, sorting, and pagination capabilities
+ * Integrates with Next.js Image optimization and Link routing for performance and enhanced user experience
+ */
+
 "use client";
 import Image from "next/image";
 import Link from "next/link";
 import PropTypes from "prop-types";
 
 import { Button } from "@design-system/buttons";
-import { renderStars } from "@modules/core/utils/renderStars";
+import { renderStars } from "@modules/core/utils";
 
 import CategoryPageView from "./CategoryPageView";
-import { useCategoryPage } from "./useCategoryPage";
+import useCategoryPage from "./useCategoryPage";
 
 import styles from "./CategoryPage.module.scss";
 
-export default function CategoryPage({ params }) {
+/**
+ * Container component for category page with product filtering, search, and pagination functionality
+ * @component
+ * @param {Object} params - URL parameters object containing category information
+ * @param {string} params.categorySlug - Category slug from URL for product filtering
+ * @returns {JSX.Element} Rendered category page with product grid, filters, and pagination
+ */
+const CategoryPage = ({ params }) => {
   const {
     categories,
     category,
@@ -36,33 +49,35 @@ export default function CategoryPage({ params }) {
 
   return (
     <CategoryPageView
-      products={products}
-      categories={categories}
-      totalProducts={totalProducts}
-      totalPages={totalPages}
-      currentPage={currentPage}
-      selectedCategory={selectedCategory}
-      sortBy={sortBy}
-      priceRange={priceRange}
-      searchTerm={searchTerm}
-      filters={filters}
-      category={category}
-      isLoading={isLoading}
-      error={error}
-      handleCategoryChange={handleCategoryChange}
-      handleFilterChange={handleFilterChange}
-      handleSearch={handleSearch}
-      handleSortChange={handleSortChange}
-      handlePriceRangeChange={handlePriceRangeChange}
-      handlePageChange={handlePageChange}
-      styles={styles}
       Button={Button}
       Image={Image}
       Link={Link}
+      categories={categories}
+      category={category}
+      currentPage={currentPage}
+      error={error}
+      filters={filters}
+      handleCategoryChange={handleCategoryChange}
+      handleFilterChange={handleFilterChange}
+      handlePageChange={handlePageChange}
+      handlePriceRangeChange={handlePriceRangeChange}
+      handleSearch={handleSearch}
+      handleSortChange={handleSortChange}
+      isLoading={isLoading}
+      priceRange={priceRange}
+      products={products}
       renderStars={renderStars}
+      searchTerm={searchTerm}
+      selectedCategory={selectedCategory}
+      sortBy={sortBy}
+      styles={styles}
+      totalPages={totalPages}
+      totalProducts={totalProducts}
     />
   );
-}
+};
+
+export default CategoryPage;
 
 CategoryPage.displayName = "CategoryPage";
 CategoryPage.View = CategoryPageView;

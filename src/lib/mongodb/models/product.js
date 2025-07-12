@@ -1,5 +1,40 @@
+/**
+ * @fileoverview Product model schema for MongoDB with comprehensive e-commerce functionality
+ * Provides product management including variants, collections, pricing, inventory, and SEO optimization
+ * Includes virtual properties for calculated fields, static methods for queries, and instance methods for operations
+ */
+
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema definition for product documents with comprehensive e-commerce features
+ * @typedef {Object} ProductSchema
+ * @property {string} name - Product name (required)
+ * @property {string} slug - URL-friendly product identifier (required, unique)
+ * @property {string} description - Product description (required)
+ * @property {string} category - Main product category (men, women, accessories, sale)
+ * @property {string} subcategory - Product subcategory for detailed classification
+ * @property {string} categoryPath - Computed category path for navigation
+ * @property {number} price - Product price (required, minimum 0)
+ * @property {number} compareAtPrice - Original price for sale calculations
+ * @property {Array<Object>} images - Product images with URLs, alt text, and positioning
+ * @property {Array<Object>} variants - Product variants with size, color, SKU, and inventory
+ * @property {Array<string>} tags - Product tags for search and categorization
+ * @property {Array<string>} collections - Product collections (featured, new-arrivals, etc.)
+ * @property {boolean} isFeatured - Whether product is featured
+ * @property {boolean} isNewArrival - Whether product is a new arrival
+ * @property {boolean} isBestSeller - Whether product is a best seller
+ * @property {boolean} isOnSale - Whether product is on sale
+ * @property {boolean} isTrending - Whether product is trending
+ * @property {boolean} isLimitedEdition - Whether product is limited edition
+ * @property {boolean} isActive - Whether product is active and visible
+ * @property {number} rating - Product rating (0-5)
+ * @property {number} averageRating - Calculated average rating from reviews
+ * @property {number} reviewCount - Number of reviews
+ * @property {number} salesCount - Number of sales for popularity ranking
+ * @property {number} viewCount - Number of views for analytics
+ * @property {Object} seo - SEO optimization fields (title, meta description, keywords)
+ */
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -156,14 +191,26 @@ const productSchema = new mongoose.Schema(
   }
 );
 
+/**
+ * Virtual property that calculates total inventory across all product variants
+ * @returns {number} Total inventory count
+ */
 productSchema.virtual("totalInventory").get(function () {
   return this.variants.reduce((sum, variant) => sum + variant.inventory, 0);
 });
 
+/**
+ * Virtual property that determines if product is in stock
+ * @returns {boolean} Whether product has inventory available
+ */
 productSchema.virtual("inStock").get(function () {
   return this.totalInventory > 0;
 });
 
+/**
+ * Virtual property that calculates sale percentage discount
+ * @returns {number} Sale percentage (0-100) or 0 if not on sale
+ */
 productSchema.virtual("salePercentage").get(function () {
   if (this.compareAtPrice && this.compareAtPrice > this.price) {
     return Math.round(((this.compareAtPrice - this.price) / this.compareAtPrice) * 100);
@@ -171,6 +218,7 @@ productSchema.virtual("salePercentage").get(function () {
   return 0;
 });
 
+// Database indexes for optimized query performance
 productSchema.index({ category: 1, isActive: 1 });
 productSchema.index({ category: 1, subcategory: 1, isActive: 1 });
 productSchema.index({ categoryPath: 1, isActive: 1 });
@@ -185,6 +233,12 @@ productSchema.index({ createdAt: -1 });
 productSchema.index({ salesCount: -1 });
 productSchema.index({ rating: -1 });
 
+/**
+ * Static method to find products by category with optional subcategory filtering
+ * @param {string} category - Product category to filter by
+ * @param {Object} options - Query options including limit, sort, and subcategory
+ * @returns {Query} Mongoose query for products in specified category
+ */
 productSchema.statics.findByCategory = function (category, options = {}) {
   const query = { category, isActive: true };
   const { limit = 20, sort = "-createdAt", subcategory } = options;
@@ -196,22 +250,48 @@ productSchema.statics.findByCategory = function (category, options = {}) {
   return this.find(query).limit(limit).sort(sort);
 };
 
+/**
+ * Static method to find featured products sorted by sales count
+ * @param {number} limit - Maximum number of products to return
+ * @returns {Query} Mongoose query for featured products
+ */
 productSchema.statics.findFeatured = function (limit = 8) {
   return this.find({ isFeatured: true, isActive: true }).limit(limit).sort("-salesCount");
 };
 
+/**
+ * Static method to find new arrival products sorted by creation date
+ * @param {number} limit - Maximum number of products to return
+ * @returns {Query} Mongoose query for new arrival products
+ */
 productSchema.statics.findNewArrivals = function (limit = 8) {
   return this.find({ isNewArrival: true, isActive: true }).limit(limit).sort("-createdAt");
 };
 
+/**
+ * Static method to find best selling products sorted by sales count
+ * @param {number} limit - Maximum number of products to return
+ * @returns {Query} Mongoose query for best selling products
+ */
 productSchema.statics.findBestSellers = function (limit = 8) {
   return this.find({ isBestSeller: true, isActive: true }).limit(limit).sort("-salesCount");
 };
 
+/**
+ * Static method to find products on sale sorted by creation date
+ * @param {number} limit - Maximum number of products to return
+ * @returns {Query} Mongoose query for sale products
+ */
 productSchema.statics.findOnSale = function (limit = 20) {
   return this.find({ isOnSale: true, isActive: true }).limit(limit).sort("-createdAt");
 };
 
+/**
+ * Static method to find products by collection type
+ * @param {string} collectionType - Collection type to filter by
+ * @param {number} limit - Maximum number of products to return
+ * @returns {Query} Mongoose query for products in specified collection
+ */
 productSchema.statics.findByCollection = function (collectionType, limit = 20) {
   return this.find({
     collections: collectionType,
@@ -221,6 +301,11 @@ productSchema.statics.findByCollection = function (collectionType, limit = 20) {
     .sort("-createdAt");
 };
 
+/**
+ * Instance method to add product to a collection
+ * @param {string} collectionType - Collection type to add product to
+ * @returns {Promise<Product>} Updated product document
+ */
 productSchema.methods.addToCollection = function (collectionType) {
   if (!this.collections.includes(collectionType)) {
     this.collections.push(collectionType);
@@ -228,11 +313,20 @@ productSchema.methods.addToCollection = function (collectionType) {
   return this.save();
 };
 
+/**
+ * Instance method to remove product from a collection
+ * @param {string} collectionType - Collection type to remove product from
+ * @returns {Promise<Product>} Updated product document
+ */
 productSchema.methods.removeFromCollection = function (collectionType) {
   this.collections = this.collections.filter(c => c !== collectionType);
   return this.save();
 };
 
+/**
+ * Instance method to update category path based on category and subcategory
+ * @returns {Promise<Product>} Updated product document
+ */
 productSchema.methods.updateCategoryPath = function () {
   this.categoryPath = this.subcategory ? `${this.category}/${this.subcategory}` : this.category;
   return this.save();

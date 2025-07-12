@@ -1,6 +1,25 @@
+/**
+ * @fileoverview Presentational component for shop landing page layout with category grid and product sections
+ * Handles responsive layout with category cards, promotional banners, inspiration grid, and product recommendations
+ * Provides comprehensive shopping experience with visual category navigation and curated product discovery
+ */
+
 import PropTypes from "prop-types";
 
-export default function ShopLandingView({
+/**
+ * View component for rendering shop landing page with category navigation and product sections
+ * @component
+ * @param {React.ComponentType} Button - Button component for call-to-action elements
+ * @param {React.ComponentType} Link - Next.js Link component for navigation
+ * @param {Array<Object>} categories - Product categories with images and descriptions for navigation
+ * @param {string|null} error - Error message if data loading fails
+ * @param {Array<Object>} featuredProducts - Featured products for recommendations section
+ * @param {boolean} isLoading - Loading state indicator for data fetching
+ * @param {Array<Object>} newArrivals - New arrival products for inspiration section
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered shop landing page with comprehensive e-commerce layout
+ */
+const ShopLandingView = ({
   Button,
   Link,
   categories,
@@ -9,7 +28,7 @@ export default function ShopLandingView({
   isLoading,
   newArrivals,
   styles,
-}) {
+}) => {
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -47,8 +66,8 @@ export default function ShopLandingView({
           {categories.map(category => (
             <Link
               key={category._id || category.id}
-              href={`/shop/${category.slug || category.id}`}
-              className={styles["category-link"]}>
+              className={styles["category-link"]}
+              href={`/shop/${category.slug || category.id}`}>
               <div className={styles["category-card"]}>
                 <div
                   className={styles["category-image"]}
@@ -75,7 +94,7 @@ export default function ShopLandingView({
                 Limited time offer on selected items. Don&lsquo;t miss out!
               </p>
               <Link href="/shop/sale">
-                <Button variant="secondary" size="large">
+                <Button size="large" variant="secondary">
                   Browse Products
                 </Button>
               </Link>
@@ -87,7 +106,7 @@ export default function ShopLandingView({
               <h3 className={styles["offer-title"]}>Other Offer</h3>
               <p className={styles["offer-text"]}>Free shipping on orders over $75</p>
               <Link href="/shop/all">
-                <Button variant="primary" size="medium">
+                <Button size="medium" variant="primary">
                   Shop Now
                 </Button>
               </Link>
@@ -97,7 +116,7 @@ export default function ShopLandingView({
               <h3 className={styles["offer-title"]}>Bestselling Products</h3>
               <p className={styles["offer-text"]}>Customer favorites flying off the shelves</p>
               <Link href="/shop/bestsellers">
-                <Button variant="primary" size="medium">
+                <Button size="medium" variant="primary">
                   Explore
                 </Button>
               </Link>
@@ -148,8 +167,8 @@ export default function ShopLandingView({
           {featuredProducts.map(product => (
             <Link
               key={product._id || product.id}
-              href={`/product/${product._id || product.id}`}
-              className={styles["product-link"]}>
+              className={styles["product-link"]}
+              href={`/product/${product._id || product.id}`}>
               <div className={styles["product-card"]}>
                 <div
                   className={styles["product-image"]}
@@ -173,7 +192,7 @@ export default function ShopLandingView({
 
         <div className={styles["view-all-container"]}>
           <Link href="/shop/all">
-            <Button variant="outline" size="large">
+            <Button size="large" variant="outline">
               View All Products
             </Button>
           </Link>
@@ -181,7 +200,9 @@ export default function ShopLandingView({
       </section>
     </div>
   );
-}
+};
+
+export default ShopLandingView;
 
 ShopLandingView.displayName = "ShopLandingView";
 ShopLandingView.propTypes = {

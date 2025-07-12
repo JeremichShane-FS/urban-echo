@@ -1,16 +1,41 @@
 /**
- * @fileoverview Custom hook for detecting clicks outside a specified element.
- * This hook triggers a callback when a click occurs outside the referenced element.
- * @param {Object} ref - The ref of the element to monitor for outside clicks.
- * @param {Function} callback - The function to call when an outside click is detected.
- * @example
- * const ref = useRef();
- * useOutsideClick(ref, () => {
- *   console.log("Clicked outside!");
- * });
- * This will log "Clicked outside!" whenever a click occurs outside the element referenced by `ref
+ * @fileoverview Custom hook for detecting clicks outside a specified element with event cleanup
+ * Provides essential functionality for dropdowns, modals, tooltips, and other overlay components
+ * Automatically handles event listener cleanup to prevent memory leaks and performance issues
  */
 
+/**
+ * Custom hook for detecting clicks outside a specified element
+ * @param {React.RefObject} ref - The ref object of the element to monitor for outside clicks
+ * @param {Function} handler - The callback function to execute when an outside click is detected
+ *
+ * @description
+ * This hook attaches a mousedown event listener to the document and checks if the click target
+ * is outside the referenced element. When an outside click is detected, it calls the handler function.
+ * The event listener is automatically cleaned up when the component unmounts or dependencies change.
+ *
+ * @example
+ * const dropdownRef = useRef();
+ * const [isOpen, setIsOpen] = useState(false);
+ *
+ * useOutsideClick(dropdownRef, () => {
+ *   setIsOpen(false);
+ * });
+ *
+ * return (
+ *   <div ref={dropdownRef}>
+ *     <button onClick={() => setIsOpen(!isOpen)}>Toggle Dropdown</button>
+ *     {isOpen && <DropdownMenu />}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Modal close on outside click
+ * const modalRef = useRef();
+ * useOutsideClick(modalRef, () => {
+ *   closeModal();
+ * });
+ */
 import { useEffect } from "react";
 
 export const useOutsideClick = (ref, handler) => {

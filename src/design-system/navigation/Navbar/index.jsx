@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Main navigation component providing responsive header with menu toggle and search functionality
+ * Integrates multiple navigation elements including logo, main navigation, mobile menu, and search interface
+ * Provides cohesive header experience with state management for mobile and desktop navigation patterns
+ */
+
 "use client";
 import Link from "next/link";
 
@@ -16,27 +22,32 @@ import useNavbar from "./useNavbar";
 
 import styles from "./Navbar.module.scss";
 
+/**
+ * Container component for main navigation bar with responsive behavior and state management
+ * @component
+ * @returns {JSX.Element} Rendered navigation header with responsive menu toggles and search functionality
+ */
 const Navbar = () => {
   const { handleMenuToggle, handleSearchToggle, isMenuOpen, isSearchOpen, searchbarRef } =
     useNavbar();
 
   return (
     <NavbarView
-      isMenuOpen={isMenuOpen}
-      isSearchOpen={isSearchOpen}
-      toggleMenu={handleMenuToggle}
-      toggleSearch={handleSearchToggle}
-      searchbarRef={searchbarRef}
-      styles={styles}
-      NavLinks={NavLinks}
+      ActionIcons={ActionIcons}
       Container={Container}
+      Link={Link}
       MenuToggle={MenuToggle}
+      MobileMenu={MobileMenu}
+      NavLinks={NavLinks}
       Searchbar={Searchbar}
       UrbanEchoLogo={UrbanEchoLogo}
-      ActionIcons={ActionIcons}
-      MobileMenu={MobileMenu}
+      isMenuOpen={isMenuOpen}
+      isSearchOpen={isSearchOpen}
       navLink={getNavItemById("home", MAIN_NAV_ITEMS)}
-      Link={Link}
+      searchbarRef={searchbarRef}
+      styles={styles}
+      toggleMenu={handleMenuToggle}
+      toggleSearch={handleSearchToggle}
     />
   );
 };

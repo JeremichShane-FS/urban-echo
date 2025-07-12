@@ -1,4 +1,23 @@
+# =================================================================
+# INFRASTRUCTURE-LEVEL ENFORCEMENT WORKFLOW
+# =================================================================
+# Purpose: Enforces security, quality, and standards at the CI/CD level
+# Triggers: All pushes and pull requests on any branch
+# Enforcement: Security scanning, code quality, build verification, TODO standards
+#
+# This workflow provides multiple security and quality gates:
+# 1. Security scanning for sensitive data and dangerous patterns
+# 2. Code quality enforcement through ESLint
+# 3. Build verification to ensure deployability
+# 4. Dependency vulnerability scanning
+# 5. TODO/FIX comment standards enforcement
+#
+# These checks run on every push to prevent security issues and
+# maintain code quality standards across the entire project.
+# =================================================================
+
 name: "Infrastructure-Level Enforcement"
+
 on:
   push:
     branches: ["**"]
@@ -10,10 +29,18 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  # =================================================================
+  # JOB 1: CORE SECURITY AND QUALITY ENFORCEMENT
+  # =================================================================
+  # Primary enforcement job that validates security, quality, and buildability
+  # This job must pass for any code to be merged or deployed
+
+  security-quality:
+    name: "Security & Quality Gate"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -23,70 +50,173 @@ jobs:
           node-version: "18"
           cache: "npm"
 
+      # =================================================================
+      # SECURITY SCANNING GATE
+      # =================================================================
+      # Scans codebase for security vulnerabilities and sensitive data
+      # Prevents commits containing secrets, API keys, or dangerous patterns
+
       - name: "Security Scanning"
         run: |
+          echo "🔒 Starting comprehensive security scan..."
+          echo "🔍 Scanning for sensitive data and dangerous code patterns..."
 
-          # Check for stripe secret keys
-          # This regex checks for sk_ followed by at least 20 alphanumeric characters
+          # =================================================================
+          # STRIPE API KEY DETECTION
+          # =================================================================
+          # Prevents secret Stripe keys from being committed to repository
+          # Pattern: sk_ followed by at least 20 alphanumeric characters
+          echo "💳 Checking for Stripe secret keys..."
           if grep -r "sk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
-            echo "❌ SECURITY VIOLATION: Stripe secret key found in source code"
+            echo ""
+            echo "❌ CRITICAL SECURITY VIOLATION: Stripe secret key detected"
+            echo "🚨 Secret API keys must never be committed to version control"
+            echo "🔧 Fix: Move to .env.local and use process.env.STRIPE_SECRET_KEY"
             exit 1
           fi
+          echo "   ✅ No Stripe secret keys found"
 
-          # Check for public API keys
-          # This regex checks for pk_ followed by at least 20 alphanumeric characters
+          # =================================================================
+          # PUBLIC API KEY DETECTION
+          # =================================================================
+          # Detects public API keys that might be exposed unintentionally
+          # Pattern: pk_ followed by at least 20 alphanumeric characters
+          echo "🔑 Checking for exposed public API keys..."
           if grep -r "pk_[a-zA-Z0-9]\{20,\}" src/ 2>/dev/null; then
-            echo "❌ SECURITY VIOLATION: API public key found in source code"
+            echo ""
+            echo "❌ SECURITY VIOLATION: Public API key found in source code"
+            echo "⚠️  Public keys should be in environment variables"
+            echo "🔧 Fix: Move to .env.local as NEXT_PUBLIC_STRIPE_KEY"
             exit 1
           fi
+          echo "   ✅ No exposed public API keys found"
 
-          # Check for three dangerous patterns, eval(), innerHTML assignment, and document.write()
-          # These patterns can lead to XSS vulnerabilities or code injection
+          # =================================================================
+          # DANGEROUS CODE PATTERN DETECTION
+          # =================================================================
+          # Scans for patterns that can lead to XSS or code injection vulnerabilities
+          # Patterns: eval(), innerHTML assignment, document.write()
+          echo "⚠️  Checking for dangerous code patterns..."
           if grep -rE "\beval\s*\(|innerHTML\s*=|document\.write\s*\(" src/ 2>/dev/null; then
+            echo ""
             echo "❌ SECURITY VIOLATION: Dangerous code patterns detected"
+            echo "🛡️  These patterns can lead to XSS vulnerabilities or code injection"
+            echo "🔧 Safe alternatives: Use JSON.parse(), textContent, or modern DOM methods"
             exit 1
           fi
+          echo "   ✅ No dangerous code patterns found"
 
-          echo "✅ Security scanning passed"
+          echo ""
+          echo "✅ Security scanning completed successfully"
 
       - name: "Install Dependencies"
         run: npm ci
 
+      # =================================================================
+      # CODE QUALITY GATE
+      # =================================================================
+      # Enforces code quality standards through ESLint
+      # Prevents commits that don't meet established coding standards
+
       - name: "Code Quality Gate"
         run: |
+          echo "🧹 Starting code quality validation..."
+          echo "📋 Running ESLint checks for code standards..."
+
           npm run lint || {
+            echo ""
             echo "❌ CODE QUALITY GATE FAILED"
+            echo "🚨 Your code does not meet the established quality standards"
+            echo ""
+            echo "🔧 To fix these issues:"
+            echo "   1. Run 'npm run lint:fix' to auto-fix simple issues"
+            echo "   2. Manually fix remaining lint errors"
+            echo "   3. Run 'npm run lint' to verify all issues are resolved"
             exit 1
           }
 
           echo "✅ Code quality checks passed"
+          echo "🎉 All code meets established quality standards"
+
+      # =================================================================
+      # BUILD VERIFICATION GATE
+      # =================================================================
+      # Ensures code can be built successfully for production deployment
+      # Prevents deployment of code that would fail in production
 
       - name: "Build Verification"
         run: |
+          echo "🏗️  Starting production build verification..."
+          echo "🔧 Testing Next.js production build process..."
+
           npm run build || {
-            echo "❌ BUILD GATE FAILED - Code cannot be deployed"
+            echo ""
+            echo "❌ BUILD GATE FAILED"
+            echo "🚨 Code cannot be built for production deployment"
+            echo ""
+            echo "🔍 Common build failure causes:"
+            echo "   • TypeScript/JSDoc type errors"
+            echo "   • Missing environment variables"
+            echo "   • Import/export syntax errors"
+            echo "   • React component errors"
+            echo ""
+            echo "🔧 To fix build issues:"
+            echo "   1. Run 'npm run build' locally to reproduce"
+            echo "   2. Fix all compilation errors"
+            echo "   3. Ensure all environment variables are configured"
             exit 1
           }
 
-          echo "✅ Build verification passed"
+          echo "✅ Production build verification passed"
+          echo "🚀 Code is ready for production deployment"
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL }}
+          NEXT_STRAPI_API_TOKEN: ${{ secrets.NEXT_STRAPI_API_TOKEN }}
+          NODE_ENV: production
 
-      # Prevents deployment with dependencies that have known high-severity vulnerabilities
-      # npm audit finds high-severity vulnerabilities and fails the job if any are found
+      # =================================================================
+      # DEPENDENCY VULNERABILITY SCANNING
+      # =================================================================
+      # Scans for high-severity vulnerabilities in project dependencies
+      # Prevents deployment with known security vulnerabilities
+
       - name: "Dependency Vulnerability Check"
         run: |
+          echo "🔍 Starting dependency vulnerability scan..."
+          echo "🛡️  Checking for high-severity security vulnerabilities..."
+
           npm audit --audit-level=high || {
-            echo "❌ SECURITY GATE FAILED: High-severity vulnerabilities found"
+            echo ""
+            echo "❌ SECURITY GATE FAILED"
+            echo "🚨 High-severity vulnerabilities found in dependencies"
+            echo ""
+            echo "🔧 To resolve dependency vulnerabilities:"
+            echo "   1. Run 'npm audit' to see detailed vulnerability report"
+            echo "   2. Run 'npm audit fix' to auto-fix vulnerabilities"
+            echo "   3. Update vulnerable packages to secure versions"
+            echo "   4. Consider alternative packages if fixes unavailable"
+            echo ""
+            echo "⚠️  Security policy: No high-severity vulnerabilities allowed"
             exit 1
           }
 
-          echo "✅ Dependency security check passed"
+          echo "✅ Dependency security audit passed"
+          echo "🔒 All dependencies are free from high-severity vulnerabilities"
 
-  enforce-standards:
+  # =================================================================
+  # JOB 2: DEVELOPMENT STANDARDS ENFORCEMENT
+  # =================================================================
+  # Enforces development standards and comment conventions
+  # Ensures consistency in code documentation and TODO management
+
+  standards-validation:
+    name: "TODO Standards Enforcement"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
 
       - name: "Setup Node.js"
         uses: actions/setup-node@v4
@@ -97,16 +227,47 @@ jobs:
       - name: "Install Dependencies"
         run: npm ci
 
+      # =================================================================
+      # TODO/FIX COMMENT STANDARDS ENFORCEMENT
+      # =================================================================
+      # Validates that all TODO and FIX comments follow project standards
+      # Ensures proper template usage and prevents malformed comments
+
       - name: "Enforce TODO Standards"
         run: |
+          echo "📝 Starting TODO/FIX comment validation..."
+          echo "🔍 Checking all JavaScript/TypeScript files for comment standards..."
+          echo ""
 
-          # Run my check-todos.js script to check and validate TODO/FIX comments
-          echo "🔍 Validating TODO/FIX comments..."
+          # Find all relevant source files and validate TODO/FIX comments
+          # Excludes node_modules and other non-source directories
+          echo "📁 Scanning source files for TODO/FIX comments..."
           find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | \
           grep -v node_modules | \
           xargs node scripts/check-todos.js || {
-            echo "❌ TODO validation failed"
+            echo ""
+            echo "❌ TODO/FIX STANDARDS VALIDATION FAILED"
+            echo "🚨 One or more TODO/FIX comments don't meet project standards"
+            echo ""
+            echo "📋 Required TODO/FIX comment format:"
+            echo "   // TODO: [TEMPLATE] Brief description (≥10 chars)"
+            echo "   // Detailed explanation of what needs to be done"
+            echo ""
+            echo "✅ Approved templates:"
+            echo "   [COMPONENT] [UI/UX] [ROUTES] [DATA] [SECURITY] [BUG]"
+            echo "   [PERF] [REFACTOR] [TEST] [DOCS] [DEPENDENCY] [FEATURE]"
+            echo "   [I18N] [A11Y] [ONBOARDING] [RESEARCH] [STATE] [CI]"
+            echo "   [CD] [WORKFLOW] [AUTOMATION] [ACTIONS] [DEPLOY] [BUILD]"
+            echo ""
+            echo "🔧 To fix TODO/FIX standard violations:"
+            echo "   1. Review the validation errors above"
+            echo "   2. Update comments to use approved template format"
+            echo "   3. Ensure descriptions are descriptive (≥10 characters)"
+            echo "   4. Add detailed explanations on following lines"
+            echo "   5. Run validation locally: npm run check:todos"
             exit 1
           }
 
-          echo "✅ TODO/FIX standards enforced"
+          echo "✅ TODO/FIX comment standards validation passed"
+          echo "📝 All TODO/FIX comments follow project conventions"
+          echo "🎉 Development standards enforcement completed successfully"

@@ -1,7 +1,20 @@
+/**
+ * @fileoverview Custom hook for managing searchbar form submission and analytics tracking
+ * Provides memoized event handlers for form submission and input focus with analytics integration
+ * Encapsulates search behavior logic including query validation and user interaction tracking
+ */
+
 import { useCallback } from "react";
 
 import { trackEvent } from "@modules/core/utils";
 
+/**
+ * Hook for handling searchbar form submission and user interaction analytics
+ * @hook
+ * @returns {Object} Searchbar event handlers and form management functions
+ * @returns {Function} returns.handleSubmit - Memoized form submission handler with analytics
+ * @returns {Function} returns.handleInputFocus - Memoized input focus handler with tracking
+ */
 const useSearchbar = () => {
   const handleSubmit = useCallback(e => {
     e.preventDefault();

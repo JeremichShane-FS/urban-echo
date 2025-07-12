@@ -1,5 +1,26 @@
+/**
+ * @fileoverview Presentational component for homepage layout with conditional section rendering
+ * Handles section visibility based on page configuration and provides intersection observer integration
+ * Manages loading states and error handling for optimal user experience during page initialization
+ */
+
 import PropTypes from "prop-types";
 
+/**
+ * View component for rendering homepage sections with conditional visibility and analytics tracking
+ * @component
+ * @param {React.ComponentType} AboutSection - About section component for company information
+ * @param {React.ComponentType} FeaturedProducts - Featured products showcase component
+ * @param {React.ComponentType} HeroSection - Hero banner component for main page header
+ * @param {React.ComponentType} NewArrivals - New arrivals product display component
+ * @param {React.ComponentType} Newsletter - Newsletter subscription component
+ * @param {boolean} error - Error state indicator for page loading failures
+ * @param {boolean} isLoading - Loading state indicator for page initialization
+ * @param {Object} pageData - Page configuration data controlling section visibility
+ * @param {Object} refs - Intersection observer refs for section tracking
+ * @param {Object} styles - CSS module styles object for component styling
+ * @returns {JSX.Element} Rendered homepage with conditional sections and analytics integration
+ */
 const HomePageView = ({
   AboutSection,
   FeaturedProducts,

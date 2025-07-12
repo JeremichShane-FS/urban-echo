@@ -2,7 +2,7 @@
 
 **Copyright © 2025 Shane Jeremich / Urban Echo. All rights reserved.**
 
-> **⚠️ LEGAL NOTICE**: This is a proprietary portfolio project. See [LICENSE](LICENSE) and [DISCLAIMER.md](docs/DISCLAIMER.md) for usage terms.
+> **⚠️ LEGAL NOTICE**: This is a proprietary portfolio project. See [LICENSE](LICENSE) and [DISCLAIMER.md](docs/05-legal/DISCLAIMER.md) for usage terms.
 
 A modern, full-stack e-commerce platform for clothing retail built with Next.js 15, designed to provide a seamless shopping experience for fashion-conscious consumers.
 

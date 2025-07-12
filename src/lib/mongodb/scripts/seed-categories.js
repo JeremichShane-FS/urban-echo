@@ -1,6 +1,17 @@
+/**
+ * @fileoverview Category seeding script for Urban Echo e-commerce platform
+ * Populates MongoDB with hierarchical product categories including main categories and subcategories
+ * Provides SEO-optimized category data with navigation structure and product count integration
+ */
+
 /* eslint-disable no-relative-import-paths/no-relative-import-paths */
 import dbConnect from "../client.js";
 
+/**
+ * Comprehensive category data structure with main categories and subcategories
+ * Includes SEO metadata, navigation settings, and hierarchical relationships
+ * @type {Array<Object>}
+ */
 const demoCategories = [
   {
     id: "men",
@@ -236,6 +247,14 @@ const demoCategories = [
   },
 ];
 
+/**
+ * Main category seeding function that populates the database with hierarchical category structure
+ * Connects to MongoDB, clears existing categories, and seeds with demo category data
+ * Updates product counts for each category and provides detailed logging
+ * @async
+ * @function seedCategories
+ * @returns {Promise<void>} Resolves when category seeding is complete
+ */
 async function seedCategories() {
   console.log("🏷️ Starting Categories Seeding...\n");
 

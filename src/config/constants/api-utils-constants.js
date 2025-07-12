@@ -1,35 +1,76 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @fileoverview API utility constants for validation, formatting, and data processing.
- * This file contains validation patterns, limits, sort options, templates, and helper constants.
- * For core API endpoints and configuration, see api-constants.js
+ * @fileoverview API utility constants for validation, formatting, and data processing with comprehensive patterns
+ * Contains validation patterns, limits, sort options, templates, and helper constants for API operations
+ * Supports input validation, response formatting, and data processing across all API endpoints
  */
 
-// Validation patterns for API data
+/* eslint-disable sonarjs/no-duplicate-string */
+
+// =================================================================
+// VALIDATION PATTERNS
+// =================================================================
+
+/**
+ * Regular expression patterns for API data validation
+ * @constant {Object} API_VALIDATION_PATTERNS - Validation regex patterns
+ *
+ * @example
+ * // Validate MongoDB ObjectId
+ * const isValidObjectId = (id) =>
+ *   API_VALIDATION_PATTERNS.MONGODB_OBJECT_ID.test(id);
+ *
+ * @example
+ * // Validate product slug format
+ * const isValidSlug = (slug) =>
+ *   API_VALIDATION_PATTERNS.PRODUCT_SLUG.test(slug);
+ *
+ * @example
+ * // Price validation in form submission
+ * const validatePrice = (price) => {
+ *   if (!API_VALIDATION_PATTERNS.PRICE.test(price)) {
+ *     return 'Invalid price format';
+ *   }
+ *   return null;
+ * };
+ */
 export const API_VALIDATION_PATTERNS = {
-  // MongoDB ObjectId pattern
   MONGODB_OBJECT_ID: /^[\dA-Fa-f]{24}$/,
-
-  // Product slug pattern (lowercase, hyphens, numbers)
   PRODUCT_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
-
-  // Category slug pattern
   CATEGORY_SLUG: /^[\da-z]+(?:-[\da-z]+)*$/,
-
-  // Basic email pattern (more thorough validation in validators.js)
   EMAIL_BASIC: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-
-  // Price pattern (allows decimals)
   PRICE: /^\d+(\.\d{1,2})?$/,
-
-  // Color hex code pattern
   HEX_COLOR: /^#([\dA-Fa-f]{6}|[\dA-Fa-f]{3})$/,
-
-  // Size pattern (S, M, L, XL, XXL, numbers)
   SIZE: /^(xxs|xs|s|m|l|xl|xxl|xxxl|\d+)$/i,
 };
 
-// API request and response limits
+// =================================================================
+// REQUEST LIMITS AND VALIDATION
+// =================================================================
+
+/**
+ * API request and response limits for performance and security
+ * @constant {Object} API_VALIDATION_LIMITS - Maximum limits for API operations
+ *
+ * @example
+ * // Validate pagination limit
+ * const validateLimit = (limit) => {
+ *   if (limit > API_VALIDATION_LIMITS.MAX_PRODUCTS_PER_REQUEST) {
+ *     throw new Error(`Limit cannot exceed ${API_VALIDATION_LIMITS.MAX_PRODUCTS_PER_REQUEST}`);
+ *   }
+ * };
+ *
+ * @example
+ * // Search query validation
+ * const validateSearchQuery = (query) => {
+ *   if (query.length > API_VALIDATION_LIMITS.MAX_SEARCH_QUERY_LENGTH) {
+ *     return 'Search query too long';
+ *   }
+ *   if (query.length < API_VALIDATION_LIMITS.MIN_SEARCH_QUERY_LENGTH) {
+ *     return 'Search query too short';
+ *   }
+ *   return null;
+ * };
+ */
 export const API_VALIDATION_LIMITS = {
   // Product endpoints
   MAX_PRODUCTS_PER_REQUEST: 100,
@@ -52,7 +93,34 @@ export const API_VALIDATION_LIMITS = {
   MAX_CTA_TEXT_LENGTH: 50,
 };
 
-// Sorting options for different endpoints
+// =================================================================
+// SORTING CONFIGURATIONS
+// =================================================================
+
+/**
+ * Sorting options for different API endpoints with endpoint-specific configurations
+ * @constant {Object} API_SORT_OPTIONS - Available sort options by endpoint type
+ *
+ * @example
+ * // Validate sort option for products endpoint
+ * const validateProductSort = (sortBy) => {
+ *   if (!API_SORT_OPTIONS.PRODUCTS.includes(sortBy)) {
+ *     throw new Error(`Invalid sort option: ${sortBy}`);
+ *   }
+ * };
+ *
+ * @example
+ * // Generate sort dropdown for search
+ * const SearchSortDropdown = () => (
+ *   <select>
+ *     {API_SORT_OPTIONS.SEARCH.map(option => (
+ *       <option key={option} value={option}>
+ *         {option.replace('-', ' ').toUpperCase()}
+ *       </option>
+ *     ))}
+ *   </select>
+ * );
+ */
 export const API_SORT_OPTIONS = {
   PRODUCTS: [
     "relevance",
@@ -71,7 +139,26 @@ export const API_SORT_OPTIONS = {
   BEST_SELLERS: ["popularity", "rating", "newest", "price-low", "price-high"],
 };
 
-// MongoDB field selection templates for optimized queries
+// =================================================================
+// DATABASE FIELD SELECTIONS
+// =================================================================
+
+/**
+ * MongoDB field selection templates for optimized database queries
+ * @constant {Object} FIELD_SELECTIONS - Field selection configurations for different use cases
+ *
+ * @example
+ * // Use minimal fields for search results
+ * const products = await Product.find(query)
+ *   .select(FIELD_SELECTIONS.MINIMAL)
+ *   .limit(20);
+ *
+ * @example
+ * // Use listing fields for product catalog
+ * const catalogProducts = await Product.find({ isActive: true })
+ *   .select(FIELD_SELECTIONS.LISTING)
+ *   .sort({ createdAt: -1 });
+ */
 export const FIELD_SELECTIONS = {
   MINIMAL: {
     name: 1,
@@ -106,7 +193,25 @@ export const FIELD_SELECTIONS = {
   },
 };
 
-// Standard API response messages
+// =================================================================
+// API RESPONSE MESSAGES AND TEMPLATES
+// =================================================================
+
+/**
+ * Standard API response messages for consistent user communication
+ * @constant {Object} API_RESPONSE_MESSAGES - Standardized response messages
+ *
+ * @example
+ * // Success response with standard message
+ * return createSuccessResponse(data, {
+ *   message: API_RESPONSE_MESSAGES.SUCCESS.DATA_RETRIEVED
+ * });
+ *
+ * @example
+ * // Validation error with dynamic field
+ * const fieldError = API_RESPONSE_MESSAGES.VALIDATION.REQUIRED_FIELD('email');
+ * return createErrorResponse(fieldError);
+ */
 export const API_RESPONSE_MESSAGES = {
   SUCCESS: {
     DATA_RETRIEVED: "Data retrieved successfully",
@@ -135,7 +240,26 @@ export const API_RESPONSE_MESSAGES = {
   },
 };
 
-// API response metadata templates
+/**
+ * API response metadata templates for consistent response formatting
+ * @constant {Object} API_META_TEMPLATES - Response metadata generators
+ *
+ * @example
+ * // Basic endpoint metadata
+ * const meta = API_META_TEMPLATES.BASIC('/api/products');
+ *
+ * @example
+ * // Paginated response metadata
+ * const meta = API_META_TEMPLATES.PAGINATED('/api/products', {
+ *   page: 1, limit: 20, total: 100
+ * });
+ *
+ * @example
+ * // Search result metadata
+ * const meta = API_META_TEMPLATES.SEARCH('/api/search', 'jacket', {
+ *   category: 'men'
+ * }, { page: 1, limit: 12 });
+ */
 export const API_META_TEMPLATES = {
   BASIC: endpoint => ({
     endpoint,
@@ -178,7 +302,24 @@ export const API_META_TEMPLATES = {
   }),
 };
 
-// Fallback data for when external services are unavailable
+// =================================================================
+// FALLBACK DATA AND CONFIGURATIONS
+// =================================================================
+
+/**
+ * Fallback data for when external services are unavailable
+ * @constant {Object} API_FALLBACK_DATA - Default content when services fail
+ *
+ * @example
+ * // Use fallback when CMS is down
+ * const getHeroContent = async () => {
+ *   try {
+ *     return await fetchFromCMS('hero-content');
+ *   } catch (error) {
+ *     return API_FALLBACK_DATA.HERO;
+ *   }
+ * };
+ */
 export const API_FALLBACK_DATA = {
   HERO: {
     title: "Discover Your Style",
@@ -212,7 +353,14 @@ export const API_FALLBACK_DATA = {
   },
 };
 
-// Required fields for different API operations
+// =================================================================
+// CONFIGURATION CONSTANTS
+// =================================================================
+
+/**
+ * Required fields for different API operations
+ * @constant {Object} API_REQUIRED_FIELDS - Required field configurations
+ */
 export const API_REQUIRED_FIELDS = {
   NEWSLETTER_SUBSCRIBE: ["email"],
   PRODUCT_DETAIL: ["id"],
@@ -220,7 +368,10 @@ export const API_REQUIRED_FIELDS = {
   CONTENT_UPDATE: ["title"],
 };
 
-// Content variant types for CMS
+/**
+ * Content variant types for CMS flexibility
+ * @constant {Object} API_CONTENT_VARIANTS - Available content variants
+ */
 export const API_CONTENT_VARIANTS = {
   HERO: ["default", "holiday", "sale", "seasonal", "featured"],
   ABOUT: ["homepage", "company", "mission", "team"],

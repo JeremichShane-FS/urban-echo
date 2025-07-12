@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
 /**
+ * @fileoverview Formatting verification script for CI/CD pipeline integration and code quality enforcement
+ * Validates that source files conform to project's Prettier formatting standards without modifying files
+ * Provides detailed feedback on formatting compliance and guidance for resolving formatting issues
+ */
+
+/**
  * This script checks if files match the project's standard formatting
  * Used by CI pipelines to verify formatting without changing files
  */
@@ -20,7 +26,7 @@ fs.writeFileSync(".prettier.temp.json", JSON.stringify(prettierConfig, null, 2))
 
 try {
   // Check files using the temporary config
-  console.log("ðŸ” Checking files against project formatting standards...");
+  console.log("🔍 Checking files against project formatting standards...");
 
   for (const pattern of filePatterns) {
     console.log(`Checking pattern: ${pattern}`);
@@ -29,9 +35,9 @@ try {
     });
   }
 
-  console.log("âœ… All files match the project's formatting standards.");
+  console.log("✅ All files match the project's formatting standards.");
 } catch {
-  console.error("âŒ Some files do not match the project's formatting standards.");
+  console.error("❌ Some files do not match the project's formatting standards.");
   console.error('   Run "npm run format" to fix formatting issues.');
   process.exit(1);
 } finally {

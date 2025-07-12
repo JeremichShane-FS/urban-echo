@@ -1,14 +1,16 @@
 /**
- * @fileoverview Barrel export file for custom hooks
- * This file centralizes exports for all custom hooks in the project
- * making imports cleaner and more organized across components.
+ * @fileoverview Centralized barrel export file for custom React hooks in the core module
+ * Provides unified access to content management hooks, utility hooks, and common constants
+ * Simplifies import statements across components and maintains clean project architecture
+ * Exports both named exports and default exports with consistent API patterns
  *
- * @example - Instead of multiple imports:
+ * @example
+ * // Instead of multiple imports:
  * import { useDebounce } from '@modules/core/hooks/useDebounce';
  * import { useLocalStorage } from '@modules/core/hooks/useLocalStorage';
- * import useToggle from '@modules/core/hooks/useToggle';
+ * import { useToggle } from '@modules/core/hooks/useToggle';
  *
- * You can now import from a single location:
+ * // You can now import from a single location:
  * import { useDebounce, useLocalStorage, useToggle } from '@modules/core/hooks';
  */
 
@@ -26,4 +28,4 @@ export {
 export { useDebounce } from "./useDebounce";
 export { useLocalStorage } from "./useLocalStorage";
 export { useOutsideClick } from "./useOutsideClick";
-export { default as useToggle } from "./useToggle";
+export { useToggle } from "./useToggle";

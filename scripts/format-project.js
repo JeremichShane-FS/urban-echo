@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
 /**
+ * @fileoverview Project-wide code formatting script using Prettier with standardized configuration
+ * Enforces consistent code formatting across the entire project while allowing developer flexibility during development
+ * Supports custom file patterns and integrates with project's Prettier configuration for standardized output
+ */
+
+/**
  * This script formats project files according to the standard project style
  * Used for enforcing consistent formatting while allowing developers to
  * have their own preferred settings during development.
@@ -26,7 +32,7 @@ fs.writeFileSync(".prettier.temp.json", JSON.stringify(prettierConfig, null, 2))
 
 try {
   // Format files using the temporary config
-  console.log("ðŸ” Formatting files according to project standards...");
+  console.log("🔧 Formatting files according to project standards...");
 
   for (const pattern of filePatterns) {
     console.log(`Processing pattern: ${pattern}`);
@@ -35,9 +41,9 @@ try {
     });
   }
 
-  console.log("âœ… Formatting complete!");
+  console.log("✅ Formatting complete!");
 } catch (error) {
-  console.error("âŒ Error during formatting:", error.message);
+  console.error("❌ Error during formatting:", error.message);
   process.exit(1);
 } finally {
   // Clean up the temporary config file

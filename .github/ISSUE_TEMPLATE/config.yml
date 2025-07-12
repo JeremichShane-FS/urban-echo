@@ -1,9 +1,26 @@
+# =================================================================
+# GITHUB ISSUE TEMPLATE CONFIGURATION
+# =================================================================
+# Purpose: Configures GitHub issue creation behavior and resource links
+# Location: .github/ISSUE_TEMPLATE/config.yml
+#
+# This configuration:
+# - Disables blank issues to encourage structured issue creation
+# - Provides helpful resource links to redirect users to appropriate channels
+# - Reduces noise by directing users to docs and discussions before creating issues
+# =================================================================
+
+# Disable blank issue creation to encourage use of issue templates
+# Users must choose from predefined templates or use resource links
 blank_issues_enabled: false
+
+# Resource links displayed when users create new issues
+# Helps redirect users to documentation and community resources first
 contact_links:
   - name: 📚 Documentation
-    url: https://github.com/JeremichShane-FS/wdv349-o-JeremichShane-FS/blob/main/README.md
+    url: https://github.com/JeremichShane-FS/urban-echo/blob/main/README.md
     about: Check our documentation before creating an issue
 
   - name: 💬 Discussions
-    url: https://github.com/JeremichShane-FS/wdv349-o-JeremichShane-FS/discussions
+    url: https://github.com/JeremichShane-FS/urban-echo/discussions
     about: For questions and ideas, please use Discussions
