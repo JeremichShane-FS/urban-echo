@@ -6,6 +6,7 @@
  */
 
 import { API_RESPONSE_MESSAGES, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import { getEnvironment } from "@config/environment";
 import { errorHandler } from "@modules/core/utils";
 
 /**
@@ -37,13 +38,14 @@ import { errorHandler } from "@modules/core/utils";
  * }
  */
 export const fetchFromStrapi = async (endpoint, source) => {
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-  const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN;
+  const env = getEnvironment();
+  const strapiUrl = env.strapiUrl || "http://localhost:1337";
+  const strapiToken = env.strapiToken;
 
-  const response = await fetch(`${STRAPI_URL}/api/${endpoint}`, {
+  const response = await fetch(`${strapiUrl}/api/${endpoint}`, {
     headers: {
       "Content-Type": "application/json",
-      ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
+      ...(strapiToken && { Authorization: `Bearer ${strapiToken}` }),
     },
   });
 
@@ -54,7 +56,7 @@ export const fetchFromStrapi = async (endpoint, source) => {
     errorHandler.handleError(strapiError, ERROR_TYPES.API_ERROR, {
       source,
       action: "fetch-strapi-content",
-      strapiUrl: STRAPI_URL,
+      strapiUrl: strapiUrl,
       endpoint,
       responseStatus: response.status,
     });
@@ -218,26 +220,32 @@ export const transformContentWithFallbacks = (content, fallbacks) => {
 /**
  * Processes and normalizes image URLs from Strapi CMS with proper URL handling
  * @function processImageUrl
- * @param {Object} image - Strapi image object with URL and metadata
- * @param {string} [image.url] - Image URL (relative or absolute)
+ * @param {Object} image - Strapi image object with nested structure or direct URL
+ * @param {Object} [image.data] - Strapi v4 image data container
+ * @param {Object} [image.data.attributes] - Strapi v4 image attributes
+ * @param {string} [image.data.attributes.url] - Strapi v4 image URL
+ * @param {string} [image.url] - Direct image URL (legacy or external)
  * @param {string} strapiUrl - Base Strapi URL for resolving relative paths
  * @returns {string|null} Complete image URL or null if image unavailable
  *
  * @description
- * Handles Strapi image URL processing:
- * - Validates image object and URL existence
- * - Detects absolute URLs (external images)
- * - Resolves relative URLs with Strapi base URL
- * - Returns null for missing or invalid images
+ * Handles Strapi image URL processing with support for:
+ * - Strapi v4 nested structure (image.data.attributes.url)
+ * - Legacy direct URL structure (image.url)
+ * - Absolute URL detection for external images
+ * - Relative URL resolution with Strapi base URL
+ * - Graceful null handling for missing images
  *
  * @example
+ * // Strapi v4 structure
  * const imageUrl = processImageUrl(
- *   { url: "/uploads/hero-image.jpg" },
+ *   { data: { attributes: { url: "/uploads/hero-image.jpg" } } },
  *   "https://cms.urbanecho.com"
  * );
  * // Returns: "https://cms.urbanecho.com/uploads/hero-image.jpg"
  *
  * @example
+ * // Legacy or external image
  * const externalImage = processImageUrl(
  *   { url: "https://cdn.example.com/image.jpg" },
  *   "https://cms.urbanecho.com"
@@ -245,11 +253,14 @@ export const transformContentWithFallbacks = (content, fallbacks) => {
  * // Returns: "https://cdn.example.com/image.jpg" (absolute URL unchanged)
  *
  * @example
+ * // Missing image handling
  * const missingImage = processImageUrl(null, "https://cms.urbanecho.com");
  * // Returns: null (graceful handling of missing images)
  */
-export const processImageUrl = (image, strapiUrl) => {
-  if (!image?.url) return null;
-  if (image.url.startsWith("http")) return image.url;
-  return `${strapiUrl}${image.url}`;
-};
+export function processImageUrl(image, strapiUrl) {
+  const imageUrl = image?.data?.attributes?.url || image?.url;
+
+  if (!imageUrl) return null;
+  if (imageUrl.startsWith("http")) return imageUrl;
+  return `${strapiUrl}${imageUrl}`;
+}

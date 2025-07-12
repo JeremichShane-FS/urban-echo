@@ -22,7 +22,11 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_URL;
 export const CDN_BASE_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+
+export const SITE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_SITE_URL || "https://shopurbanecho.com"
+    : "http://localhost:3000";
 export const API_VERSION = "v1";
 export const LEGACY_API_VERSION = "v0";
 

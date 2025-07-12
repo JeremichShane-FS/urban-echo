@@ -116,6 +116,18 @@ const nextConfig = {
         hostname: "cms.gourbanecho.com",
         pathname: "/uploads/**",
       },
+      // Strapi Cloud instance for media hosting
+      {
+        protocol: "https",
+        hostname: "strong-canvas-c0e422458b.media.strapiapp.com",
+        pathname: "/**",
+      },
+      // Wildcard subdomain pattern for Strapi Cloud media hosting
+      {
+        protocol: "https",
+        hostname: "*.media.strapiapp.com",
+        pathname: "/**",
+      },
     ],
 
     /**

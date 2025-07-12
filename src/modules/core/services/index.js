@@ -12,13 +12,7 @@
  */
 
 // Authentication Services
-export {
-  default as authService,
-  getUserProfile,
-  login,
-  register,
-  updateUserProfile,
-} from "./auth-service";
+export { default as authService, getUserProfile, login, register, updateUserProfile } from "./auth";
 
 // Content Management Services
 export {
@@ -26,7 +20,7 @@ export {
   getAboutContent,
   getHeroContent,
   getPageConfig,
-} from "./content-service";
+} from "./content";
 
 // HTTP Client Services
 export { del, get, post, put } from "./http-client";
@@ -36,15 +30,4 @@ export {
   default as newsletterService,
   subscribeNewsletter,
   unsubscribeNewsletter,
-} from "./newsletter-service";
-
-// Product Services
-export {
-  getFeaturedProducts,
-  getNewArrivals,
-  getProduct,
-  getProducts,
-  getRelatedProducts,
-  default as productService,
-  searchProducts,
-} from "./product-service";
+} from "./newsletter";

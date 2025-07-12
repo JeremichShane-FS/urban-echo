@@ -10,7 +10,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 
 import { Button } from "@design-system/buttons";
-import { renderStars } from "@modules/core/utils/renderStars";
+import { renderStars } from "@modules/core/utils";
 
 import CategoryPageView from "./CategoryPageView";
 import useCategoryPage from "./useCategoryPage";

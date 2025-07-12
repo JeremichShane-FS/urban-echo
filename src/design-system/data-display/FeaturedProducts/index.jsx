@@ -6,7 +6,7 @@
 
 "use client";
 import ProductCard from "@design-system/data-display/ProductCard";
-import { useFeaturedProducts } from "@modules/product/hooks";
+import { useFeaturedProducts } from "@modules/products/hooks";
 
 import FeaturedProductsView from "./FeaturedProductsView";
 

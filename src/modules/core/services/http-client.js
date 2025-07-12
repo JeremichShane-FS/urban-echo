@@ -6,6 +6,7 @@
  */
 
 import { API_TIMEOUT, ERROR_TYPES, HTTP_STATUS } from "@config/constants";
+import { getEnvironment } from "@config/environment";
 import { errorHandler } from "@modules/core/utils";
 
 /**
@@ -42,15 +43,10 @@ const createStatusError = (message, status) => {
 const request = async (endpoint, options = {}) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+  const { siteUrl } = getEnvironment();
 
   let baseUrl = "";
-  if (typeof window === "undefined") {
-    // Server-side: use localhost for development or site URL for production
-    baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL || "https://shopurbanecho.com"
-        : "http://localhost:3000";
-  }
+  if (typeof window === "undefined") baseUrl = siteUrl;
 
   const url = endpoint.startsWith("http") ? endpoint : `${baseUrl}/api/${endpoint}`;
 

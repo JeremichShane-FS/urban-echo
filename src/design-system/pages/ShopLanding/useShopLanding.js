@@ -8,8 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION } from "@config/constants";
 import { queryKeys } from "@modules/core/providers";
-import { useFeaturedProducts, useNewArrivals } from "@modules/product/hooks";
-import { categoriesService } from "@modules/product/services";
+import { useFeaturedProducts, useNewArrivals } from "@modules/products/hooks";
+import { categoriesService } from "@modules/products/services";
 
 /**
  * Hook for managing shop landing page data with optimized caching and error handling

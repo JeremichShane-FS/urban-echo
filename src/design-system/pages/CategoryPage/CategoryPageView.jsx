@@ -61,7 +61,6 @@ const CategoryPageView = ({
   totalPages,
   totalProducts,
 }) => {
-  // Ensure products is always an array to prevent .map() errors
   const safeProducts = Array.isArray(products) ? products : [];
   const safeCategories = Array.isArray(categories) ? categories : [];
 
