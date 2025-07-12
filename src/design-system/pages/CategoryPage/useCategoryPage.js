@@ -97,7 +97,9 @@ const useCategoryPage = params => {
         ...(filters.freeShipping && { freeShipping: true }),
       };
 
-      console.log("🔧 Final query params:", queryParams);
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔧 Final query params:", queryParams);
+      }
 
       // FIXED: Use only existing API endpoints
       if (searchTerm) {
