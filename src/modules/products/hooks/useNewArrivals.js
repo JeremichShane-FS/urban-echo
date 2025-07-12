@@ -91,7 +91,7 @@ export const useNewArrivals = (options = {}) => {
 
   const { data, error, isLoading, ...rest } = useQuery({
     queryKey,
-    queryFn: () => getNewArrivals({ limit }),
+    queryFn: () => getNewArrivals(limit),
     enabled,
     staleTime: CACHE_DURATION.short,
     gcTime: CACHE_DURATION.medium,
