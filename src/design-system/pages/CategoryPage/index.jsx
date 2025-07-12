@@ -47,10 +47,6 @@ const CategoryPage = ({ params }) => {
     totalProducts,
   } = useCategoryPage(params);
 
-  console.log("📍 CategoryPage container - products:", products);
-  console.log("📍 CategoryPage container - totalProducts:", totalProducts);
-  console.log("📍 CategoryPage container - isLoading:", isLoading);
-
   return (
     <CategoryPageView
       Button={Button}

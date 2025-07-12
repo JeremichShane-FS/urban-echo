@@ -6,8 +6,6 @@ export const CategoryRoute = async ({ params }) => {
   const resolvedParams = await params;
   // Merge resolved params back into params object
   // Object.assign(params, resolvedParams);
-  console.log("📍 Page params:", params);
-  console.log("📍 Page resolvedParams:", resolvedParams);
   return <CategoryPage params={resolvedParams} />;
 };
 
