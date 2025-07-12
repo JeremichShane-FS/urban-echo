@@ -13,7 +13,7 @@ export const getEnvironment = () => {
 
     // Strapi CMS
     strapiUrl: process.env.NEXT_PUBLIC_STRAPI_URL,
-    strapiToken: process.env.STRAPI_TOKEN,
+    strapiToken: process.env.NEXT_STRAPI_API_TOKEN,
 
     // Feature flags
     enableAnalytics: process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true",
