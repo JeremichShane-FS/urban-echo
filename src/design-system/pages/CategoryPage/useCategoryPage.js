@@ -42,8 +42,6 @@ import { getCategories, getProducts, searchProducts } from "@modules/products/se
 const useCategoryPage = params => {
   const router = useRouter();
   const category = params?.category || "all";
-
-  // Filter states
   const [selectedCategory, setSelectedCategory] = useState(category === "all" ? "all" : category);
   const [sortBy, setSortBy] = useState("featured");
   const [priceRange, setPriceRange] = useState([0, 500]);
@@ -68,7 +66,7 @@ const useCategoryPage = params => {
     retry: 3,
   });
 
-  // Fetch products based on current filters - FIXED: Use existing API endpoints
+  // Fetch products based on current filters
   const {
     data: productsResponse,
     error,
@@ -86,26 +84,19 @@ const useCategoryPage = params => {
       const queryParams = {
         page: currentPage,
         limit: 12,
-        sortBy: sortBy, // Note: changed from 'sort' to 'sortBy' to match your API
+        sortBy: sortBy,
         minPrice: priceRange[0],
         maxPrice: priceRange[1],
         ...(searchTerm && { search: searchTerm }),
-        // FIXED: Always include category filter, use 'all' for all products
         ...(selectedCategory !== "all" && { category: selectedCategory }),
         ...(filters.onSale && { onSale: true }),
         ...(filters.newArrivals && { isNew: true }),
         ...(filters.freeShipping && { freeShipping: true }),
       };
 
-      if (process.env.NODE_ENV === "development") {
-        console.log("🔧 Final query params:", queryParams);
-      }
-
-      // FIXED: Use only existing API endpoints
       if (searchTerm) {
         return searchProducts(queryParams);
       } else {
-        // Use the main products API for both "all" and specific categories
         return getProducts(queryParams);
       }
     },
@@ -116,22 +107,16 @@ const useCategoryPage = params => {
     enabled: true,
   });
 
-  // Process API response to handle different data structures
   const productsData = useMemo(() => {
-    console.log("🔧 Raw API Response:", productsResponse);
-
     if (!productsResponse) {
       return { products: [], total: 0 };
     }
 
-    // Handle different possible response structures from your existing API
     if (Array.isArray(productsResponse)) {
-      // If API returns just an array of products
       return { products: productsResponse, total: productsResponse.length };
     }
 
     if (productsResponse.products && Array.isArray(productsResponse.products)) {
-      // If API returns {products: [...], total: number}
       return {
         products: productsResponse.products,
         total: productsResponse.total || productsResponse.products.length,
@@ -139,7 +124,6 @@ const useCategoryPage = params => {
     }
 
     if (productsResponse.data && Array.isArray(productsResponse.data)) {
-      // If API returns {data: [...], pagination: {...}}
       const total =
         productsResponse.pagination?.total ||
         productsResponse.meta?.total ||
@@ -150,11 +134,7 @@ const useCategoryPage = params => {
       };
     }
 
-    // FIXED: Handle the actual structure from your API
     if (productsResponse.products && typeof productsResponse.products === "object") {
-      console.log("🔧 Products object structure:", productsResponse.products);
-
-      // Check if products object has array properties
       if (Array.isArray(productsResponse.products.data)) {
         const total =
           productsResponse.pagination?.total ||
@@ -166,14 +146,10 @@ const useCategoryPage = params => {
         };
       }
 
-      // Check if products is nested differently
       const productKeys = Object.keys(productsResponse.products);
-      console.log("🔧 Product object keys:", productKeys);
 
-      // Look for array properties in the products object
       for (const key of productKeys) {
         if (Array.isArray(productsResponse.products[key])) {
-          console.log(`🔧 Found array at products.${key}:`, productsResponse.products[key]);
           const total =
             productsResponse.pagination?.total ||
             productsResponse.meta?.total ||
@@ -186,16 +162,9 @@ const useCategoryPage = params => {
       }
     }
 
-    // Fallback for unexpected response structure
-    console.warn("🔧 Unexpected API response structure:", productsResponse);
-    console.warn("🔧 Available keys:", Object.keys(productsResponse));
-    console.warn("🔧 Products type:", typeof productsResponse.products);
     return { products: [], total: 0 };
   }, [productsResponse]);
 
-  console.log("🔧 Processed productsData:", productsData);
-
-  // Enhanced categories with product counts
   const enhancedCategories = useMemo(() => {
     const baseCategories = [{ id: "all", label: "All Products", count: productsData.total || 0 }];
 
@@ -209,14 +178,12 @@ const useCategoryPage = params => {
     ];
   }, [categories, productsData.total]);
 
-  // Pagination
   const totalPages = Math.ceil((productsData.total || 0) / 12);
 
   const handleCategoryChange = newCategory => {
     setSelectedCategory(newCategory);
     setCurrentPage(1);
 
-    // Update URL
     if (newCategory === "all") {
       router.push("/shop/all");
     } else {
