@@ -118,12 +118,6 @@ jobs:
       # Enforces code quality standards through ESLint
       # Prevents commits that don't meet established coding standards
 
-      # =================================================================
-      # CODE QUALITY GATE
-      # =================================================================
-      # Enforces code quality standards through ESLint
-      # Prevents commits that don't meet established coding standards
-
       - name: "Code Quality Gate"
         run: |
           echo "🧹 Starting code quality validation..."
@@ -143,12 +137,6 @@ jobs:
 
           echo "✅ Code quality checks passed"
           echo "🎉 All code meets established quality standards"
-
-      # =================================================================
-      # BUILD VERIFICATION GATE
-      # =================================================================
-      # Ensures code can be built successfully for production deployment
-      # Prevents deployment of code that would fail in production
 
       # =================================================================
       # BUILD VERIFICATION GATE
@@ -186,6 +174,7 @@ jobs:
           NEXT_STRAPI_API_TOKEN: ${{ secrets.NEXT_STRAPI_API_TOKEN }}
           NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NODE_ENV: production
 
       # =================================================================
       # DEPENDENCY VULNERABILITY SCANNING
