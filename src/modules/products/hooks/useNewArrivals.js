@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION, DEFAULT_PAGINATION } from "@config/constants";
 import { queryKeys } from "@modules/core/providers";
-import { getNewArrivals } from "@modules/core/services";
+import { getNewArrivals } from "@modules/products/services";
 
 /**
  * Custom hook for fetching and managing new arrival products with filtering and pagination
@@ -91,7 +91,7 @@ export const useNewArrivals = (options = {}) => {
 
   const { data, error, isLoading, ...rest } = useQuery({
     queryKey,
-    queryFn: () => getNewArrivals({ category, limit, page, sortBy, sortOrder }),
+    queryFn: () => getNewArrivals(limit),
     enabled,
     staleTime: CACHE_DURATION.short,
     gcTime: CACHE_DURATION.medium,
@@ -99,29 +99,17 @@ export const useNewArrivals = (options = {}) => {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
-    select: data => {
-      const rawData = data?.data || data || {};
-      const products = rawData.products || rawData.data || rawData || [];
-      const pagination = rawData.pagination || {
+    select: data => ({
+      products: Array.isArray(data) ? data : [],
+      pagination: {
         page,
         limit,
-        total: products.length,
-        totalPages: Math.ceil(products.length / limit),
-        hasMore: products.length === limit,
-        hasPrevious: page > 1,
-      };
-      const filters = {
-        category,
-        sortBy,
-        sortOrder,
-      };
-
-      return {
-        products: Array.isArray(products) ? products : [],
-        pagination,
-        filters,
-      };
-    },
+        total: Array.isArray(data) ? data.length : 0,
+        hasMore: false,
+        totalPages: 1,
+      },
+      filters: { category, sortBy, sortOrder },
+    }),
     meta: {
       source: "new-arrivals-api",
       filters: { category, sortBy, sortOrder },
@@ -183,3 +171,14 @@ export const useNewArrivals = (options = {}) => {
     ...rest,
   };
 };
+
+/**
+ * New Arrivals service object containing all new arrivals management functions
+ * @namespace newArrivalsService
+ * @description Provides a centralized interface for all new arrivals API operations
+ */
+const newArrivalsService = {
+  getNewArrivals,
+};
+
+export default newArrivalsService;

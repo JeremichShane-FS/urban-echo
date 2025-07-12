@@ -5,6 +5,7 @@
  */
 
 import { API_ENDPOINTS, API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
+import { getEnvironment } from "@config/environment";
 import { errorHandler } from "@modules/core/utils";
 import {
   createCorsResponse,
@@ -15,8 +16,10 @@ import {
   processImageUrl,
   transformContentWithFallbacks,
 } from "@modules/core/utils/api";
+
 const ERROR_SOURCE = "hero-content-api";
 const HERO_FALLBACKS = API_FALLBACK_DATA.HERO;
+
 /**
  * Builds Strapi endpoint URL based on variant and request type
  * @param {string} variant - Content variant (default, holiday, sale, seasonal)
@@ -58,7 +61,8 @@ function buildStrapiEndpoint(variant, endpoint) {
  * const transformed = transformHeroContent(variantArray, strapiUrl, true);
  */
 function transformHeroContent(content, strapiUrl, isArray = false) {
-  const STRAPI_URL = strapiUrl || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  const env = getEnvironment();
+  const STRAPI_URL = strapiUrl || env.strapiUrl || "http://localhost:1337";
 
   if (isArray) {
     return content.map(item => transformSingleHeroContent(item, STRAPI_URL));
@@ -83,6 +87,7 @@ function transformSingleHeroContent(content, strapiUrl) {
   transformed.backgroundImage = processImageUrl(content.backgroundImage, strapiUrl);
   return transformed;
 }
+
 /**
  * GET /api/content/hero - Retrieve hero section content with variant support
  * @param {Request} request - Next.js API request object with URL search parameters
@@ -159,9 +164,15 @@ export async function GET(request) {
     const strapiEndpoint = buildStrapiEndpoint(variant, endpoint);
     const response = await fetchFromStrapi(strapiEndpoint, ERROR_SOURCE);
     const data = await response.json();
-    const content = endpoint === "variants" ? data.data : data.data?.[0];
-    const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+    // ✅ Extract attributes from Strapi response structure
+    const rawContent = endpoint === "variants" ? data.data : data.data?.[0];
+    const content = rawContent?.attributes || rawContent;
+
+    const env = getEnvironment();
+    const STRAPI_URL = env.strapiUrl || "http://localhost:1337";
     const transformedContent = transformHeroContent(content, STRAPI_URL, endpoint === "variants");
+
     const meta = {
       endpoint: `/api/${API_ENDPOINTS.content}/hero`,
       variant,

@@ -20,7 +20,6 @@ import { trackClick } from "@modules/core/utils";
  */
 const useAboutSection = () => {
   const { data: aboutContent, error, isLoading } = useAboutContent();
-
   const handleLearnMoreClick = useCallback(() => {
     trackClick("About Section", "Learn More About Us");
   }, []);

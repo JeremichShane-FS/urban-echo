@@ -10,7 +10,7 @@ import Link from "next/link";
 import { BUTTON_SIZES, BUTTON_VARIANTS, ROUTES } from "@config/constants";
 import { Button } from "@design-system/buttons";
 import { ProductCard } from "@design-system/data-display";
-import { useNewArrivals } from "@modules/product/hooks";
+import { useNewArrivals } from "@modules/products/hooks";
 
 import NewArrivalsView from "./NewArrivalsView";
 

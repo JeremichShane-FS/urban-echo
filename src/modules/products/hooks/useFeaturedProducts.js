@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CACHE_DURATION, ERROR_TYPES } from "@config/constants";
 import { queryKeys } from "@modules/core/providers";
 import { errorHandler } from "@modules/core/utils";
-import { featuredProductsService } from "@modules/product/services";
+import { getFeaturedProducts } from "@modules/products/services";
 
 /**
  * Custom hook for managing featured products data using TanStack Query
@@ -55,7 +55,7 @@ export const useFeaturedProducts = (options = {}) => {
 
   const queryResult = useQuery({
     queryKey: queryKeys.products.featured(),
-    queryFn: () => featuredProductsService.getFeaturedProducts(limit),
+    queryFn: () => getFeaturedProducts(limit),
     enabled,
     staleTime: CACHE_DURATION.medium,
     gcTime: CACHE_DURATION.long,
@@ -63,10 +63,7 @@ export const useFeaturedProducts = (options = {}) => {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
-    select: data => {
-      // The featuredProductsService already returns just the products array
-      return Array.isArray(data) ? data : [];
-    },
+    select: data => (Array.isArray(data?.products) ? data.products : []),
     meta: {
       source: ERROR_SOURCE,
       limit,
@@ -188,7 +185,7 @@ export const usePrefetchFeaturedProducts = (limit = 8) => {
   return () => {
     queryClient.prefetchQuery({
       queryKey: queryKeys.products.featured(),
-      queryFn: () => featuredProductsService.getFeaturedProducts(limit),
+      queryFn: () => getFeaturedProducts(limit),
       staleTime: CACHE_DURATION.medium,
     });
   };

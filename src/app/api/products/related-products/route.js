@@ -18,7 +18,7 @@ import {
   validatePagination,
   validateRequiredFields,
 } from "@modules/core/utils/api";
-import { relatedProductsService } from "@modules/product/services";
+import { relatedProductsService } from "@modules/products/services";
 
 const ERROR_SOURCE = "related-products-api";
 

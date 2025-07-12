@@ -9,10 +9,8 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION } from "@config/constants";
-import { queryKeys } from "@modules/core/providers/query-provider";
-import { categoriesService } from "@modules/product/services/categories";
-import { productSearchService } from "@modules/product/services/product-search";
-import { productsService } from "@modules/product/services/products";
+import { queryKeys } from "@modules/core/providers";
+import { getCategories, getProducts, searchProducts } from "@modules/products/services";
 
 /**
  * Hook for managing category page state including products, filters, pagination, and URL synchronization
@@ -61,7 +59,7 @@ const useCategoryPage = params => {
   const { data: categories = [] } = useQuery({
     queryKey: queryKeys.categories.list(),
     queryFn: () =>
-      categoriesService.getCategories({
+      getCategories({
         includeProductCount: true,
         status: "active",
       }),
@@ -70,9 +68,9 @@ const useCategoryPage = params => {
     retry: 3,
   });
 
-  // Fetch products based on current filters
+  // Fetch products based on current filters - FIXED: Use existing API endpoints
   const {
-    data: productsData = { products: [], total: 0 },
+    data: productsResponse,
     error,
     isLoading,
   } = useQuery({
@@ -88,28 +86,114 @@ const useCategoryPage = params => {
       const queryParams = {
         page: currentPage,
         limit: 12,
-        sort: sortBy,
+        sortBy: sortBy, // Note: changed from 'sort' to 'sortBy' to match your API
         minPrice: priceRange[0],
         maxPrice: priceRange[1],
         ...(searchTerm && { search: searchTerm }),
+        // FIXED: Always include category filter, use 'all' for all products
         ...(selectedCategory !== "all" && { category: selectedCategory }),
         ...(filters.onSale && { onSale: true }),
         ...(filters.newArrivals && { isNew: true }),
         ...(filters.freeShipping && { freeShipping: true }),
       };
 
-      if (searchTerm) return productSearchService.searchProducts(queryParams);
-      if (selectedCategory === "all") return productsService.getProducts(queryParams);
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔧 Final query params:", queryParams);
+      }
 
-      return productsService.getProductsByCategory(selectedCategory, queryParams);
+      // FIXED: Use only existing API endpoints
+      if (searchTerm) {
+        return searchProducts(queryParams);
+      } else {
+        // Use the main products API for both "all" and specific categories
+        return getProducts(queryParams);
+      }
     },
     staleTime: CACHE_DURATION.short,
     gcTime: CACHE_DURATION.medium,
     retry: 3,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-    // Refetch when filters change
     enabled: true,
   });
+
+  // Process API response to handle different data structures
+  const productsData = useMemo(() => {
+    console.log("🔧 Raw API Response:", productsResponse);
+
+    if (!productsResponse) {
+      return { products: [], total: 0 };
+    }
+
+    // Handle different possible response structures from your existing API
+    if (Array.isArray(productsResponse)) {
+      // If API returns just an array of products
+      return { products: productsResponse, total: productsResponse.length };
+    }
+
+    if (productsResponse.products && Array.isArray(productsResponse.products)) {
+      // If API returns {products: [...], total: number}
+      return {
+        products: productsResponse.products,
+        total: productsResponse.total || productsResponse.products.length,
+      };
+    }
+
+    if (productsResponse.data && Array.isArray(productsResponse.data)) {
+      // If API returns {data: [...], pagination: {...}}
+      const total =
+        productsResponse.pagination?.total ||
+        productsResponse.meta?.total ||
+        productsResponse.data.length;
+      return {
+        products: productsResponse.data,
+        total: total,
+      };
+    }
+
+    // FIXED: Handle the actual structure from your API
+    if (productsResponse.products && typeof productsResponse.products === "object") {
+      console.log("🔧 Products object structure:", productsResponse.products);
+
+      // Check if products object has array properties
+      if (Array.isArray(productsResponse.products.data)) {
+        const total =
+          productsResponse.pagination?.total ||
+          productsResponse.meta?.total ||
+          productsResponse.products.data.length;
+        return {
+          products: productsResponse.products.data,
+          total: total,
+        };
+      }
+
+      // Check if products is nested differently
+      const productKeys = Object.keys(productsResponse.products);
+      console.log("🔧 Product object keys:", productKeys);
+
+      // Look for array properties in the products object
+      for (const key of productKeys) {
+        if (Array.isArray(productsResponse.products[key])) {
+          console.log(`🔧 Found array at products.${key}:`, productsResponse.products[key]);
+          const total =
+            productsResponse.pagination?.total ||
+            productsResponse.meta?.total ||
+            productsResponse.products[key].length;
+          return {
+            products: productsResponse.products[key],
+            total: total,
+          };
+        }
+      }
+    }
+
+    // Fallback for unexpected response structure
+    console.warn("🔧 Unexpected API response structure:", productsResponse);
+    console.warn("🔧 Available keys:", Object.keys(productsResponse));
+    console.warn("🔧 Products type:", typeof productsResponse.products);
+    return { products: [], total: 0 };
+  }, [productsResponse]);
+
+  console.log("🔧 Processed productsData:", productsData);
 
   // Enhanced categories with product counts
   const enhancedCategories = useMemo(() => {

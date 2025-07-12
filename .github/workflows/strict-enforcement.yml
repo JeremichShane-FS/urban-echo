@@ -118,12 +118,6 @@ jobs:
       # Enforces code quality standards through ESLint
       # Prevents commits that don't meet established coding standards
 
-      # =================================================================
-      # CODE QUALITY GATE
-      # =================================================================
-      # Enforces code quality standards through ESLint
-      # Prevents commits that don't meet established coding standards
-
       - name: "Code Quality Gate"
         run: |
           echo "🧹 Starting code quality validation..."
@@ -143,12 +137,6 @@ jobs:
 
           echo "✅ Code quality checks passed"
           echo "🎉 All code meets established quality standards"
-
-      # =================================================================
-      # BUILD VERIFICATION GATE
-      # =================================================================
-      # Ensures code can be built successfully for production deployment
-      # Prevents deployment of code that would fail in production
 
       # =================================================================
       # BUILD VERIFICATION GATE
@@ -183,6 +171,10 @@ jobs:
           echo "🚀 Code is ready for production deployment"
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_STRAPI_URL: ${{ secrets.NEXT_PUBLIC_STRAPI_URL }}
+          NEXT_STRAPI_API_TOKEN: ${{ secrets.NEXT_STRAPI_API_TOKEN }}
+          NODE_ENV: production
 
       # =================================================================
       # DEPENDENCY VULNERABILITY SCANNING

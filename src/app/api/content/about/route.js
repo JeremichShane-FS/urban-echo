@@ -17,6 +17,7 @@ import {
 
 const ERROR_SOURCE = "about-content-api";
 const ABOUT_FALLBACKS = API_FALLBACK_DATA.ABOUT;
+
 /**
  * Builds Strapi endpoint URL for about content retrieval
  * @param {string} section - Content section (mission, vision, team, history)
@@ -138,7 +139,11 @@ export async function GET(request) {
     const strapiEndpoint = buildStrapiEndpoint(section);
     const response = await fetchFromStrapi(strapiEndpoint, ERROR_SOURCE);
     const data = await response.json();
-    const content = data.data?.[0];
+
+    // ✅ Extract attributes from Strapi response structure
+    const rawContent = data.data?.[0];
+    const content = rawContent?.attributes || rawContent;
+
     const transformedContent = transformAboutContent(content, section);
 
     const meta = {

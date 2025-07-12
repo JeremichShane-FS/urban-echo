@@ -26,9 +26,14 @@
 
 import { API_FALLBACK_DATA, ERROR_TYPES } from "@config/constants";
 import { generatePageMetadata } from "@config/seo";
+import { validateEnvironment } from "@config/validateEnv";
 import HomePage from "@design-system/pages/HomePage";
 import { errorHandler } from "@modules/core/utils";
 import { fetchFromStrapi, transformContentWithFallbacks } from "@modules/core/utils/api";
+
+if (typeof window === "undefined") {
+  validateEnvironment();
+}
 
 export async function generateMetadata() {
   try {

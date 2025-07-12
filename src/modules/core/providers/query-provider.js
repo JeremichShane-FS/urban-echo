@@ -119,7 +119,7 @@ export const QueryProvider = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       {children}
       {process.env.NEXT_PUBLIC_SHOW_DEVTOOLS === "true" && (
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={true} />
       )}
     </QueryClientProvider>
   );
