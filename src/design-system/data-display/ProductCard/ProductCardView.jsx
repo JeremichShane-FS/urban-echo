@@ -66,7 +66,10 @@ const ProductCardView = ({
   }
   return (
     <div className={`${styles.card} ${className}`}>
-      <Link className={styles.link} href={`/shop/product/${product.slug}`} onClick={handleClick}>
+      <Link
+        className={styles.link}
+        href={`/shop/${product.category}/${product.slug}/${product.id}`}
+        onClick={handleClick}>
         <div className={styles.image}>
           <Image
             fill

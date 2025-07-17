@@ -16,6 +16,17 @@
 // Analytics Utilities
 export { trackClick, trackEvent, trackPageView } from "./analytics";
 
+// Breadcrumb Utilities
+export {
+  formatCategoryName,
+  generateAccountBreadcrumbs,
+  generateCategoryBreadcrumbs,
+  generateCheckoutBreadcrumbs,
+  generateProductBreadcrumbs,
+  generateSearchBreadcrumbs,
+  truncateBreadcrumbLabel,
+} from "./breadcrumbs";
+
 // CSS/Styling Utilities
 export { classNames, cn } from "./classNames";
 
@@ -32,6 +43,7 @@ export { getNavItemById, getNavItemsByIds } from "./getNavItems";
 export {
   getBrandedPlaceholder,
   getHeroImageUrl,
+  getImageUrl,
   getPlaceholderUrl,
   getProductImageUrl,
   PLACEHOLDER_CONFIGS,

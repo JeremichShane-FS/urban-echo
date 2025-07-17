@@ -55,7 +55,7 @@ export const useFeaturedProducts = (options = {}) => {
 
   const queryResult = useQuery({
     queryKey: queryKeys.products.featured(),
-    queryFn: () => getFeaturedProducts(limit),
+    queryFn: async () => getFeaturedProducts(limit),
     enabled,
     staleTime: CACHE_DURATION.medium,
     gcTime: CACHE_DURATION.long,

@@ -26,6 +26,7 @@ import styles from "./CategoryPage.module.scss";
  */
 const CategoryPage = ({ params }) => {
   const {
+    breadcrumbItems,
     categories,
     category,
     currentPage,
@@ -52,6 +53,7 @@ const CategoryPage = ({ params }) => {
       Button={Button}
       Image={Image}
       Link={Link}
+      breadcrumbItems={breadcrumbItems}
       categories={categories}
       category={category}
       currentPage={currentPage}

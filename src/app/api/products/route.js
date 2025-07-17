@@ -124,6 +124,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const rawLimit = parseInt(searchParams.get("limit")) || 8;
     const category = searchParams.get("category");
+    const featured = searchParams.get("featured");
 
     const validation = validatePagination({
       limit: rawLimit,
@@ -140,7 +141,7 @@ export async function GET(request) {
     const query = buildProductQuery({
       category,
       isActive: true,
-      isFeatured: true,
+      ...(featured === "true" && { isFeatured: true }),
     });
 
     const featuredProducts = await Product.find(query)

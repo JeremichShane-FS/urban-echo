@@ -23,8 +23,8 @@ const createQueryClient = () =>
   new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: CACHE_DURATION.short, // 5 minutes
-        gcTime: CACHE_DURATION.medium, // 30 minutes (updated from cacheTime)
+        staleTime: CACHE_DURATION.short,
+        gcTime: CACHE_DURATION.medium,
         // Retry failed requests 3 times
         retry: (failureCount, error) => {
           // Don't retry on 4xx errors

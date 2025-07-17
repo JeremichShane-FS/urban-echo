@@ -6,6 +6,9 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+
 /**
  * View component for rendering homepage sections with conditional visibility and analytics tracking
  * @component
@@ -33,22 +36,9 @@ const HomePageView = ({
   refs,
   styles,
 }) => {
-  if (error) {
-    return <div>Error loading about section</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <main className={styles.page}>
-        <div className={styles.loading}>
-          <div className={styles.content}>
-            <h1>Loading Urban Echo...</h1>
-            <p>Preparing your fashion experience</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  if (isLoading)
+    return <Loading message="Preparing your fashion experience" title="Loading Urban Echo..." />;
+  if (error) return <Error message={error} title="Home Page" variant="page" />;
 
   return (
     <main className={styles.page}>

@@ -19,24 +19,12 @@ export const getProducts = async (params = {}) => {
 };
 
 /**
- * Retrieves detailed information for a single product by ID or slug
- * @async
- * @function getProduct
- * @param {string} id - Product ID or URL-friendly slug identifier
- * @returns {Promise<Object>} Complete product data including variants and images
- */
-export const getProduct = async id => {
-  return get(`${API_ENDPOINTS.products}/${id}`);
-};
-
-/**
  * Product catalog service object containing all catalog management functions
  * @namespace productCatalogService
  * @description Provides a centralized interface for all product catalog API operations
  */
 const productCatalogService = {
   getProducts,
-  getProduct,
 };
 
 export default productCatalogService;

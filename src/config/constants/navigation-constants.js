@@ -4,7 +4,7 @@
  * Supports responsive navigation, accessibility compliance, and dynamic menu generation across the application
  */
 
-import ROUTES from "@config/routes";
+import { ROUTES } from "@config/routes";
 
 // =================================================================
 // MAIN NAVIGATION STRUCTURE

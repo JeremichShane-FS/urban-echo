@@ -1,12 +1,11 @@
 /**
  * @fileoverview Shopping cart state management store using Zustand with persistent storage
- * Provides comprehensive cart functionality including item management, price calculations, and validation
- * Handles cart persistence, tax calculations, shipping logic, and error handling for e-commerce operations
- * Includes computed properties for totals, formatted prices, and shopping cart business rules
+ * FIXED: Using useShallow to prevent getServerSnapshot infinite loop by caching snapshots
  */
 
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { useShallow } from "zustand/react/shallow";
 
 import {
   CART_STORAGE_KEY,
@@ -20,7 +19,6 @@ import { errorHandler, formatCurrency } from "@modules/core/utils";
 
 /**
  * Initial cart state with empty items and default values
- * @constant {Object}
  */
 const initialState = {
   items: [],
@@ -30,29 +28,6 @@ const initialState = {
 
 /**
  * Main cart store created with Zustand for state management and persistence
- * @typedef {Object} CartStore
- * @property {Array<Object>} items - Array of cart items with product details
- * @property {boolean} isLoading - Loading state for cart operations
- * @property {string|null} lastUpdated - ISO timestamp of last cart update
- * @property {number} totalItems - Computed total number of items in cart
- * @property {number} subtotal - Computed subtotal before tax and shipping
- * @property {number} tax - Computed tax amount based on subtotal
- * @property {number} shipping - Computed shipping cost based on subtotal and thresholds
- * @property {number} total - Computed total including subtotal, tax, and shipping
- * @property {string} formattedSubtotal - Currency-formatted subtotal string
- * @property {string} formattedTax - Currency-formatted tax string
- * @property {string} formattedShipping - Currency-formatted shipping string
- * @property {string} formattedTotal - Currency-formatted total string
- * @property {boolean} hasItems - Whether cart contains any items
- * @property {boolean} isFreeShippingEligible - Whether cart qualifies for free shipping
- * @property {number} freeShippingProgress - Progress percentage toward free shipping threshold
- * @property {Function} addItem - Adds product to cart with validation
- * @property {Function} removeItem - Removes product from cart by ID
- * @property {Function} updateQuantity - Updates item quantity with validation
- * @property {Function} clearCart - Removes all items from cart
- * @property {Function} getItem - Retrieves specific cart item by product ID
- * @property {Function} getItemQuantity - Gets quantity for specific product
- * @property {Function} setLoading - Sets loading state for cart operations
  */
 const useCartStore = create(
   persist(
@@ -61,20 +36,18 @@ const useCartStore = create(
 
       /**
        * Computed property that returns total number of items across all cart entries
-       * @returns {number} Total quantity of all items in cart
        */
       get totalItems() {
-        const state = get();
-        return (state.items || []).reduce((total, item) => total + (item.quantity || 0), 0);
+        const items = get().items || [];
+        return items.reduce((total, item) => total + (item.quantity || 0), 0);
       },
 
       /**
        * Computed property that calculates subtotal before tax and shipping
-       * @returns {number} Cart subtotal amount
        */
       get subtotal() {
-        const state = get();
-        return (state.items || []).reduce((total, item) => {
+        const items = get().items || [];
+        return items.reduce((total, item) => {
           const price = item.price || 0;
           const quantity = item.quantity || 0;
           return total + price * quantity;
@@ -83,7 +56,6 @@ const useCartStore = create(
 
       /**
        * Computed property that calculates tax amount based on subtotal
-       * @returns {number} Tax amount using default tax rate
        */
       get tax() {
         const subtotal = get().subtotal;
@@ -91,8 +63,7 @@ const useCartStore = create(
       },
 
       /**
-       * Computed property that calculates shipping cost based on subtotal and free shipping threshold
-       * @returns {number} Shipping cost (0 if eligible for free shipping)
+       * Computed property that calculates shipping cost
        */
       get shipping() {
         const subtotal = get().subtotal;
@@ -100,17 +71,15 @@ const useCartStore = create(
       },
 
       /**
-       * Computed property that calculates final total including subtotal, tax, and shipping
-       * @returns {number} Final cart total amount
+       * Computed property that calculates final total
        */
       get total() {
-        const state = get();
-        return state.subtotal + state.tax + state.shipping;
+        const { shipping, subtotal, tax } = get();
+        return subtotal + tax + shipping;
       },
 
       /**
        * Computed property that returns currency-formatted subtotal string
-       * @returns {string} Formatted subtotal with currency symbol
        */
       get formattedSubtotal() {
         return formatCurrency(get().subtotal);
@@ -118,7 +87,6 @@ const useCartStore = create(
 
       /**
        * Computed property that returns currency-formatted tax string
-       * @returns {string} Formatted tax amount with currency symbol
        */
       get formattedTax() {
         return formatCurrency(get().tax);
@@ -126,7 +94,6 @@ const useCartStore = create(
 
       /**
        * Computed property that returns currency-formatted shipping string
-       * @returns {string} Formatted shipping cost with currency symbol
        */
       get formattedShipping() {
         return formatCurrency(get().shipping);
@@ -134,7 +101,6 @@ const useCartStore = create(
 
       /**
        * Computed property that returns currency-formatted total string
-       * @returns {string} Formatted total amount with currency symbol
        */
       get formattedTotal() {
         return formatCurrency(get().total);
@@ -142,7 +108,6 @@ const useCartStore = create(
 
       /**
        * Computed property that indicates whether cart contains any items
-       * @returns {boolean} True if cart has items, false if empty
        */
       get hasItems() {
         return get().totalItems > 0;
@@ -150,7 +115,6 @@ const useCartStore = create(
 
       /**
        * Computed property that indicates whether cart qualifies for free shipping
-       * @returns {boolean} True if subtotal meets free shipping threshold
        */
       get isFreeShippingEligible() {
         return get().subtotal >= FREE_SHIPPING_THRESHOLD;
@@ -158,7 +122,6 @@ const useCartStore = create(
 
       /**
        * Computed property that calculates progress percentage toward free shipping
-       * @returns {number} Progress percentage (0-100) toward free shipping threshold
        */
       get freeShippingProgress() {
         const subtotal = get().subtotal;
@@ -168,21 +131,10 @@ const useCartStore = create(
 
       /**
        * Adds a product to the cart with quantity and validation checks
-       * @function addItem
-       * @param {Object} product - Product object to add to cart
-       * @param {string} product.id - Unique product identifier
-       * @param {string} product.name - Product name
-       * @param {number} product.price - Product price
-       * @param {string} product.image - Product image URL
-       * @param {string} [product.selectedSize] - Selected product size
-       * @param {string} [product.selectedColor] - Selected product color
-       * @param {string} product.slug - URL-friendly product identifier
-       * @returns {boolean} True if item was successfully added, false if validation failed
        */
       addItem: product => {
         try {
-          const state = get();
-          const items = state.items || [];
+          const { items } = get();
 
           if (items.length >= MAX_CART_ITEMS) {
             errorHandler.handleError(
@@ -221,10 +173,10 @@ const useCartStore = create(
               name: product.name,
               price: product.price,
               image: product.image,
-              size: product.selectedSize,
-              color: product.selectedColor,
+              size: product.selectedSize || product.size,
+              color: product.selectedColor || product.color,
               slug: product.slug,
-              quantity: 1,
+              quantity: product.quantity || 1,
             };
 
             set({
@@ -245,14 +197,10 @@ const useCartStore = create(
 
       /**
        * Removes a product from the cart by product ID
-       * @function removeItem
-       * @param {string} productId - Unique product identifier to remove
-       * @returns {boolean} True if item was successfully removed, false on error
        */
       removeItem: productId => {
         try {
-          const state = get();
-          const items = state.items || [];
+          const { items } = get();
           const updatedItems = items.filter(item => item.id !== productId);
 
           set({
@@ -269,10 +217,6 @@ const useCartStore = create(
 
       /**
        * Updates the quantity of a specific cart item with validation
-       * @function updateQuantity
-       * @param {string} productId - Unique product identifier
-       * @param {number} quantity - New quantity (removes item if less than 1)
-       * @returns {boolean} True if quantity was successfully updated, false if validation failed
        */
       updateQuantity: (productId, quantity) => {
         try {
@@ -289,8 +233,7 @@ const useCartStore = create(
             return false;
           }
 
-          const state = get();
-          const items = state.items || [];
+          const { items } = get();
           const itemIndex = items.findIndex(item => item.id === productId);
 
           if (itemIndex >= 0) {
@@ -318,8 +261,6 @@ const useCartStore = create(
 
       /**
        * Removes all items from the cart
-       * @function clearCart
-       * @returns {boolean} True if cart was successfully cleared, false on error
        */
       clearCart: () => {
         try {
@@ -336,21 +277,14 @@ const useCartStore = create(
 
       /**
        * Retrieves a specific cart item by product ID
-       * @function getItem
-       * @param {string} productId - Unique product identifier
-       * @returns {Object|undefined} Cart item object or undefined if not found
        */
       getItem: productId => {
-        const state = get();
-        const items = state.items || [];
+        const { items } = get();
         return items.find(item => item.id === productId);
       },
 
       /**
        * Gets the quantity of a specific product in the cart
-       * @function getItemQuantity
-       * @param {string} productId - Unique product identifier
-       * @returns {number} Quantity of the product in cart (0 if not found)
        */
       getItemQuantity: productId => {
         const item = get().getItem(productId);
@@ -359,8 +293,6 @@ const useCartStore = create(
 
       /**
        * Sets the loading state for cart operations
-       * @function setLoading
-       * @param {boolean} isLoading - Loading state to set
        */
       setLoading: isLoading => {
         set({ isLoading });
@@ -368,6 +300,7 @@ const useCartStore = create(
     }),
     {
       name: CART_STORAGE_KEY,
+      storage: createJSONStorage(() => localStorage),
       partialize: state => ({
         items: state.items,
         lastUpdated: state.lastUpdated,
@@ -384,60 +317,49 @@ const useCartStore = create(
 
 /**
  * Hook that returns cart items array
- * @hook
- * @returns {Array<Object>} Array of cart items
+ * Using regular selector since items is already an array reference
  */
 export const useCartItems = () => useCartStore(state => state.items || []);
 
 /**
  * Hook that returns total item count in cart
- * @hook
- * @returns {number} Total number of items in cart
+ * Using regular selector since totalItems is a primitive number
  */
 export const useCartCount = () => useCartStore(state => state.totalItems);
 
 /**
  * Hook that returns cart subtotal amount
- * @hook
- * @returns {number} Cart subtotal before tax and shipping
+ * Using regular selector since subtotal is a primitive number
  */
 export const useCartSubtotal = () => useCartStore(state => state.subtotal);
 
 /**
  * Hook that returns cart total amount
- * @hook
- * @returns {number} Final cart total including tax and shipping
+ * Using regular selector since total is a primitive number
  */
 export const useCartTotal = () => useCartStore(state => state.total);
 
 /**
  * Hook that returns cart loading state
- * @hook
- * @returns {boolean} Whether cart operations are currently loading
+ * Using regular selector since isLoading is a primitive boolean
  */
 export const useCartLoading = () => useCartStore(state => state.isLoading);
 
 /**
  * Hook that returns cart action functions for modifying cart state
- * @hook
- * @returns {Object} Object containing cart action functions
- * @returns {Function} returns.addItem - Function to add item to cart
- * @returns {Function} returns.removeItem - Function to remove item from cart
- * @returns {Function} returns.updateQuantity - Function to update item quantity
- * @returns {Function} returns.clearCart - Function to clear all cart items
- * @returns {Function} returns.getItem - Function to get specific cart item
- * @returns {Function} returns.getItemQuantity - Function to get item quantity
- * @returns {Function} returns.setLoading - Function to set loading state
+ * CRITICAL: Using useShallow to prevent infinite re-renders when returning object
  */
 export const useCartActions = () =>
-  useCartStore(state => ({
-    addItem: state.addItem,
-    removeItem: state.removeItem,
-    updateQuantity: state.updateQuantity,
-    clearCart: state.clearCart,
-    getItem: state.getItem,
-    getItemQuantity: state.getItemQuantity,
-    setLoading: state.setLoading,
-  }));
+  useCartStore(
+    useShallow(state => ({
+      addItem: state.addItem,
+      removeItem: state.removeItem,
+      updateQuantity: state.updateQuantity,
+      clearCart: state.clearCart,
+      getItem: state.getItem,
+      getItemQuantity: state.getItemQuantity,
+      setLoading: state.setLoading,
+    }))
+  );
 
 export default useCartStore;

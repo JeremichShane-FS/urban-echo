@@ -14,7 +14,6 @@
 const UrbanEchoLogo = () => {
   return (
     <svg aria-hidden="true" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-      {/* Urban skyline silhouette */}
       <path
         d="M5,25 L9,25 L9,18 L13,18 L13,22 L17,22 L17,16 L21,16 L21,20 
               L25,20 L25,15 L29,15 L29,19 L33,19 L33,14 L37,14 L37,23 
@@ -24,12 +23,10 @@ const UrbanEchoLogo = () => {
         strokeWidth="1.2"
       />
 
-      {/* Sound wave patterns */}
       <path d="M5,30 Q27,27 49,30" fill="none" stroke="#E67E22" strokeWidth="1.2" />
       <path d="M5,33 Q27,30 49,33" fill="none" opacity="0.7" stroke="#E67E22" strokeWidth="0.9" />
       <path d="M5,36 Q27,33 49,36" fill="none" opacity="0.4" stroke="#E67E22" strokeWidth="0.6" />
 
-      {/* Brand text */}
       <text
         fill="#F7F7F7"
         fontFamily="Arial, sans-serif"

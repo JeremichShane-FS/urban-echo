@@ -6,6 +6,9 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+
 /**
  * View component for rendering hero section with background image, content, and call-to-action
  * @component
@@ -26,20 +29,14 @@ const HeroSectionView = ({
   Button,
   Image,
   Link,
+  error,
   heroData,
   isLoading,
   onCtaClick,
   styles,
 }) => {
-  if (isLoading || !heroData) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.loading}>Loading...</div>
-        </div>
-      </section>
-    );
-  }
+  if (isLoading || !heroData) return <Loading message="Loading..." title="Discover Your Style" />;
+  if (error) return <Error message={error.message} title="Error Loading Hero Section" />;
 
   return (
     <section className={styles.section}>
@@ -84,6 +81,7 @@ HeroSectionView.propTypes = {
   Button: PropTypes.elementType.isRequired,
   Image: PropTypes.elementType.isRequired,
   Link: PropTypes.elementType.isRequired,
+  error: PropTypes.object,
   heroData: PropTypes.shape({
     backgroundImage: PropTypes.string,
     ctaLink: PropTypes.string.isRequired,

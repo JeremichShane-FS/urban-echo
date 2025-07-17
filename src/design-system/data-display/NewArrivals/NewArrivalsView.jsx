@@ -6,6 +6,9 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+
 /**
  * View component for rendering new arrivals in a responsive grid with featured product layout
  * @component
@@ -33,43 +36,14 @@ const NewArrivalsView = ({
   ProductCard,
   ROUTES,
   error,
-  loading,
+  isLoading,
   newArrivals,
   onProductClick,
   onViewAllClick,
   styles,
 }) => {
-  if (loading) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <h2 className={styles.title}>New Arrivals</h2>
-            <p className={styles.subtitle}>
-              Discover our latest collection of trendy and modern clothing pieces
-            </p>
-          </div>
-          <div className={styles.loading}>Loading new arrivals...</div>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <h2 className={styles.title}>New Arrivals</h2>
-            <p className={styles.subtitle}>
-              Discover our latest collection of trendy and modern clothing pieces
-            </p>
-          </div>
-          <div className={styles.error}>{error}</div>
-        </div>
-      </section>
-    );
-  }
+  if (isLoading) return <Loading message="Loading new arrivals..." title="New Arrivals" />;
+  if (error) return <Error message={error} title="New Arrivals" />;
 
   const products = Array.isArray(newArrivals) ? newArrivals : [];
 
@@ -143,7 +117,7 @@ NewArrivalsView.propTypes = {
   ROUTES: PropTypes.object.isRequired,
   error: PropTypes.string,
   filters: PropTypes.object,
-  loading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   newArrivals: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

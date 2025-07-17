@@ -10,51 +10,51 @@
 
 /**
  * Application route paths organized by functional areas for consistent navigation
- * @constant {Object} routes - Complete collection of application route paths
+ * @constant {Object} ROUTES - Complete collection of application route paths
  *
  * @example
  * // Navigation component usage
- * import routes from '@config/routes';
+ * import ROUTES from '@config/routes';
  *
  * const Navigation = () => (
  *   <nav>
- *     <Link href={routes.HOME}>Home</Link>
- *     <Link href={routes.SHOP}>Shop</Link>
- *     <Link href={routes.ABOUT}>About</Link>
+ *     <Link href={ROUTES.HOME}>Home</Link>
+ *     <Link href={ROUTES.SHOP}>Shop</Link>
+ *     <Link href={ROUTES.ABOUT}>About</Link>
  *   </nav>
  * );
  *
  * @example
  * // Programmatic navigation with Next.js router
  * import { useRouter } from 'next/navigation';
- * import routes from '@config/routes';
+ * import ROUTES from '@config/routes';
  *
  * const handleAddToCart = () => {
  *   // Add item logic...
- *   router.push(routes.CART);
+ *   router.push(ROUTES.CART);
  * };
  *
  * @example
  * // Dynamic route building for categories
  * const getCategoryUrl = (category) => {
  *   const categoryRoutes = {
- *     men: routes.MEN,
- *     women: routes.WOMEN,
- *     accessories: routes.ACCESSORIES
+ *     men: ROUTES.MEN,
+ *     women: ROUTES.WOMEN,
+ *     accessories: ROUTES.ACCESSORIES
  *   };
- *   return categoryRoutes[category] || routes.SHOP;
+ *   return categoryRoutes[category] || ROUTES.SHOP;
  * };
  *
  * @example
  * // Account section navigation menu generation
  * const accountLinks = [
- *   { href: routes.ACCOUNT, label: 'Dashboard', icon: 'dashboard' },
- *   { href: routes.ORDERS, label: 'Order History', icon: 'orders' },
- *   { href: routes.ADDRESSES, label: 'Addresses', icon: 'location' },
- *   { href: routes.WISHLIST, label: 'Wishlist', icon: 'heart' }
+ *   { href: ROUTES.ACCOUNT, label: 'Dashboard', icon: 'dashboard' },
+ *   { href: ROUTES.ORDERS, label: 'Order History', icon: 'orders' },
+ *   { href: ROUTES.ADDRESSES, label: 'Addresses', icon: 'location' },
+ *   { href: ROUTES.WISHLIST, label: 'Wishlist', icon: 'heart' }
  * ];
  */
-const routes = {
+export const ROUTES = {
   HOME: "/",
   ABOUT: "/about",
   ACCOUNT: "/account",
@@ -96,5 +96,3 @@ const routes = {
   WINTER_COLLECTION: "/collections/winter",
   HOLIDAY_COLLECTION: "/collections/holiday",
 };
-
-export default routes;

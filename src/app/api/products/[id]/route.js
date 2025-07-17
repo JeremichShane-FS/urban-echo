@@ -234,7 +234,7 @@ const ERROR_SOURCE = "product-detail-api";
  */
 export async function GET(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const validation = validateRequiredFields(
       { id },
       API_REQUIRED_FIELDS.PRODUCT_DETAIL,

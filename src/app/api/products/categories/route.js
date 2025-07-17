@@ -144,18 +144,6 @@ export async function GET(request) {
 
     const categories = await categoriesQuery.lean();
 
-    if (includeProductCount && categories.length > 0) {
-      const Product = (await import("@lib/mongodb/utils/models/product")).default;
-
-      for (const category of categories) {
-        const productCount = await Product.countDocuments({
-          category: category.slug,
-          isActive: true,
-        });
-        category.productCount = productCount;
-      }
-    }
-
     if (!categories || categories.length === 0) {
       return createSuccessResponse([], {
         endpoint: `/api/${API_ENDPOINTS.categories}`,
@@ -165,9 +153,70 @@ export async function GET(request) {
       });
     }
 
-    return createSuccessResponse(categories, {
+    let responseData = categories;
+
+    if (includeProductCount && categories.length > 0) {
+      const Product = (await import("@lib/mongodb/utils/models/product")).default;
+
+      // Get all product counts in a single aggregation query
+      const productCountsAggregation = await Product.aggregate([
+        {
+          $match: {
+            isActive: true,
+          },
+        },
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalProducts: { $sum: "$count" },
+            categoryBreakdown: {
+              $push: {
+                category: "$_id",
+                count: "$count",
+              },
+            },
+          },
+        },
+      ]);
+
+      const aggregationResult = productCountsAggregation[0] || {
+        totalProducts: 0,
+        categoryBreakdown: [],
+      };
+
+      const categoryCountMap = {};
+      aggregationResult.categoryBreakdown.forEach(item => {
+        categoryCountMap[item.category] = item.count;
+      });
+
+      categories.forEach(category => {
+        category.productCount = categoryCountMap[category.slug] || 0;
+      });
+
+      const allProductsEntry = {
+        id: "all",
+        name: "All Products",
+        slug: "all",
+        level: -1,
+        navigationOrder: 0,
+        isActive: true,
+        isVisible: true,
+        productCount: aggregationResult.totalProducts,
+        isSpecialCategory: true,
+      };
+
+      responseData = [allProductsEntry, ...categories];
+    }
+
+    return createSuccessResponse(responseData, {
       endpoint: `/api/${API_ENDPOINTS.categories}`,
-      count: categories.length,
+      count: responseData.length,
       source: "mongodb",
       filters: {
         includeProductCount,

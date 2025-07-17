@@ -21,17 +21,20 @@ export { default as bestSellersService, getBestSellers } from "./best-sellers";
 // Category Services
 export { default as categoriesService, getCategories, getCategoryProducts } from "./categories";
 
-// Product Search Services
-export { default as productSearchService, searchProducts } from "./product-search";
-
-// Related Products Services
-export { getRelatedProducts, default as relatedProductsService } from "./product-related";
-
-// Product Catalog Services
-export { getProduct, getProducts, default as productCatalogService } from "./product-catalog";
-
 // Featured Products Services
 export { default as featuredProductsService, getFeaturedProducts } from "./featured-products";
 
 // New Arrivals Services
 export { getNewArrivals, default as newArrivalsService } from "./new-arrivals";
+
+// Product Catalog Services
+export { getProducts, default as productCatalogService } from "./product-catalog";
+
+// Product Details Services
+export { getProduct, default as productDetailsService } from "./product-details";
+
+// Related Products Services
+export { getRelatedProducts, default as relatedProductsService } from "./product-related";
+
+// Product Search Services
+export { default as productSearchService, searchProducts } from "./product-search";
