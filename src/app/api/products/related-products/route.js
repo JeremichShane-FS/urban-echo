@@ -10,6 +10,7 @@ import {
   API_VALIDATION_LIMITS,
   ERROR_TYPES,
 } from "@config/constants";
+import dbConnect from "@lib/mongodb/client";
 import { errorHandler } from "@modules/core/utils";
 import {
   createCorsResponse,
@@ -18,7 +19,6 @@ import {
   validatePagination,
   validateRequiredFields,
 } from "@modules/core/utils/api";
-import { relatedProductsService } from "@modules/products/services";
 
 const ERROR_SOURCE = "related-products-api";
 
@@ -153,11 +153,16 @@ export async function GET(request) {
 
     if (!limitValidation.isValid) return limitValidation.response;
 
-    const relatedProducts = await relatedProductsService.getRelatedProducts(productId, {
-      limit: rawLimit,
-      category,
-      excludeOutOfStock,
-    });
+    await dbConnect();
+    const Product = (await import("@lib/mongodb/models/product")).default;
+
+    const relatedProducts = await Product.find({
+      _id: { $ne: productId },
+      ...(category && category !== "undefined" && { category }),
+      isActive: true,
+    })
+      .limit(rawLimit)
+      .lean();
 
     return createSuccessResponse(relatedProducts, {
       endpoint: `/api/${API_ENDPOINTS.relatedProducts}`,

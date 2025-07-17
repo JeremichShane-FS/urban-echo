@@ -3,6 +3,7 @@
  * Provides comprehensive image URL management with fallback strategies for product images and hero content
  * Integrates with placehold.co service for consistent placeholder generation with brand colors and typography
  * Includes branded placeholder configurations for different content types and responsive image handling
+ * Enhanced with intelligent multi-format image detection for various API data structures
  */
 
 /**
@@ -137,4 +138,62 @@ export const getBrandedPlaceholder = (type = "product", width = 400, height = 40
   const displayText = text || config.defaultText;
 
   return getPlaceholderUrl(width, height, displayText, config.bgColor, config.textColor);
+};
+
+/**
+ * Intelligent image URL resolver with branded placeholder fallback system
+ * Searches through multiple data structure formats to find valid image URLs
+ * Falls back to branded placeholders that maintain visual consistency and brand identity
+ * Handles various API response formats including categories, products, and mixed content types
+ *
+ * @function getImageUrl
+ * @param {Object} item - Data item that may contain image information in various formats
+ * @param {string} [type="product"] - Content type for branded placeholder styling (product, hero, category)
+ * @param {number} [width=400] - Desired image width for responsive display optimization
+ * @param {number} [height=400] - Desired image height for consistent aspect ratios
+ * @returns {string} Valid image URL or branded placeholder URL with custom styling
+ *
+ * @example
+ * // Category with nested image object
+ * const categoryUrl = getImageUrl(category, 'category', 500, 300);
+ *
+ * @example
+ * // Product with images array
+ * const productUrl = getImageUrl(product, 'product', 400, 400);
+ *
+ * @example
+ * // Mixed content with fallback
+ * const mixedUrl = getImageUrl(unknownItem, 'product', 300, 300);
+ */
+export const getImageUrl = (item, type = "product", width = 400, height = 400) => {
+  let imageUrl = null;
+
+  // Handle category structure: image: { url: "...", alt: "..." }
+  // Categories typically store images as objects with metadata
+  if (item.image?.url) {
+    imageUrl = item.image.url;
+  }
+  // Handle product structure: images: [{ url: "..." }] or images: ["url"]
+  // Products may store multiple images in array format with object wrappers
+  else if (item.images?.[0]?.url) {
+    imageUrl = item.images[0].url;
+  }
+  // Handle simple image arrays: images: ["url1", "url2"]
+  // Some products store images as direct URL strings in arrays
+  else if (typeof item.images?.[0] === "string" && item.images[0].trim()) {
+    imageUrl = item.images[0];
+  }
+  // Handle direct image string: image: "url"
+  // Fallback for items with single image stored as direct string
+  else if (typeof item.image === "string" && item.image.trim()) {
+    imageUrl = item.image;
+  }
+  // Handle alternative image field: imageUrl: "url"
+  // Some data sources use different field naming conventions
+  else if (item.imageUrl && item.imageUrl.trim()) {
+    imageUrl = item.imageUrl;
+  }
+
+  // Return found image or generate branded placeholder with item name and type-specific styling
+  return imageUrl || getBrandedPlaceholder(type, width, height, item.name);
 };

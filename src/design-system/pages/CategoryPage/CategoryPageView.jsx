@@ -6,12 +6,17 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+import Breadcrumbs from "@design-system/navigation/Breadcrumbs";
+
 /**
  * View component for rendering category page with product grid, filters, and pagination
  * @component
  * @param {React.ComponentType} Button - Button component for interactive elements
  * @param {React.ComponentType} Image - Next.js Image component for optimized product images
  * @param {React.ComponentType} Link - Next.js Link component for product navigation
+ * @param {Array<Object>} breadcrumbItems - Breadcrumb navigation items for page hierarchy
  * @param {Array<Object>} categories - Available product categories with counts
  * @param {string} category - Current active category slug
  * @param {number} currentPage - Current pagination page number
@@ -39,6 +44,7 @@ const CategoryPageView = ({
   Button,
   Image,
   Link,
+  breadcrumbItems,
   categories,
   category,
   currentPage,
@@ -64,50 +70,33 @@ const CategoryPageView = ({
   const safeProducts = Array.isArray(products) ? products : [];
   const safeCategories = Array.isArray(categories) ? categories : [];
 
-  if (error) {
-    return (
-      <div className={styles.error}>
-        <div className={styles["error-content"]}>
-          <h2>Something went wrong</h2>
-          <p>Error loading products: {error.message}</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
-        </div>
-      </div>
-    );
-  }
+  if (error)
+    return <Error showRetry message={error.message} onRetry={() => window.location.reload()} />;
 
   return (
     <div className={styles["category-page"]}>
       <section className={styles.header}>
         <div className={styles["header-content"]}>
-          <div className={styles.breadcrumbs}>
-            <Link className={styles["breadcrumb-link"]} href="/shop">
-              Shop
-            </Link>
-            <span className={styles["breadcrumb-separator"]}>›</span>
-            <span className={styles["breadcrumb-current"]}>
+          <Breadcrumbs className="breadcrumbs--dark" items={breadcrumbItems} />
+          <div className={styles["header-group"]}>
+            <h1 className={styles.title}>
               {category === "all"
                 ? "All Products"
                 : category.charAt(0).toUpperCase() + category.slice(1)}
-            </span>
-          </div>
-          <h1 className={styles.title}>
-            {category === "all"
-              ? "All Products"
-              : category.charAt(0).toUpperCase() + category.slice(1)}
-          </h1>
-          <p className={styles.subtitle}>
-            {category === "all"
-              ? "Discover our complete collection of premium fashion"
-              : `Explore our ${category} collection`}
-          </p>
-          <div className={styles["results-count"]}>
-            {isLoading ? "Loading..." : `${totalProducts} products found`}
+            </h1>
+            <p className={styles.subtitle}>
+              {category === "all"
+                ? "Discover our complete collection of premium fashion"
+                : `Explore our ${category} collection`}
+            </p>
+            <div className={styles["results-count"]}>
+              {isLoading ? "Loading..." : `${totalProducts} products found`}
+            </div>
           </div>
         </div>
       </section>
 
-      <div className={styles["content-grid"]}>
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 max-w-7xl mx-auto px-4">
         <aside className={styles.sidebar}>
           <div className={styles["filter-group"]}>
             <label className={styles["filter-label"]} htmlFor="product-search">
@@ -116,7 +105,7 @@ const CategoryPageView = ({
             <input
               className={styles["search-input"]}
               id="product-search"
-              placeholder="Search..."
+              placeholder="Search for products..."
               type="text"
               value={searchTerm}
               onChange={e => handleSearch(e.target.value)}
@@ -126,7 +115,7 @@ const CategoryPageView = ({
           <div className={styles["filter-group"]}>
             <h3 className={styles["filter-title"]}>Categories</h3>
             {safeCategories.map(categoryItem => (
-              <Button
+              <button
                 key={categoryItem.id}
                 className={`${styles["category-button"]} ${
                   selectedCategory === categoryItem.id ? styles["category-button-active"] : ""
@@ -136,7 +125,7 @@ const CategoryPageView = ({
                   <span>{categoryItem.label}</span>
                   <span className={styles["category-count"]}>{categoryItem.count}</span>
                 </div>
-              </Button>
+              </button>
             ))}
           </div>
 
@@ -192,7 +181,7 @@ const CategoryPageView = ({
           </div>
         </aside>
 
-        <main className={styles["main-content"]}>
+        <div>
           <div className={styles["sort-controls"]}>
             <div className={styles["product-count"]}>
               {isLoading ? "Loading..." : `${totalProducts} Products`}
@@ -217,19 +206,22 @@ const CategoryPageView = ({
             </div>
           </div>
 
-          {isLoading && (
-            <div className={styles.loading}>
-              <div className={styles["loading-spinner"]}></div>
-              <p>Loading products...</p>
-            </div>
-          )}
+          {isLoading && <Loading message="Loading products..." />}
 
           {!isLoading && safeProducts.length > 0 && (
-            <div className={styles["products-grid"]}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
               {safeProducts.map(product => {
                 const productId = product._id || product.id;
                 const productImage =
-                  product.images?.[0] || product.image || "/images/placeholder-product.jpg";
+                  (Array.isArray(product.images) &&
+                  typeof product.images[0] === "string" &&
+                  product.images[0].trim()
+                    ? product.images[0]
+                    : null) ||
+                  (typeof product.image === "string" && product.image.trim()
+                    ? product.image
+                    : null) ||
+                  "/images/placeholder-product.jpg";
                 const productName = product.name || "Unnamed Product";
                 const productPrice = product.price || 0;
                 const productOriginalPrice = product.originalPrice;
@@ -238,13 +230,13 @@ const CategoryPageView = ({
                   <Link
                     key={productId}
                     className={styles["product-link"]}
-                    href={`/product/${productId}`}>
-                    <div className={styles["product-card"]}>
+                    href={`/shop/${category}/${product.slug || "product"}/${productId}`}>
+                    <article className={styles["product-card"]}>
                       <div className={styles["product-image-container"]}>
                         <Image
                           alt={productName}
                           className={styles["product-image"]}
-                          height={400}
+                          height={240}
                           priority={false}
                           src={productImage}
                           width={300}
@@ -256,14 +248,15 @@ const CategoryPageView = ({
                         </div>
 
                         <div className={styles["quick-actions"]}>
-                          <Button
+                          <button
+                            aria-label={`Add ${productName} to wishlist`}
                             className={styles["wishlist-button"]}
                             onClick={e => {
                               e.preventDefault();
                               // wishlist logic
                             }}>
                             ♡
-                          </Button>
+                          </button>
                         </div>
                       </div>
 
@@ -292,7 +285,7 @@ const CategoryPageView = ({
                           </div>
 
                           <Button
-                            size="small"
+                            size="xs"
                             variant="primary"
                             onClick={e => {
                               e.preventDefault();
@@ -302,7 +295,7 @@ const CategoryPageView = ({
                           </Button>
                         </div>
                       </div>
-                    </div>
+                    </article>
                   </Link>
                 );
               })}
@@ -312,52 +305,59 @@ const CategoryPageView = ({
           {!isLoading && safeProducts.length === 0 && (
             <div className={styles["no-products"]}>
               <h3>No products found</h3>
-              <p>Try adjusting your filters or search terms.</p>
+              <p>
+                Try adjusting your filters or search terms to find what you&apos;re looking for.
+              </p>
               <Button
+                variant="primary"
                 onClick={() => {
                   handleSearch("");
                   handleCategoryChange("all");
                   handlePriceRangeChange([0, 500]);
                 }}>
-                Clear Filters
+                Clear All Filters
               </Button>
             </div>
           )}
 
           {!isLoading && totalPages > 1 && (
-            <div className={styles.pagination}>
-              <Button
+            <nav aria-label="Product pagination" className={styles.pagination}>
+              <button
+                aria-label="Go to previous page"
                 className={styles["pagination-button"]}
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}>
                 Previous
-              </Button>
+              </button>
 
               <div className={styles["page-numbers"]}>
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   const page = i + 1;
                   return (
-                    <Button
+                    <button
                       key={page}
+                      aria-current={page === currentPage ? "page" : undefined}
+                      aria-label={`Go to page ${page}`}
                       className={`${styles["page-button"]} ${
                         page === currentPage ? styles["page-button-active"] : ""
                       }`}
                       onClick={() => handlePageChange(page)}>
                       {page}
-                    </Button>
+                    </button>
                   );
                 })}
               </div>
 
-              <Button
+              <button
+                aria-label="Go to next page"
                 className={styles["pagination-button"]}
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}>
                 Next
-              </Button>
-            </div>
+              </button>
+            </nav>
           )}
-        </main>
+        </div>
       </div>
     </div>
   );
@@ -370,6 +370,12 @@ CategoryPageView.propTypes = {
   Button: PropTypes.elementType.isRequired,
   Image: PropTypes.elementType.isRequired,
   Link: PropTypes.elementType.isRequired,
+  breadcrumbItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      path: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   categories: PropTypes.arrayOf(
     PropTypes.shape({
       count: PropTypes.number.isRequired,

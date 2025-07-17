@@ -2,9 +2,13 @@
  * @fileoverview Presentational component for shop landing page layout with category grid and product sections
  * Handles responsive layout with category cards, promotional banners, inspiration grid, and product recommendations
  * Provides comprehensive shopping experience with visual category navigation and curated product discovery
+ * Integrates branded placeholder generation for consistent visual identity when images are unavailable
  */
 
 import PropTypes from "prop-types";
+
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
 
 /**
  * View component for rendering shop landing page with category navigation and product sections
@@ -25,29 +29,13 @@ const ShopLandingView = ({
   categories,
   error,
   featuredProducts,
+  getImageUrl,
   isLoading,
   newArrivals,
   styles,
 }) => {
-  if (isLoading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles["loading-content"]}>
-          <p>Loading shop...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.error}>
-        <div className={styles["error-content"]}>
-          <p>Error loading shop: {error}</p>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <Loading message="Loading your shopping experience" title="Shop" />;
+  if (error) return <Error message={error} title="Shop" variant="section" />;
 
   return (
     <div className={styles["shop-landing"]}>
@@ -63,7 +51,7 @@ const ShopLandingView = ({
 
       <section className={styles["categories-section"]}>
         <div className={styles["categories-grid"]}>
-          {categories.map(category => (
+          {categories.slice(1).map(category => (
             <Link
               key={category._id || category.id}
               className={styles["category-link"]}
@@ -72,7 +60,7 @@ const ShopLandingView = ({
                 <div
                   className={styles["category-image"]}
                   style={{
-                    backgroundImage: `url(${category.image || category.imageUrl})`,
+                    backgroundImage: `url(${getImageUrl(category, "category", 500, 300)})`,
                   }}
                 />
                 <div className={styles["category-content"]}>
@@ -94,7 +82,7 @@ const ShopLandingView = ({
                 Limited time offer on selected items. Don&lsquo;t miss out!
               </p>
               <Link href="/shop/sale">
-                <Button size="large" variant="secondary">
+                <Button size="lg" variant="secondary">
                   Browse Products
                 </Button>
               </Link>
@@ -106,7 +94,7 @@ const ShopLandingView = ({
               <h3 className={styles["offer-title"]}>Other Offer</h3>
               <p className={styles["offer-text"]}>Free shipping on orders over $75</p>
               <Link href="/shop/all">
-                <Button size="medium" variant="primary">
+                <Button size="md" variant="primary">
                   Shop Now
                 </Button>
               </Link>
@@ -116,7 +104,7 @@ const ShopLandingView = ({
               <h3 className={styles["offer-title"]}>Bestselling Products</h3>
               <p className={styles["offer-text"]}>Customer favorites flying off the shelves</p>
               <Link href="/shop/bestsellers">
-                <Button size="medium" variant="primary">
+                <Button size="md" variant="primary">
                   Explore
                 </Button>
               </Link>
@@ -140,7 +128,7 @@ const ShopLandingView = ({
               <div
                 className={styles["inspiration-image"]}
                 style={{
-                  backgroundImage: `url(${item.images?.[0] || item.image})`,
+                  backgroundImage: `url(${getImageUrl(item, "product", 400, 300)})`,
                 }}
               />
               <div className={styles["inspiration-content"]}>
@@ -168,12 +156,12 @@ const ShopLandingView = ({
             <Link
               key={product._id || product.id}
               className={styles["product-link"]}
-              href={`/product/${product._id || product.id}`}>
+              href={`/shop/${product.category}/${product.slug}/${product._id || product.id}`}>
               <div className={styles["product-card"]}>
                 <div
                   className={styles["product-image"]}
                   style={{
-                    backgroundImage: `url(${product.images?.[0] || product.image})`,
+                    backgroundImage: `url(${getImageUrl(product, "product", 300, 300)})`,
                   }}
                 />
                 <div className={styles["product-content"]}>
@@ -192,7 +180,7 @@ const ShopLandingView = ({
 
         <div className={styles["view-all-container"]}>
           <Link href="/shop/all">
-            <Button size="large" variant="outline">
+            <Button size="lg" variant="outline">
               View All Products
             </Button>
           </Link>
@@ -213,7 +201,13 @@ ShopLandingView.propTypes = {
       _id: PropTypes.string,
       description: PropTypes.string,
       id: PropTypes.string,
-      image: PropTypes.string,
+      image: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          alt: PropTypes.string,
+          url: PropTypes.string.isRequired,
+        }),
+      ]),
       imageUrl: PropTypes.string,
       name: PropTypes.string.isRequired,
       slug: PropTypes.string,
@@ -226,12 +220,21 @@ ShopLandingView.propTypes = {
       description: PropTypes.string,
       id: PropTypes.string,
       image: PropTypes.string,
-      images: PropTypes.arrayOf(PropTypes.string),
+      images: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.shape({
+            alt: PropTypes.string,
+            url: PropTypes.string.isRequired,
+          }),
+        ])
+      ),
       name: PropTypes.string.isRequired,
       originalPrice: PropTypes.number,
       price: PropTypes.number.isRequired,
     })
   ).isRequired,
+  getImageUrl: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   newArrivals: PropTypes.arrayOf(
     PropTypes.shape({
@@ -239,7 +242,15 @@ ShopLandingView.propTypes = {
       description: PropTypes.string,
       id: PropTypes.string,
       image: PropTypes.string,
-      images: PropTypes.arrayOf(PropTypes.string),
+      images: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.shape({
+            alt: PropTypes.string,
+            url: PropTypes.string.isRequired,
+          }),
+        ])
+      ),
       name: PropTypes.string.isRequired,
     })
   ).isRequired,

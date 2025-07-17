@@ -4,7 +4,7 @@
  * Supports multi-column footer layout, accessibility compliance, and brand consistency across the application
  */
 
-import ROUTES from "@config/routes";
+import { ROUTES } from "@config/routes";
 
 import { DEFAULT_IMAGES } from "./media-constants";
 import { SITE_NAME, SOCIAL_LINKS } from "./site-constants";

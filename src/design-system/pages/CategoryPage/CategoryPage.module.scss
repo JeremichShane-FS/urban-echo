@@ -1,4 +1,4 @@
-@use "@assets/styles/abstracts" as *;
+@use "@styles/abstracts" as *;
 
 .category-page {
   min-height: 100vh;
@@ -6,17 +6,13 @@
 }
 
 .header {
-  background-color: var(--color-header-bg);
-  color: var(--color-header-text);
   padding: var(--spacing-xl) 0;
-  margin-bottom: var(--spacing-xl);
 }
 
 .header-content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
@@ -24,24 +20,36 @@
 .breadcrumbs {
   font-size: var(--font-size-sm);
   opacity: 0.8;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .breadcrumb-link {
-  color: var(--color-gray-300);
+  color: var(--color-text-primary);
   text-decoration: none;
+  transition: color 0.2s;
 
   &:hover {
-    color: white;
+    color: var(--color-button-link-hover-text);
   }
 }
 
 .breadcrumb-separator {
   margin: 0 var(--spacing-sm);
-  color: var(--color-gray-300);
+  color: var(--color-text-secondary);
 }
 
 .breadcrumb-current {
-  color: white;
+  color: var(--color-gray-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.header-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
 }
 
 .title {
@@ -66,30 +74,12 @@
   margin-top: var(--spacing-md);
 }
 
-.content-grid {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: var(--spacing-xl);
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
-
-  @include breakpoint(lg) {
-    grid-template-columns: 1fr;
-  }
-}
-
 .sidebar {
   background-color: var(--color-background-primary);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
   height: fit-content;
-  box-shadow: var(--shadow-sm);
-
-  @include breakpoint(lg) {
-    order: 2;
-    margin-top: var(--spacing-xl);
-  }
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // closest to --shadow-sm
 }
 
 .filter-group {
@@ -142,7 +132,7 @@
 
   &.category-button-active {
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-white);
   }
 }
 
@@ -198,12 +188,6 @@
   margin-right: var(--spacing-sm);
 }
 
-.main-content {
-  @include breakpoint(lg) {
-    order: 1;
-  }
-}
-
 .sort-controls {
   display: flex;
   justify-content: space-between;
@@ -212,7 +196,7 @@
   background-color: var(--color-background-primary);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // closest to --shadow-sm
 
   @include breakpoint(sm) {
     flex-direction: column;
@@ -245,30 +229,29 @@
   font-size: var(--font-size-sm);
 }
 
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xxl);
-}
-
 .product-link {
   text-decoration: none;
   color: inherit;
 }
 
 .product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 23.4375rem;
   background-color: var(--color-background-primary);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // closest to --shadow-sm
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05); // closest to --shadow-lg
   }
 }
 
@@ -292,7 +275,7 @@
 
 .badge-new {
   background-color: var(--color-success);
-  color: white;
+  color: var(--color-white);
   padding: 0.3rem 0.6rem;
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
@@ -300,8 +283,8 @@
 }
 
 .badge-sale {
-  background-color: var(--color-danger);
-  color: white;
+  background-color: var(--color-error);
+  color: var(--color-white);
   padding: 0.3rem 0.6rem;
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
@@ -315,16 +298,13 @@
 }
 
 .wishlist-button {
-  background-color: white;
   border: none;
   border-radius: 50%;
   width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 36px;
+  padding: unset;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); // closest to --shadow-sm
   transition: transform 0.2s ease;
 
   &:hover {
@@ -481,7 +461,7 @@
 
   &.page-button-active {
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-white);
     border-color: var(--color-primary);
   }
 }

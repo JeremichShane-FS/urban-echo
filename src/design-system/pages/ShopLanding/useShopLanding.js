@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION } from "@config/constants";
 import { queryKeys } from "@modules/core/providers";
+import { getImageUrl } from "@modules/core/utils";
 import { useFeaturedProducts, useNewArrivals } from "@modules/products/hooks";
 import { categoriesService } from "@modules/products/services";
 
@@ -33,8 +34,8 @@ const useShopLanding = () => {
         includeProductCount: true,
         status: "active",
       }),
-    staleTime: CACHE_DURATION.long, // 24 hours
-    gcTime: CACHE_DURATION.veryLong, // 1 week
+    staleTime: CACHE_DURATION.long,
+    gcTime: CACHE_DURATION.veryLong,
     retry: 3,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
@@ -50,6 +51,7 @@ const useShopLanding = () => {
     error: newArrivalsError,
     isLoading: newArrivalsLoading,
   } = useNewArrivals({ limit: 6 });
+
   const isLoading = categoriesLoading || featuredLoading || newArrivalsLoading;
   const error =
     categoriesError?.message || featuredError?.message || newArrivalsError?.message || null;
@@ -60,6 +62,7 @@ const useShopLanding = () => {
     newArrivals: newArrivalsData || [],
     isLoading,
     error,
+    getImageUrl,
   };
 };
 

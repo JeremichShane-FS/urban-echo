@@ -6,6 +6,9 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+
 /**
  * View component for rendering featured products in a responsive grid layout
  * @component
@@ -25,27 +28,9 @@ const FeaturedProductsView = ({
   onProductClick,
   styles,
 }) => {
-  if (isLoading) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Featured Products</h2>
-          <div className={styles.loading}>Loading featured products...</div>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <h2 className={styles.title}>Featured Products</h2>
-          <div className={styles.error}>{error}</div>
-        </div>
-      </section>
-    );
-  }
+  if (isLoading)
+    return <Loading message="Loading featured products..." title="Featured Products" />;
+  if (error) return <Error message={error} title="Featured Products" />;
 
   return (
     <section className={styles.section}>

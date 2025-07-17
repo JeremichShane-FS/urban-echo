@@ -1,0 +1,271 @@
+@use "@styles/abstracts" as *;
+
+// =================================================================
+// COMMON SECTION STRUCTURE
+// =================================================================
+
+.section {
+  padding: var(--spacing-xxl) 0;
+  background-color: var(--color-background-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+.title {
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-header);
+  margin-bottom: var(--spacing-xxl);
+
+  @include breakpoint(sm) {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-xl);
+  }
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--color-background-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  text-align: center;
+  max-width: 25rem;
+  padding: var(--spacing-xl);
+}
+
+// =================================================================
+// ERROR COMPONENT STYLES
+// =================================================================
+
+.error {
+  background-color: var(--color-error-light, #fef2f2);
+  border: 1px solid var(--color-error-border, #fecaca);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.message {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--color-error, #dc2626);
+  line-height: var(--line-height-md);
+}
+
+.error-icon {
+  font-size: var(--font-size-2xl);
+  line-height: 1;
+  margin-bottom: var(--spacing-xs);
+}
+
+.retry-button {
+  background-color: var(--color-error, #dc2626);
+  color: var(--color-white);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: var(--spacing-sm);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-error-dark, #b91c1c);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// =================================================================
+// INLINE ERROR VARIANT
+// =================================================================
+
+.inline-error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-error, #dc2626);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-error-light, #fef2f2);
+  border: 1px solid var(--color-error-border, #fecaca);
+  border-radius: var(--border-radius-sm);
+  margin: 0;
+
+  .error-icon {
+    font-size: var(--font-size-sm);
+    margin-bottom: 0;
+  }
+
+  .message {
+    font-size: var(--font-size-sm);
+  }
+}
+
+.inline-retry-button {
+  background: none;
+  border: none;
+  color: var(--color-error, #dc2626);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  padding: 0;
+  margin-left: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+
+  &:hover:not(:disabled) {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 1px solid var(--color-error);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// =================================================================
+// RESPONSIVE STYLES
+// =================================================================
+
+@include breakpoint(sm) {
+  .section {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .error {
+    padding: var(--spacing-md);
+  }
+
+  .content {
+    padding: var(--spacing-md);
+  }
+
+  .message {
+    font-size: var(--font-size-sm);
+  }
+
+  .retry-button {
+    font-size: var(--font-size-xs);
+  }
+}
+
+// =================================================================
+// ACCESSIBILITY IMPROVEMENTS
+// =================================================================
+
+.error {
+  &:focus-within {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .error {
+    border-width: 2px;
+  }
+
+  .retry-button {
+    border: 2px solid var(--color-error);
+  }
+
+  .inline-error {
+    border-width: 2px;
+  }
+}
+
+// =================================================================
+// CONTAINER VARIANTS
+// =================================================================
+
+.section-error {
+  .error {
+    min-height: 200px;
+    background-color: var(--color-background-primary);
+  }
+}
+
+.page-error {
+  .error {
+    min-height: 50vh;
+    background-color: var(--color-background-primary);
+  }
+}
+
+.inline-error {
+  .error {
+    min-height: auto;
+    padding: var(--spacing-xs);
+  }
+}
+
+// =================================================================
+// LOADING STATES FOR RETRY BUTTON
+// =================================================================
+
+.retry-button {
+  &[aria-busy="true"] {
+    position: relative;
+    color: transparent;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      margin-left: -6px;
+      border: 1px solid var(--color-white);
+      border-top: 1px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -22,8 +22,15 @@ import styles from "./NewArrivals.module.scss";
  * @returns {JSX.Element} Rendered new arrivals section with loading and error states
  */
 const NewArrivals = () => {
-  const { error, filters, handleProductClick, handleViewAllClick, loading, pagination, products } =
-    useNewArrivals();
+  const {
+    error,
+    filters,
+    handleProductClick,
+    handleViewAllClick,
+    isLoading,
+    pagination,
+    products,
+  } = useNewArrivals();
 
   return (
     <NewArrivalsView
@@ -35,7 +42,7 @@ const NewArrivals = () => {
       ROUTES={ROUTES}
       error={error?.message || null}
       filters={filters}
-      loading={loading}
+      isLoading={isLoading}
       newArrivals={products}
       pagination={pagination}
       styles={styles}

@@ -19,4 +19,4 @@ export * from "./product-constants";
 export * from "./site-constants";
 export * from "./ui-constants";
 export * from "./user-constants";
-export { default as ROUTES } from "@config/routes";
+export * from "@config/routes";

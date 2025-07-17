@@ -20,7 +20,8 @@ import styles from "./ShopLanding.module.scss";
  * @returns {JSX.Element} Rendered shop landing page with categories, promotions, and product sections
  */
 const ShopLanding = () => {
-  const { categories, error, featuredProducts, isLoading, newArrivals } = useShopLanding();
+  const { categories, error, featuredProducts, getImageUrl, isLoading, newArrivals } =
+    useShopLanding();
 
   return (
     <ShopLandingView
@@ -29,6 +30,7 @@ const ShopLanding = () => {
       categories={categories}
       error={error}
       featuredProducts={featuredProducts}
+      getImageUrl={getImageUrl}
       isLoading={isLoading}
       newArrivals={newArrivals}
       styles={styles}

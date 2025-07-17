@@ -1,0 +1,192 @@
+@use "@styles/abstracts" as *;
+
+// =================================================================
+// COMMON SECTION STRUCTURE
+// =================================================================
+
+.section {
+  padding: var(--spacing-xxl) 0;
+  background-color: var(--color-background-primary);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+.title {
+  text-align: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-header);
+  margin-bottom: var(--spacing-xxl);
+
+  @include breakpoint(sm) {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-xl);
+  }
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--color-background-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  text-align: center;
+  max-width: 400px;
+  padding: var(--spacing-xl);
+}
+
+// =================================================================
+// LOADING COMPONENT STYLES
+// =================================================================
+
+.loading {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.message {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-md);
+}
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.spinner-circle {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-light);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// =================================================================
+// INLINE LOADING VARIANT
+// =================================================================
+
+.inline-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+
+  .spinner {
+    margin-bottom: 0;
+  }
+
+  .spinner-circle {
+    width: 16px;
+    height: 16px;
+    border-width: 1px;
+  }
+
+  .message {
+    font-size: var(--font-size-sm);
+  }
+}
+
+// =================================================================
+// RESPONSIVE STYLES
+// =================================================================
+
+@include breakpoint(sm) {
+  .section {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .loading {
+    padding: var(--spacing-md);
+  }
+
+  .content {
+    padding: var(--spacing-md);
+  }
+
+  .message {
+    font-size: var(--font-size-sm);
+  }
+}
+
+// =================================================================
+// ACCESSIBILITY IMPROVEMENTS
+// =================================================================
+
+.loading {
+  &:focus-within {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  .spinner-circle {
+    animation: none;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .spinner-circle {
+    border-width: 3px;
+  }
+}
+
+// =================================================================
+// CONTAINER VARIANTS
+// =================================================================
+
+.section-loading {
+  .loading {
+    min-height: 200px;
+    background-color: var(--color-background-primary);
+  }
+}
+
+.page-loading {
+  .loading {
+    min-height: 50vh;
+    background-color: var(--color-background-primary);
+  }
+}
+
+.inline-loading {
+  .loading {
+    min-height: auto;
+    padding: var(--spacing-xs);
+  }
+}

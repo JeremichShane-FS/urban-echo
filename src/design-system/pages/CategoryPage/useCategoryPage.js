@@ -1,7 +1,7 @@
 /**
- * @fileoverview Custom hook for managing category page state including filtering, sorting, and pagination
+ * @fileoverview Custom hook for managing category page state including filtering, sorting, pagination, and breadcrumbs
  * Provides comprehensive e-commerce browsing functionality with React Query integration for data fetching
- * Handles URL synchronization, filter state management, and optimized caching for enhanced user experience
+ * Handles URL synchronization, filter state management, breadcrumb generation, and optimized caching for enhanced user experience
  */
 
 import { useMemo, useState } from "react";
@@ -10,16 +10,18 @@ import { useQuery } from "@tanstack/react-query";
 
 import { CACHE_DURATION } from "@config/constants";
 import { queryKeys } from "@modules/core/providers";
+import { generateCategoryBreadcrumbs } from "@modules/core/utils";
 import { getCategories, getProducts, searchProducts } from "@modules/products/services";
 
 /**
- * Hook for managing category page state including products, filters, pagination, and URL synchronization
+ * Hook for managing category page state including products, filters, pagination, breadcrumbs, and URL synchronization
  * @hook
  * @param {Object} params - URL parameters object containing category information
  * @param {string} [params.category] - Category slug from URL for filtering products
  * @returns {Object} Category page state management and interaction handlers
  * @returns {Array<Object>} returns.products - Filtered product data array for display
  * @returns {Array<Object>} returns.categories - Available categories with product counts
+ * @returns {Array<Object>} returns.breadcrumbItems - Breadcrumb navigation items for page hierarchy
  * @returns {number} returns.totalProducts - Total count of products matching current filters
  * @returns {number} returns.totalPages - Total number of pagination pages
  * @returns {number} returns.currentPage - Current pagination page number
@@ -38,7 +40,6 @@ import { getCategories, getProducts, searchProducts } from "@modules/products/se
  * @returns {Function} returns.handlePriceRangeChange - Handler for price range filter changes with pagination reset
  * @returns {Function} returns.handlePageChange - Handler for pagination navigation with scroll behavior
  */
-
 const useCategoryPage = params => {
   const router = useRouter();
   const category = params?.category || "all";
@@ -52,6 +53,11 @@ const useCategoryPage = params => {
     newArrivals: false,
     freeShipping: false,
   });
+
+  // Generate breadcrumb items based on current category
+  const breadcrumbItems = useMemo(() => {
+    return generateCategoryBreadcrumbs(category);
+  }, [category]);
 
   // Fetch categories for sidebar
   const { data: categories = [] } = useQuery({
@@ -166,17 +172,12 @@ const useCategoryPage = params => {
   }, [productsResponse]);
 
   const enhancedCategories = useMemo(() => {
-    const baseCategories = [{ id: "all", label: "All Products", count: productsData.total || 0 }];
-
-    return [
-      ...baseCategories,
-      ...categories.map(cat => ({
-        id: cat.slug || cat._id,
-        label: cat.name,
-        count: cat.productCount || 0,
-      })),
-    ];
-  }, [categories, productsData.total]);
+    return categories.map(cat => ({
+      id: cat.slug || cat._id,
+      label: cat.name,
+      count: cat.productCount || 0,
+    }));
+  }, [categories]);
 
   const totalPages = Math.ceil((productsData.total || 0) / 12);
 
@@ -222,12 +223,15 @@ const useCategoryPage = params => {
   };
 
   return {
+    // Data
     products: productsData.products || [],
     categories: enhancedCategories,
     totalProducts: productsData.total || 0,
     totalPages,
     currentPage,
+    breadcrumbItems,
 
+    // State
     selectedCategory,
     sortBy,
     priceRange,
@@ -235,9 +239,11 @@ const useCategoryPage = params => {
     filters,
     category,
 
+    // Status
     isLoading,
     error,
 
+    // Handlers
     handleCategoryChange,
     handleFilterChange,
     handleSearch,

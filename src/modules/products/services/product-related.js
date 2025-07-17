@@ -12,11 +12,21 @@ import { get } from "@modules/core/services";
  * @async
  * @function getRelatedProducts
  * @param {string} productId - Product ID to find related products for
- * @param {number} [limit=4] - Maximum number of related products to retrieve
+ * @param {Object} [options={}] - Options object for the query
+ * @param {number} [options.limit=4] - Maximum number of related products to retrieve
+ * @param {string} [options.category] - Category filter for related products
+ * @param {boolean} [options.excludeOutOfStock=false] - Exclude out-of-stock items
  * @returns {Promise<Object>} Related products data for cross-selling
  */
-export const getRelatedProducts = async (productId, limit = 4) => {
-  return get(`${API_ENDPOINTS.products}/related-products`, { productId, limit });
+export const getRelatedProducts = async (productId, options = {}) => {
+  const { category, excludeOutOfStock = false, limit = 4 } = options;
+
+  return get(`${API_ENDPOINTS.products}/related-products`, {
+    productId,
+    limit,
+    category,
+    excludeOutOfStock,
+  });
 };
 
 /**

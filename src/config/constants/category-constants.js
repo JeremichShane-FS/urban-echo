@@ -4,7 +4,7 @@
  * Supports dynamic route generation, menu building, and product taxonomy management across the application
  */
 
-import ROUTES from "@config/routes";
+import { ROUTES } from "@config/routes";
 
 // =================================================================
 // MAIN CATEGORY DEFINITIONS

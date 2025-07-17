@@ -6,6 +6,9 @@
 
 import PropTypes from "prop-types";
 
+import Error from "@design-system/feedback/Error";
+import Loading from "@design-system/feedback/Loading";
+
 /**
  * View component for rendering about section with formatted content and navigation link
  * @component
@@ -33,21 +36,9 @@ const AboutSectionView = ({
   onLearnMoreClick,
   styles,
 }) => {
-  if (error) {
-    return <div>Error loading about section</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.content}>
-            <div className={styles.loading}>Loading about content...</div>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  if (isLoading) return <Loading message="Loading about content..." title="About Us" />;
+  if (error)
+    return <Error message="Error loading about section" title="About Us" variant="section" />;
 
   return (
     <section className={styles.section}>

@@ -42,11 +42,11 @@
  * {renderStars(null, styles)}
  * // Returns: null (prevents rendering empty stars)
  */
-export const renderStars = (rating, styles) => {
-  if (!rating) return null;
-  return Array.from({ length: 5 }, (_, i) => (
-    <span key={i} className={i < Math.floor(rating) ? styles["star-filled"] : styles["star-empty"]}>
-      ★
-    </span>
-  ));
+export const renderStars = rating => {
+  return Array.from({ length: 5 }, (_, index) => {
+    const isFilled = index < Math.floor(rating);
+    const isHalf = index === Math.floor(rating) && rating % 1 >= 0.5;
+    const isEmpty = index >= Math.ceil(rating);
+    return { isFilled, isHalf, isEmpty };
+  });
 };

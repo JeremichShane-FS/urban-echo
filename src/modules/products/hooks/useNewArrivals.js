@@ -164,7 +164,7 @@ export const useNewArrivals = (options = {}) => {
     products,
     pagination,
     filters,
-    loading: isLoading,
+    isLoading,
     error,
     handleProductClick,
     handleViewAllClick,
