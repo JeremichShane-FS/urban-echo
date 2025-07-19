@@ -5,7 +5,7 @@
 // =================================================================
 
 .section {
-  padding: var(--spacing-xxl) 0;
+  padding: var(--spacing-2xl) 0;
   background-color: var(--color-background-primary);
 }
 
@@ -21,7 +21,7 @@
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-header);
-  margin-bottom: var(--spacing-xxl);
+  margin-bottom: var(--spacing-2xl);
 
   @include breakpoint(sm) {
     font-size: var(--font-size-2xl);
@@ -216,7 +216,7 @@
 
 .section-error {
   .error {
-    min-height: 200px;
+    min-height: 12.5rem;
     background-color: var(--color-background-primary);
   }
 }

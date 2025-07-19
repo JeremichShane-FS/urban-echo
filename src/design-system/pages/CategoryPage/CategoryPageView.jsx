@@ -2,6 +2,7 @@
  * @fileoverview Presentational component for category page layout with product grid and filtering interface
  * Handles responsive layout with sidebar filters, product grid display, and pagination controls
  * Provides comprehensive e-commerce browsing experience with search, sorting, and filtering capabilities
+ * Now includes unified image handling system with conditional optimization
  */
 
 import PropTypes from "prop-types";
@@ -9,6 +10,7 @@ import PropTypes from "prop-types";
 import Error from "@design-system/feedback/Error";
 import Loading from "@design-system/feedback/Loading";
 import Breadcrumbs from "@design-system/navigation/Breadcrumbs";
+import { getImageUrl } from "@modules/core/utils";
 
 /**
  * View component for rendering category page with product grid, filters, and pagination
@@ -89,14 +91,11 @@ const CategoryPageView = ({
                 ? "Discover our complete collection of premium fashion"
                 : `Explore our ${category} collection`}
             </p>
-            <div className={styles["results-count"]}>
-              {isLoading ? "Loading..." : `${totalProducts} products found`}
-            </div>
           </div>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 max-w-7xl mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 mx-auto px-4">
         <aside className={styles.sidebar}>
           <div className={styles["filter-group"]}>
             <label className={styles["filter-label"]} htmlFor="product-search">
@@ -197,7 +196,6 @@ const CategoryPageView = ({
                 value={sortBy}
                 onChange={e => handleSortChange(e.target.value)}>
                 <option value="featured">Featured</option>
-                <option value="newest">Newest</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
                 <option value="name">Name</option>
@@ -212,16 +210,8 @@ const CategoryPageView = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
               {safeProducts.map(product => {
                 const productId = product._id || product.id;
-                const productImage =
-                  (Array.isArray(product.images) &&
-                  typeof product.images[0] === "string" &&
-                  product.images[0].trim()
-                    ? product.images[0]
-                    : null) ||
-                  (typeof product.image === "string" && product.image.trim()
-                    ? product.image
-                    : null) ||
-                  "/images/placeholder-product.jpg";
+                const productImage = getImageUrl(product);
+                const isPlaceholder = productImage?.includes("placehold.co");
                 const productName = product.name || "Unnamed Product";
                 const productPrice = product.price || 0;
                 const productOriginalPrice = product.originalPrice;
@@ -234,12 +224,13 @@ const CategoryPageView = ({
                     <article className={styles["product-card"]}>
                       <div className={styles["product-image-container"]}>
                         <Image
+                          fill
                           alt={productName}
                           className={styles["product-image"]}
-                          height={240}
                           priority={false}
+                          sizes="(max-width: 768px) 100vw, 300px"
                           src={productImage}
-                          width={300}
+                          unoptimized={isPlaceholder}
                         />
 
                         <div className={styles.badges}>
@@ -309,6 +300,7 @@ const CategoryPageView = ({
                 Try adjusting your filters or search terms to find what you&apos;re looking for.
               </p>
               <Button
+                size="sm"
                 variant="primary"
                 onClick={() => {
                   handleSearch("");

@@ -29,6 +29,7 @@ import styles from "./ProductPage.module.scss";
  */
 const ProductPage = ({ params }) => {
   const productPageState = useProductPage(params);
+  console.log("🛍️ DEBUG - Product Page State:", productPageState);
 
   if (productPageState.isLoading) return <Loading message="Loading product..." variant="page" />;
 

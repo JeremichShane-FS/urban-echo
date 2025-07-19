@@ -1,6 +1,9 @@
 /**
- * @fileoverview Simplified useProductPage hook for category/slug/id URL structure
- * No legacy format handling - designed specifically for new URL pattern
+ * @fileoverview Custom hook for managing product page state, data fetching, and user interactions
+ * Supports category/slug/id URL structure for SEO-friendly routing
+ * Integrates with React Query for data fetching and caching
+ * Manages state for product variants, images, cart actions, and wishlist functionality
+ * Provides computed properties and event handlers for the ProductPageView component
  */
 
 import { useMemo, useState } from "react";
@@ -26,10 +29,7 @@ import { getProduct, getRelatedProducts } from "@modules/products/services";
 const useProductPage = params => {
   const router = useRouter();
   const { addItem: addToCart } = useCartActions();
-
-  // Stabilize params to prevent re-renders (keep only what's necessary)
   const { category, productId } = params;
-
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -57,14 +57,14 @@ const useProductPage = params => {
     return generateProductBreadcrumbs(product, category);
   }, [product, category]);
 
-  // Related products - MINIMAL version to prevent infinite loop
+  // Related products
   const { data: relatedProducts } = useQuery({
-    queryKey: ["related-products-simple", productId], // Simple, stable key
+    queryKey: ["related-products-simple", productId],
     queryFn: () => getRelatedProducts(productId, { limit: 5 }),
-    staleTime: Infinity, // Never refetch automatically
-    gcTime: Infinity, // Keep in cache forever
-    enabled: !!productId, // Only enable when productId exists
-    retry: 0, // Never retry
+    staleTime: Infinity,
+    gcTime: Infinity,
+    enabled: !!productId,
+    retry: 0,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -73,7 +73,7 @@ const useProductPage = params => {
   });
 
   // Computed values
-  const isLoading = productLoading; // Don't block main loading on related products
+  const isLoading = productLoading;
   const error = productError?.message || null;
 
   const currentPrice = useMemo(() => {
@@ -108,6 +108,13 @@ const useProductPage = params => {
     return product?.images || [];
   }, [selectedVariant, product]);
 
+  const currentImageUrl = useMemo(() => {
+    if (!productImages.length) return null;
+
+    const index = Math.min(Math.max(activeImageIndex, 0), productImages.length - 1);
+    return productImages[index];
+  }, [activeImageIndex, productImages]);
+
   const averageRating = useMemo(() => {
     if (!product?.reviewCount) return 0;
     const calculated = 3.5 + product.reviewCount / 200;
@@ -116,7 +123,7 @@ const useProductPage = params => {
 
   const canAddToCart = selectedSize && selectedColor && quantity > 0 && product?.inStock;
 
-  // Event handlers - Simplified without useCallback overuse
+  // Event handlers
   const updateSelectedVariant = (size, color) => {
     if (!size || !color || !availableVariants.length) {
       setSelectedVariant(null);
@@ -198,13 +205,13 @@ const useProductPage = params => {
     router.push("/checkout");
   };
 
-  // Return object - Simple and clean
   return {
     // Data
     product,
     relatedProducts: relatedProducts || [],
     reviews: [],
     productImages,
+    currentImageUrl,
     breadcrumbItems,
 
     // State

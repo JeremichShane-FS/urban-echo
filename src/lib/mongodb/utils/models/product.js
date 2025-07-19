@@ -30,6 +30,7 @@ import mongoose from "mongoose";
  * @property {boolean} isLimitedEdition - Whether product is limited edition
  * @property {boolean} isActive - Whether product is active and visible
  * @property {number} rating - Product rating (0-5)
+ *  @property {number} averageRating - Calculated average rating from reviews
  * @property {number} reviewCount - Number of reviews
  * @property {number} salesCount - Number of sales for popularity ranking
  * @property {number} viewCount - Number of views for analytics
@@ -154,7 +155,18 @@ const productSchema = new mongoose.Schema(
       default: true,
       index: true,
     },
+    freeShipping: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0,
+    },
+    averageRating: {
       type: Number,
       min: 0,
       max: 5,
@@ -226,6 +238,22 @@ productSchema.index({ price: 1 });
 productSchema.index({ createdAt: -1 });
 productSchema.index({ salesCount: -1 });
 productSchema.index({ rating: -1 });
+productSchema.index({ freeShipping: 1, isActive: 1 });
+productSchema.index(
+  {
+    name: "text",
+    description: "text",
+    tags: "text",
+  },
+  {
+    weights: {
+      name: 10,
+      tags: 5,
+      description: 1,
+    },
+    name: "product_text_search",
+  }
+);
 
 /**
  * Static method to find products by category with optional subcategory filtering

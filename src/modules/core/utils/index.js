@@ -12,6 +12,7 @@
  * You can now import from a single location:
  * import { trackEvent, formatCurrency, isValidEmail } from '@modules/core/utils';
  */
+/* eslint-disable simple-import-sort/exports */
 
 // Analytics Utilities
 export { trackClick, trackEvent, trackPageView } from "./analytics";
@@ -41,12 +42,23 @@ export { getNavItemById, getNavItemsByIds } from "./getNavItems";
 
 // Image Utilities
 export {
-  getBrandedPlaceholder,
-  getHeroImageUrl,
+  // Core universal image function - handles all image types
   getImageUrl,
+
+  // Placeholder generation utilities
   getPlaceholderUrl,
-  getProductImageUrl,
+  getBrandedPlaceholder,
   PLACEHOLDER_CONFIGS,
+
+  // Data transformation utilities
+  normalizeImageArray,
+  transformProductData,
+
+  // Convenience functions for specific use cases
+  getProductImageUrl,
+  getRelatedProductImageUrl,
+  getCategoryImageUrl,
+  getHeroImageUrl,
 } from "./imageUtils";
 
 // Copyright Utility
