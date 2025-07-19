@@ -12,7 +12,7 @@
   position: fixed;
   top: var(--spacing-lg);
   right: var(--spacing-lg);
-  z-index: 1000;
+  z-index: var(--z-index-toast, 1000);
   animation: slideInRight 0.3s ease-out forwards;
 
   @include breakpoint(md, "max") {
@@ -23,7 +23,7 @@
 
   .toast-content {
     background-color: var(--color-success, #10b981);
-    color: white;
+    color: var(--color-white);
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -31,8 +31,8 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-md);
-    min-width: 280px;
-    max-width: 400px;
+    min-width: 17.5rem;
+    max-width: 25rem;
 
     @include breakpoint(md, "max") {
       min-width: auto;
@@ -48,12 +48,12 @@
     .toast-close {
       background: none;
       border: none;
-      color: white;
+      color: var(--color-white);
       font-size: var(--font-size-xl);
       cursor: pointer;
       padding: 0;
-      width: 24px;
-      height: 24px;
+      width: 1.5rem;
+      height: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -88,7 +88,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
+  min-height: 25rem;
 
   .loading-spinner {
     font-size: var(--font-size-lg);
@@ -117,7 +117,7 @@
   gap: var(--spacing-2xl);
   margin-bottom: var(--spacing-3xl);
   align-items: start;
-  min-height: 500px;
+  min-height: 31.25rem;
 
   @include breakpoint(md, "max") {
     grid-template-columns: 1fr;
@@ -134,7 +134,7 @@
 
 .main-image {
   width: 100%;
-  height: 400px; // Fixed height like wireframe
+  height: 25rem;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   background-color: var(--color-background-secondary);
@@ -233,7 +233,7 @@
 
   .discount {
     background-color: var(--color-error);
-    color: white;
+    color: var(--color-white);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-sm);
     font-size: var(--font-size-sm);
@@ -267,7 +267,7 @@
 
   .model-dropdown {
     width: 100%;
-    max-width: 300px;
+    max-width: 18.75rem;
     padding: var(--spacing-md) var(--spacing-lg);
     border: 1px solid var(--color-border-light);
     border-radius: var(--border-radius-sm);
@@ -280,7 +280,7 @@
 
     background-repeat: no-repeat;
     background-position: right var(--spacing-md) center;
-    background-size: 16px;
+    background-size: 1rem;
     padding-right: var(--spacing-xl);
 
     &:hover {
@@ -294,16 +294,16 @@
   }
 }
 
-// Actions section - exactly like wireframe
 .actions {
   display: flex;
+  // justify-content: center;
   gap: var(--spacing-md);
   align-items: center;
   margin-top: var(--spacing-lg);
 
   .add-to-cart-button {
-    background-color: #4a90a4; // Matching wireframe button color
-    color: white;
+    background-color: #4a90a4;
+    color: var(--color-white);
     border: none;
     padding: var(--spacing-md) var(--spacing-xl);
     border-radius: var(--border-radius-sm);
@@ -324,8 +324,8 @@
   }
 
   .wishlist-button {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border: 1px solid var(--color-border-light);
     border-radius: var(--border-radius-sm);
     background: var(--color-background);
@@ -345,7 +345,7 @@
     &.wishlisted {
       border-color: var(--color-primary);
       background-color: var(--color-primary);
-      color: white;
+      color: var(--color-white);
     }
   }
 }
@@ -362,9 +362,8 @@
   margin-top: var(--spacing-md);
 }
 
-// Similar Products Section - matching wireframe
 .similar-products {
-  margin-bottom: var(--spacing-3xl);
+  margin: var(--spacing-3xl) 0;
   padding-top: var(--spacing-2xl);
   border-top: 1px solid var(--color-border-light);
 
@@ -372,7 +371,7 @@
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    margin-bottom: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
     text-align: center;
   }
 
@@ -421,7 +420,6 @@
       overflow: hidden;
       background-color: var(--color-background-secondary);
       display: flex;
-      align-items: center;
       justify-content: center;
 
       .related-image {
@@ -503,11 +501,11 @@
       gap: var(--spacing-md);
 
       .avatar {
-        width: 48px;
-        height: 48px;
+        width: 3rem;
+        height: 3rem;
         border-radius: 50%;
         background-color: var(--color-primary);
-        color: white;
+        color: var(--color-white);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -600,8 +598,8 @@
   .color-selection {
     .color-options {
       .color-option {
-        width: 35px;
-        height: 35px;
+        width: 2.1875rem;
+        height: 2.1875rem;
       }
     }
   }

@@ -139,13 +139,9 @@ export async function GET(request) {
     const strapiEndpoint = buildStrapiEndpoint(section);
     const response = await fetchFromStrapi(strapiEndpoint, ERROR_SOURCE);
     const data = await response.json();
-
-    // ✅ Extract attributes from Strapi response structure
     const rawContent = data.data?.[0];
     const content = rawContent?.attributes || rawContent;
-
     const transformedContent = transformAboutContent(content, section);
-
     const meta = {
       endpoint: `/api/${API_ENDPOINTS.content}/about`,
       section: section,

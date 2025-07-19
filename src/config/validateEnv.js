@@ -17,7 +17,6 @@ export function validateEnvironment() {
   console.log(
     `Current values: ${requiredVars.map(varName => (process.env[varName] ? "set" : "unset")).join(", ")}`
   );
-  // console.log(`Missing variables: ${missing.join(", ")}`);
 
   const missing = requiredVars.filter(varName => !process.env[varName]);
 

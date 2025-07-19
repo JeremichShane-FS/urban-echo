@@ -2,52 +2,27 @@
  * @fileoverview Presentational component for product page layout and user interface with breadcrumb navigation
  * Handles the visual presentation of product details, image gallery, variants, related products, and navigation breadcrumbs
  * Provides responsive layout with product information, reviews, purchase options, and hierarchical navigation - Updated to match wireframe
+ * Now uses unified image handling system with conditional optimization
  */
 
 import PropTypes from "prop-types";
 
 import Breadcrumbs from "@design-system/navigation/Breadcrumbs";
+import { getImageUrl } from "@modules/core/utils";
 
 /**
  * View component for rendering complete product page interface with breadcrumb navigation matching wireframe design
  * @component
- * @param {React.ComponentType} Button - Button component for interactive elements
- * @param {React.ComponentType} Image - Next.js Image component for optimized product images
- * @param {React.ComponentType} Link - Next.js Link component for navigation
- * @param {number} activeImageIndex - Currently displayed image index in gallery
- * @param {Array<string>} availableSizes - Available size options for product selection
- * @param {number} averageRating - Calculated average rating from product reviews
- * @param {Array<Object>} breadcrumbItems - Breadcrumb navigation items for page hierarchy
- * @param {boolean} canAddToCart - Whether product can be added to cart based on selections
- * @param {number} currentPrice - Current product price including variant pricing
- * @param {number} discountPercentage - Percentage discount amount for sale display
- * @param {Function} handleAddToCart - Handler for add to cart button interactions
- * @param {Function} handleCloseSuccessMessage - Handler for closing success notification overlay
- * @param {Function} handleSizeSelect - Handler for size selection dropdown changes
- * @param {Function} handleWishlistToggle - Handler for wishlist heart button interactions
- * @param {boolean} isOnSale - Whether product has active discount pricing
- * @param {boolean} isWishlisted - Whether product is currently in user's wishlist
- * @param {number} originalPrice - Original product price before discounts
- * @param {Object} product - Complete product data object with details and specifications
- * @param {Array<string>} productImages - Product image URLs for gallery display
- * @param {Array<Object>} relatedProducts - Related/similar products for recommendations section
- * @param {Function} renderStars - Utility function for rendering star rating components
- * @param {Array<Object>} reviews - Product reviews data for reviews section
- * @param {string} selectedSize - Currently selected size option value
- * @param {boolean} showSuccessMessage - Whether success notification overlay is visible
- * @param {Object} styles - CSS module styles object for component styling
- * @param {string} successMessage - Success notification message content for display
- * @returns {JSX.Element} Rendered product page with comprehensive interface and breadcrumb navigation
  */
 const ProductPageView = ({
   Button,
   Image,
   Link,
-  activeImageIndex,
   availableSizes,
   averageRating,
   breadcrumbItems,
   canAddToCart,
+  currentImageUrl,
   currentPrice,
   discountPercentage,
   handleAddToCart,
@@ -58,7 +33,6 @@ const ProductPageView = ({
   isWishlisted,
   originalPrice,
   product,
-  productImages,
   relatedProducts,
   renderStars,
   reviews,
@@ -69,10 +43,14 @@ const ProductPageView = ({
 }) => {
   if (!product) return null;
 
+  console.log("🛍️ DEBUG - relatedProducts in View:", relatedProducts);
+
+  const mainImageUrl = getImageUrl(currentImageUrl);
+  const isMainImagePlaceholder = mainImageUrl?.includes("placehold.co");
+
   return (
     <div className={styles["product-page"]}>
-      {/* Breadcrumb Navigation */}
-      <div className="max-w-7xl mx-auto px-4 pt-4 pb-2">
+      <div className="px-4 pt-4 pb-2">
         <Breadcrumbs items={breadcrumbItems} />
       </div>
 
@@ -90,25 +68,19 @@ const ProductPageView = ({
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 items-start">
           <div className={styles["image-section"]}>
             <div className={styles["main-image"]}>
-              {productImages[activeImageIndex] && (
-                <Image
-                  priority
-                  alt={product.name}
-                  className={styles["product-image"]}
-                  height={500}
-                  src={
-                    typeof productImages[activeImageIndex] === "string"
-                      ? productImages[activeImageIndex]
-                      : productImages[activeImageIndex]?.url || "/placeholder-image.jpg"
-                  }
-                  style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "100%" }}
-                  width={500}
-                />
-              )}
+              <Image
+                priority
+                alt={product.name}
+                className={styles["product-image"]}
+                height={500}
+                src={mainImageUrl}
+                unoptimized={isMainImagePlaceholder}
+                width={500}
+              />
             </div>
           </div>
 
@@ -185,27 +157,32 @@ const ProductPageView = ({
           <section className={styles["similar-products"]}>
             <h2 className={styles["section-title"]}>Similar Products</h2>
             <div className={styles["related-grid"]}>
-              {relatedProducts.map(relatedProduct => (
-                <Link
-                  key={relatedProduct.id}
-                  className={styles["related-product"]}
-                  href={`/product/${relatedProduct.id}`}>
-                  <div className={styles["related-image-wrapper"]}>
-                    <Image
-                      alt={relatedProduct.name}
-                      className={styles["related-image"]}
-                      height={200}
-                      src={relatedProduct.images?.[0] || "/placeholder-image.jpg"}
-                      style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "100%" }}
-                      width={200}
-                    />
-                  </div>
-                  <div className={styles["related-info"]}>
-                    <h3 className={styles["related-name"]}>{relatedProduct.name}</h3>
-                    <p className={styles["related-price"]}>${relatedProduct.price}</p>
-                  </div>
-                </Link>
-              ))}
+              {relatedProducts.map((relatedProduct, i) => {
+                const relatedImageUrl = getImageUrl(relatedProduct);
+                const isRelatedPlaceholder = relatedImageUrl?.includes("placehold.co");
+
+                return (
+                  <Link
+                    key={`${relatedProduct.id}-${i}`}
+                    className={styles["related-product"]}
+                    href={`/shop/${relatedProduct.category}/${relatedProduct.slug}/${relatedProduct.id || relatedProduct._id}`}>
+                    <div className={styles["related-image-wrapper"]}>
+                      <Image
+                        alt={relatedProduct.name}
+                        className={styles["related-image"]}
+                        height={200}
+                        src={relatedImageUrl}
+                        unoptimized={isRelatedPlaceholder}
+                        width={200}
+                      />
+                    </div>
+                    <div className={styles["related-info"]}>
+                      <h3 className={styles["related-name"]}>{relatedProduct.name}</h3>
+                      <p className={styles["related-price"]}>${relatedProduct.price}</p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}
@@ -266,20 +243,20 @@ ProductPageView.propTypes = {
     })
   ).isRequired,
   canAddToCart: PropTypes.bool,
+  currentImageUrl: PropTypes.string,
   currentPrice: PropTypes.number,
   discountPercentage: PropTypes.number,
   handleAddToCart: PropTypes.func.isRequired,
   handleCloseSuccessMessage: PropTypes.func.isRequired,
-  handleColorSelect: PropTypes.func.isRequired,
-  handleImageSelect: PropTypes.func.isRequired,
-  handleQuantityChange: PropTypes.func.isRequired,
+  handleColorSelect: PropTypes.func,
+  handleQuantityChange: PropTypes.func,
   handleSizeSelect: PropTypes.func.isRequired,
   handleWishlistToggle: PropTypes.func.isRequired,
   isOnSale: PropTypes.bool,
   isWishlisted: PropTypes.bool,
   originalPrice: PropTypes.number,
   product: PropTypes.object,
-  productImages: PropTypes.array,
+  productImages: PropTypes.arrayOf(PropTypes.string),
   quantity: PropTypes.number,
   relatedProducts: PropTypes.array,
   renderStars: PropTypes.func.isRequired,

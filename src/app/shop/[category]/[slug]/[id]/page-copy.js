@@ -19,14 +19,11 @@ import ProductPage from "@design-system/pages/ProductPage";
  */
 export default function CategorySlugIdProductPage({ params }) {
   const { category, id, slug } = params;
-
-  // Basic validation
   const validCategories = ["men", "women", "accessories", "sale", "new", "all"];
   if (!validCategories.includes(category)) {
     notFound();
   }
 
-  // Just pass the params to your existing ProductPage component
   return <ProductPage params={{ productId: id, category, slug }} />;
 }
 

@@ -1,7 +1,7 @@
 @use "@styles/abstracts" as *;
 
 .section {
-  padding: var(--spacing-xxl) 0;
+  padding: var(--spacing-2xl) 0;
   background-color: var(--color-background-primary);
 }
 
@@ -14,7 +14,7 @@
 
 .header {
   text-align: center;
-  margin-bottom: var(--spacing-xxl);
+  margin-bottom: var(--spacing-2xl);
 
   @include breakpoint(sm) {
     margin-bottom: var(--spacing-xl);
@@ -36,7 +36,7 @@
   font-size: var(--font-size-md);
   color: var(--color-text-secondary);
   margin: 0;
-  max-width: 600px;
+  max-width: 37.5rem;
   margin: 0 auto;
 }
 
