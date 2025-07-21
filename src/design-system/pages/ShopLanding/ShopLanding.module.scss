@@ -1,12 +1,10 @@
 @use "@styles/abstracts" as *;
 
-// Main container
 .shop-landing {
   min-height: 100vh;
   background-color: var(--color-background-secondary);
 }
 
-// Loading and Error States
 .loading,
 .error {
   min-height: 50vh;
@@ -32,24 +30,17 @@
   color: var(--color-danger);
 }
 
-// Header Section
 .header {
-  background-color: var(--color-header-bg);
-  color: var(--color-header-text);
   padding: var(--spacing-2xl) 0;
   margin-bottom: var(--spacing-2xl);
-  text-align: center;
 }
 
 .header-content {
   max-width: 50rem;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
 }
 
 .title {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--spacing-lg) 0;
 
   @include breakpoint(sm) {
@@ -58,7 +49,6 @@
 }
 
 .subtitle {
-  font-size: var(--font-size-lg);
   opacity: 0.9;
   margin: 0;
   line-height: var(--line-height-lg);
@@ -68,13 +58,10 @@
   }
 }
 
-// Categories Section
 .categories-section {
-  margin-bottom: var(--spacing-2xl);
+  margin: 0 auto var(--spacing-2xl);
   padding: 0 var(--spacing-md);
   max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .categories-grid {
@@ -89,13 +76,10 @@
 }
 
 .category-link {
-  text-decoration: none;
   color: inherit;
-  display: block;
 }
 
 .category-card {
-  background-color: var(--color-background-primary);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
@@ -131,10 +115,7 @@
 }
 
 .category-name {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-sm) 0;
-  color: var(--color-text-primary);
 
   @include breakpoint(sm) {
     font-size: var(--font-size-md);
@@ -152,13 +133,10 @@
   }
 }
 
-// Sales Section
 .sales-section {
-  margin-bottom: var(--spacing-2xl);
+  margin: 0 auto var(--spacing-2xl);
   padding: 0 var(--spacing-md);
   max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .sales-grid {
@@ -178,7 +156,6 @@
   padding: var(--spacing-2xl);
   color: var(--color-white);
   text-align: center;
-  position: relative;
   overflow: hidden;
 
   @include breakpoint(sm) {
@@ -212,20 +189,6 @@
   }
 }
 
-.side-offers {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-
-  @include breakpoint(lg) {
-    flex-direction: row;
-  }
-
-  @include breakpoint(sm) {
-    flex-direction: column;
-  }
-}
-
 .secondary-offer,
 .bestsellers-offer {
   background-color: var(--color-background-primary);
@@ -245,10 +208,7 @@
 }
 
 .offer-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-md) 0;
-  color: var(--color-text-primary);
 
   @include breakpoint(sm) {
     font-size: var(--font-size-md);
@@ -262,13 +222,10 @@
   line-height: var(--line-height-base);
 }
 
-// Inspiration Section
 .inspiration-section {
-  margin-bottom: var(--spacing-2xl);
+  margin: 0 auto var(--spacing-2xl);
   padding: 0 var(--spacing-md);
   max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .section-header {
@@ -277,10 +234,8 @@
 }
 
 .section-title {
-  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   margin: 0 0 var(--spacing-md) 0;
-  color: var(--color-text-primary);
 
   @include breakpoint(sm) {
     font-size: var(--font-size-2xl);
@@ -288,7 +243,6 @@
 }
 
 .section-description {
-  font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   max-width: 37.5rem;
   margin: 0 auto;
@@ -296,17 +250,6 @@
 
   @include breakpoint(sm) {
     font-size: var(--font-size-md);
-  }
-}
-
-.inspiration-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
-  gap: var(--spacing-lg);
-
-  @include breakpoint(sm) {
-    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
-    gap: var(--spacing-md);
   }
 }
 
@@ -364,25 +307,10 @@
   }
 }
 
-// Recommended Products Section
 .recommended-section {
-  margin-bottom: var(--spacing-2xl);
-  padding: 0 var(--spacing-md);
-  max-width: 11.25rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-
-  @include breakpoint(sm) {
-    grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
-    gap: var(--spacing-md);
-  }
+  margin: 0 auto;
+  padding: 0 var(--spacing-md) 3rem;
+  max-width: 75rem;
 }
 
 .product-link {
@@ -426,10 +354,7 @@
 }
 
 .product-name {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-sm) 0;
-  color: var(--color-text-primary);
 
   @include breakpoint(sm) {
     font-size: var(--font-size-md);
@@ -437,8 +362,6 @@
 }
 
 .product-pricing {
-  display: flex;
-  align-items: center;
   gap: var(--spacing-sm);
 }
 
