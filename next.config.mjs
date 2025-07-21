@@ -92,7 +92,7 @@ const nextConfig = {
       {
         // Placeholder service for development and testing
         protocol: "https",
-        hostname: "via.placeholder.com",
+        hostname: "placehold.co",
         port: "",
         pathname: "/**",
       },
@@ -113,19 +113,22 @@ const nextConfig = {
       {
         // Production CMS for content and product image management
         protocol: "https",
-        hostname: "cms.gourbanecho.com",
+        hostname: "cms.shopurbanecho.com",
+        port: "",
         pathname: "/uploads/**",
       },
-      // Strapi Cloud instance for media hosting
       {
+        // Strapi Cloud instance for media hosting
         protocol: "https",
         hostname: "strong-canvas-c0e422458b.media.strapiapp.com",
+        port: "",
         pathname: "/**",
       },
-      // Wildcard subdomain pattern for Strapi Cloud media hosting
       {
+        // Wildcard subdomain pattern for Strapi Cloud media hosting
         protocol: "https",
         hostname: "*.media.strapiapp.com",
+        port: "",
         pathname: "/**",
       },
     ],

@@ -154,6 +154,11 @@ const productSchema = new mongoose.Schema(
       default: true,
       index: true,
     },
+    freeShipping: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     rating: {
       type: Number,
       min: 0,
@@ -232,6 +237,22 @@ productSchema.index({ price: 1 });
 productSchema.index({ createdAt: -1 });
 productSchema.index({ salesCount: -1 });
 productSchema.index({ rating: -1 });
+productSchema.index({ freeShipping: 1, isActive: 1 });
+productSchema.index(
+  {
+    name: "text",
+    description: "text",
+    tags: "text",
+  },
+  {
+    weights: {
+      name: 10,
+      tags: 5,
+      description: 1,
+    },
+    name: "product_text_search",
+  }
+);
 
 /**
  * Static method to find products by category with optional subcategory filtering

@@ -2,6 +2,7 @@
  * @fileoverview Custom hook for managing category page state including filtering, sorting, pagination, and breadcrumbs
  * Provides comprehensive e-commerce browsing functionality with React Query integration for data fetching
  * Handles URL synchronization, filter state management, breadcrumb generation, and optimized caching for enhanced user experience
+ * Fixed parameter mapping to match API expectations
  */
 
 import { useMemo, useState } from "react";
@@ -72,6 +73,29 @@ const useCategoryPage = params => {
     retry: 3,
   });
 
+  // Build query parameters with correct mapping
+  const queryParams = useMemo(() => {
+    return {
+      // Basic parameters
+      category: selectedCategory !== "all" ? selectedCategory : undefined,
+      search: searchTerm.trim() || undefined,
+      sortBy: sortBy,
+
+      // Pagination
+      page: currentPage,
+      limit: 12,
+
+      // Price range - only include if not default values
+      minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+      maxPrice: priceRange[1] < 500 ? priceRange[1] : undefined,
+
+      // Boolean filters - only include if true
+      onSale: filters.onSale || undefined,
+      newArrivals: filters.newArrivals || undefined,
+      freeShipping: filters.freeShipping || undefined,
+    };
+  }, [selectedCategory, searchTerm, sortBy, currentPage, priceRange, filters]);
+
   // Fetch products based on current filters
   const {
     data: productsResponse,
@@ -87,23 +111,16 @@ const useCategoryPage = params => {
       filters,
     }),
     queryFn: async () => {
-      const queryParams = {
-        page: currentPage,
-        limit: 12,
-        sortBy: sortBy,
-        minPrice: priceRange[0],
-        maxPrice: priceRange[1],
-        ...(searchTerm && { search: searchTerm }),
-        ...(selectedCategory !== "all" && { category: selectedCategory }),
-        ...(filters.onSale && { onSale: true }),
-        ...(filters.newArrivals && { isNew: true }),
-        ...(filters.freeShipping && { freeShipping: true }),
-      };
+      // Clean up undefined values from queryParams
+      const cleanParams = Object.fromEntries(
+        Object.entries(queryParams).filter(([_, value]) => value !== undefined)
+      );
 
-      if (searchTerm) {
-        return searchProducts(queryParams);
+      // Use search if we have a search term, otherwise use regular getProducts
+      if (searchTerm.trim()) {
+        return searchProducts(cleanParams);
       } else {
-        return getProducts(queryParams);
+        return getProducts(cleanParams);
       }
     },
     staleTime: CACHE_DURATION.short,
@@ -118,10 +135,12 @@ const useCategoryPage = params => {
       return { products: [], total: 0 };
     }
 
+    // Handle direct array response
     if (Array.isArray(productsResponse)) {
       return { products: productsResponse, total: productsResponse.length };
     }
 
+    // Handle response with products array
     if (productsResponse.products && Array.isArray(productsResponse.products)) {
       return {
         products: productsResponse.products,
@@ -129,6 +148,7 @@ const useCategoryPage = params => {
       };
     }
 
+    // Handle response with data array
     if (productsResponse.data && Array.isArray(productsResponse.data)) {
       const total =
         productsResponse.pagination?.total ||
@@ -140,6 +160,7 @@ const useCategoryPage = params => {
       };
     }
 
+    // Handle nested response structures
     if (productsResponse.products && typeof productsResponse.products === "object") {
       if (Array.isArray(productsResponse.products.data)) {
         const total =
@@ -152,8 +173,8 @@ const useCategoryPage = params => {
         };
       }
 
+      // Check for any array property in products object
       const productKeys = Object.keys(productsResponse.products);
-
       for (const key of productKeys) {
         if (Array.isArray(productsResponse.products[key])) {
           const total =
@@ -184,6 +205,7 @@ const useCategoryPage = params => {
   const handleCategoryChange = newCategory => {
     setSelectedCategory(newCategory);
     setCurrentPage(1);
+    setSearchTerm("");
 
     if (newCategory === "all") {
       router.push("/shop/all");
