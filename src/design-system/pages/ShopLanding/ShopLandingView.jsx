@@ -50,7 +50,8 @@ const ShopLandingView = ({
       </section>
 
       <section className={styles["categories-section"]}>
-        <div className={styles["categories-grid"]}>
+        {/* Categories Grid - Tailwind: Auto-fit grid with responsive columns */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(12.5rem,1fr))] gap-4 sm:grid-cols-[repeat(auto-fit,minmax(9.375rem,1fr))] sm:gap-4">
           {categories.slice(1).map(category => (
             <Link
               key={category._id || category.id}
@@ -74,10 +75,11 @@ const ShopLandingView = ({
       </section>
 
       <section className={styles["sales-section"]}>
-        <div className={styles["sales-grid"]}>
+        {/* Sales Grid - Tailwind: 2fr 1fr layout with responsive stack */}
+        <div className="grid grid-cols-1 gap-4">
           <div className={styles["main-sale-banner"]}>
             <div className={styles["banner-content"]}>
-              <h2 className={styles["banner-title"]}>Ongoing SALE. 50% OFF.</h2>
+              <h2 className={styles["banner-title"]}>Ongoing SALE. Up to 50% OFF.</h2>
               <p className={styles["banner-subtitle"]}>
                 Limited time offer on selected items. Don&lsquo;t miss out!
               </p>
@@ -89,7 +91,8 @@ const ShopLandingView = ({
             </div>
           </div>
 
-          <div className={styles["side-offers"]}>
+          {/* Side Offers - Tailwind: Flex column with responsive row */}
+          <div className="flex flex-col-1 gap-4 sm:flex-col">
             <div className={styles["secondary-offer"]}>
               <h3 className={styles["offer-title"]}>Other Offer</h3>
               <p className={styles["offer-text"]}>Free shipping on orders over $75</p>
@@ -122,7 +125,8 @@ const ShopLandingView = ({
           </p>
         </div>
 
-        <div className={styles["inspiration-grid"]}>
+        {/* Inspiration Grid - Tailwind: Auto-fit grid with responsive columns */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(15.625rem,1fr))] gap-4 sm:grid-cols-[repeat(auto-fit,minmax(12.5rem,1fr))] sm:gap-4">
           {newArrivals.slice(0, 6).map(item => (
             <div key={item._id || item.id} className={styles["inspiration-card"]}>
               <div
@@ -151,7 +155,8 @@ const ShopLandingView = ({
           </p>
         </div>
 
-        <div className={styles["products-grid"]}>
+        {/* Products Grid - Tailwind: Auto-fit grid with responsive columns */}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(12.5rem,1fr))] gap-4 sm:grid-cols-[repeat(auto-fit,minmax(9.375rem,1fr))] sm:gap-4">
           {featuredProducts.map(product => (
             <Link
               key={product._id || product.id}
