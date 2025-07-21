@@ -1,6 +1,5 @@
 @use "@styles/abstracts" as *;
 
-// Main container
 .shop-landing {
   min-height: 100vh;
   background-color: var(--color-background-secondary);
@@ -65,6 +64,17 @@
   max-width: 75rem;
 }
 
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  gap: var(--spacing-lg);
+
+  @include breakpoint(sm) {
+    grid-template-columns: repeat(auto-fit, minmax(9.375rem, 1fr));
+    gap: var(--spacing-md);
+  }
+}
+
 .category-link {
   color: inherit;
 }
@@ -127,6 +137,17 @@
   margin: 0 auto var(--spacing-2xl);
   padding: 0 var(--spacing-md);
   max-width: 75rem;
+}
+
+.sales-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-lg);
+
+  @include breakpoint(lg) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
 }
 
 .main-sale-banner {
