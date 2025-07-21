@@ -17,7 +17,7 @@
 .backtop {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--spacing-xxl);
+  margin-bottom: var(--spacing-2xl);
   padding-bottom: var(--spacing-xl);
   border-bottom: 1px solid var(--color-gray-600);
 }
@@ -65,7 +65,7 @@
 
 .content {
   @include respond-to(lg, "max") {
-    margin-bottom: var(--spacing-xxl);
+    margin-bottom: var(--spacing-2xl);
   }
 }
 

@@ -164,15 +164,11 @@ export async function GET(request) {
     const strapiEndpoint = buildStrapiEndpoint(variant, endpoint);
     const response = await fetchFromStrapi(strapiEndpoint, ERROR_SOURCE);
     const data = await response.json();
-
-    // ✅ Extract attributes from Strapi response structure
     const rawContent = endpoint === "variants" ? data.data : data.data?.[0];
     const content = rawContent?.attributes || rawContent;
-
     const env = getEnvironment();
     const STRAPI_URL = env.strapiUrl || "http://localhost:1337";
     const transformedContent = transformHeroContent(content, STRAPI_URL, endpoint === "variants");
-
     const meta = {
       endpoint: `/api/${API_ENDPOINTS.content}/hero`,
       variant,

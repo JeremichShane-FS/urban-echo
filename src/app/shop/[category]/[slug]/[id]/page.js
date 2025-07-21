@@ -19,10 +19,7 @@ import ProductPage from "@design-system/pages/ProductPage";
  */
 export default async function CategorySlugIdProductPage({ params }) {
   const resolvedParams = await params;
-
   const { category, id, slug } = resolvedParams;
-
-  // Basic validation
   const validCategories = ["men", "women", "accessories", "sale", "new", "all"];
 
   if (!validCategories.includes(category)) {
